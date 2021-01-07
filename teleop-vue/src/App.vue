@@ -1,15 +1,15 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <TestClient msg="OpenTera Test for WebRTC VUE components" />
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import TestClient from "./components/TestClient.vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld
+    TestClient
   }
 };
 </script>
