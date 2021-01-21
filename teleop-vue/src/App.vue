@@ -1,15 +1,14 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <TestClient msg="OpenTera Test for WebRTC VUE components" />
+  <opentera-wrapper-component/>
 </template>
 
 <script>
-import TestClient from "./components/TestClient.vue";
+import OpenteraWrapperComponent from "./components/OpenteraWrapperComponent"
 
 export default {
   name: "App",
   components: {
-    TestClient
+    OpenteraWrapperComponent
   }
 };
 </script>
