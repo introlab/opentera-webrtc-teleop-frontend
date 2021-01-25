@@ -1,13 +1,16 @@
 <template>
   <div class="video-with-overlay-outer-container">
-      <div class="video-with-overlay-inner-container">
+      <div class="video-with-overlay-inner-container bg-dark">
           <div class="video-with-overlay-video-overlay">
-              <video v-bind:id="overlayVideoId" class="video-with-overlay-video" v-show="showOverlayVideo"></video>
+              <video class="video-with-overlay-video mirror-y" v-bind:id="overlayVideoId" v-show="showOverlayVideo"></video>
           </div>
-          <div v-for="client in clientsVideo" v-bind:key="client.id">
+          <div class="container-fluid">
+            <div class="row g-0" v-bind:class="'row-cols-' + columnsToDisplay">
+              <div class="col" v-for="client in clientsVideo" v-bind:key="client.id">
                 <base-video-component v-bind:id="client.id" v-bind:name="client.name" v-bind:stream="client.stream" v-bind:show-name="true"/>
+              </div>
+            </div>
           </div>
-          <!--video id="fullscreenVideo" class="video-with-overlay-video"></video-->
       </div>
   </div>
 </template>
@@ -33,11 +36,21 @@ export default {
         clientsVideo: {
             type: Array
         }
-        /* clientsVideo : [{
-            id : String,
-            name : String,
-            stream : {}
-        }] */
+    },
+    computed: {
+      // Compute the quantity of columns to display with the number of clients
+      columnsToDisplay() {
+        let nClients = this.clientsVideo.length;
+        if (nClients === 0)
+          return 0;
+
+        for (let i = 1; i < 8; i++){
+          if (nClients > Math.pow(i-1, 2) && nClients <= Math.pow(i, 2))
+            return i;
+        }
+        alert("More than 64 for user the GUI can't handle as many");
+        return 8;
+      }
     },
     mounted() {
         // Setup local video
@@ -59,8 +72,6 @@ export default {
   text-align: center;
 }
 .video-with-overlay-inner-container {
-  width: 100%;
-  height: 100%;
   display: inline-block;
   position: relative;
 }
@@ -72,6 +83,7 @@ export default {
   padding: 5px 5px;
   width: 20%;
   height: 20%;
+  z-index: 1;
 }
 .video-with-overlay-video {
   width: 100%;

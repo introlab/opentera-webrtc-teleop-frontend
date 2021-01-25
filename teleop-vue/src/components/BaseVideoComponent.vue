@@ -2,9 +2,9 @@
     <div class="base-video-outer-container">
         <div class="base-video-inner-container">
             <div class="base-video-name-layout" v-show="showName">
-                <p>{{ name }}</p>
+                <span class="text-white">{{ name }}</span>
             </div>
-            <video autoplay v-bind:id="id"></video>
+            <video class="base-video-video" autoplay v-bind:id="videoId"></video>
         </div>
     </div>
 </template>
@@ -18,8 +18,13 @@ export default {
         stream: {},
         showName : Boolean
     },
+    computed: {
+      videoId() {
+        return 'video' + this.id;
+      }
+    },
     mounted() {
-      document.getElementById(this.id).srcObject = this.stream;
+      document.getElementById('video' + this.id).srcObject = this.stream;
     }
 }
 </script>
@@ -27,8 +32,7 @@ export default {
 <style>
 .base-video-outer-container {
   width: 100%;
-  height: 100%;
-  text-align: center;
+  height: auto;
 }
 .base-video-inner-container {
   width: 100%;
@@ -42,7 +46,9 @@ export default {
   bottom: 0px;
   margin: 10px;
   padding: 5px 5px;
-  width: 20%;
-  height: 20%;
+}
+.base-video-video {
+  width: 100%;
+  height: auto;
 }
 </style>

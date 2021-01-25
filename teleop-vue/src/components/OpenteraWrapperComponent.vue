@@ -71,19 +71,17 @@ export default {
             this.streamClient.onSignalingConnectionError = message => {
                 alert(message);
             };
-            //this.streamClient.onRoomClientsChange = client => {
-            //    // TODO
-            //};
+            // eslint-disable-next-line
+            this.streamClient.onRoomClientsChange = client => {
+                // TODO
+            };
             this.streamClient.onAddRemoteStream = (id, name, clientData, stream) => {
                 this.clients.push({id, name, stream});
-                /* this.$nextTick(() => {
-                    document.getElementById(id).srcObject = stream;
-                    document.getElementById(id).autoplay = true;
-                }); */
             };
-            //this.streamClient.onClientDisconnect = (id, name, clientData) => {
-            //    // TODO
-            //};
+            // eslint-disable-next-line
+            this.streamClient.onClientDisconnect = (id, name, clientData) => {
+                this.clients = this.clients.filter(item => item.id !== id);
+            };
         },
         callAll() {
             this.streamClient.callAll();
