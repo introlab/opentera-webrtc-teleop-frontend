@@ -1,5 +1,5 @@
 <template>
-  <div class="video-with-overlay-container bg-dark">
+  <div class="video-with-overlay-container">
     <div class="video-with-overlay-video-overlay">
       <video class="video-with-overlay-video mirror-y" v-bind:id="overlayVideoId" v-show="showOverlayVideo"></video>
     </div>

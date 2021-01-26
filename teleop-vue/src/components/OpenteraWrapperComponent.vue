@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card">
+        <div class="shadow card bg-dark">
             <div class="card-body">
                 <video-conference-component
                     overlay-video-id="overlayVideo"
@@ -36,8 +36,7 @@ export default {
         async connect()  {
             const SignalingServerConfiguration = {
                 url: "http://localhost:8080/",
-                //url: 'http://localhost/',
-                name: "TestClient.vue",
+                name: "Client Name",
                 data: {}, // Client custom data
                 room: "chat"
             };

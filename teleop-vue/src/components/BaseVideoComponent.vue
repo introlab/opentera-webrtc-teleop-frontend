@@ -1,7 +1,7 @@
 <template>
     <div class="base-video-container">
       <div class="base-video-name-layout" v-show="showName">
-        <span class="text-white">{{ name }}</span>
+        <span class="base-video-name-text">{{ name }}</span>
       </div>
       <video class="base-video-video" autoplay v-bind:id="videoId"></video>
     </div>
@@ -40,6 +40,23 @@ export default {
   bottom: 0px;
   margin: 10px;
   padding: 5px 5px;
+}
+.base-video-name-layout::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: var(--bs-dark);
+  opacity: 0.75;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  border-radius: .25rem;
+}
+.base-video-name-text {
+  position: relative;
+  z-index: 2;
+  color: var(--bs-light);
 }
 .base-video-video {
   width: 100%;
