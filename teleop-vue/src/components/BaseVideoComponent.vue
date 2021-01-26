@@ -1,11 +1,9 @@
 <template>
-    <div class="base-video-outer-container">
-        <div class="base-video-inner-container">
-            <div class="base-video-name-layout" v-show="showName">
-                <span class="text-white">{{ name }}</span>
-            </div>
-            <video class="base-video-video" autoplay v-bind:id="videoId"></video>
-        </div>
+    <div class="base-video-container">
+      <div class="base-video-name-layout" v-show="showName">
+        <span class="text-white">{{ name }}</span>
+      </div>
+      <video class="base-video-video" autoplay v-bind:id="videoId"></video>
     </div>
 </template>
 
@@ -30,14 +28,10 @@ export default {
 </script>
 
 <style>
-.base-video-outer-container {
-  width: 100%;
-  height: auto;
-}
-.base-video-inner-container {
+.base-video-container {
   width: 100%;
   height: 100%;
-  display: inline-block;
+  display: flex;
   position: relative;
 }
 .base-video-name-layout {

@@ -1,17 +1,15 @@
 <template>
-  <div class="video-with-overlay-outer-container">
-      <div class="video-with-overlay-inner-container bg-dark">
-          <div class="video-with-overlay-video-overlay">
-              <video class="video-with-overlay-video mirror-y" v-bind:id="overlayVideoId" v-show="showOverlayVideo"></video>
-          </div>
-          <div class="container-fluid">
-            <div class="row g-0" v-bind:class="'row-cols-' + columnsToDisplay">
-              <div class="col" v-for="client in clientsVideo" v-bind:key="client.id">
-                <base-video-component v-bind:id="client.id" v-bind:name="client.name" v-bind:stream="client.stream" v-bind:show-name="true"/>
-              </div>
-            </div>
-          </div>
+  <div class="video-with-overlay-container bg-dark">
+    <div class="video-with-overlay-video-overlay">
+      <video class="video-with-overlay-video mirror-y" v-bind:id="overlayVideoId" v-show="showOverlayVideo"></video>
+    </div>
+    <div class="container-fluid grid-padding">
+      <div class="row g-2" v-bind:class="'row-cols-' + columnsToDisplay">
+        <div class="col" v-for="client in clientsVideo" v-bind:key="client.id">
+          <base-video-component v-bind:id="client.id" v-bind:name="client.name" v-bind:stream="client.stream" v-bind:show-name="true"/>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -66,12 +64,7 @@ export default {
 </script>
 
 <style>
-.video-with-overlay-outer-container {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-}
-.video-with-overlay-inner-container {
+.video-with-overlay-container {
   display: inline-block;
   position: relative;
 }
@@ -93,5 +86,8 @@ export default {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg); /* Safari and Chrome */
   -moz-transform: rotateY(180deg); /* Firefox */
+}
+.grid-padding {
+  padding: .75rem .75rem .75rem .75rem;
 }
 </style>

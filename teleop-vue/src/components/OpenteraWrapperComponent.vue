@@ -1,10 +1,14 @@
 <template>
     <div>
-        <video-conference-component
-            overlay-video-id="overlayVideo"
-            v-bind:clients-video="clients"
-            v-bind:show-overlay-video="true">
-        </video-conference-component>
+        <div class="card">
+            <div class="card-body">
+                <video-conference-component
+                    overlay-video-id="overlayVideo"
+                    v-bind:clients-video="clients"
+                    v-bind:show-overlay-video="true">
+                </video-conference-component>
+            </div>
+        </div>
         <button v-on:click="connect">Connect</button>
         <button v-on:click="callAll">Call all</button>
         <button v-on:click="hangUpAll">Hang up</button>
