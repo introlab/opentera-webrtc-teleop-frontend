@@ -6,7 +6,12 @@
     <div class="container-fluid grid-padding">
       <div class="row g-2" v-bind:class="'row-cols-' + columnsToDisplay">
         <div class="col" v-for="client in clientsVideo" v-bind:key="client.id">
-          <base-video-component v-bind:id="client.id" v-bind:name="client.name" v-bind:stream="client.stream" v-bind:show-name="true"/>
+          <base-video 
+            v-bind:id="client.id" 
+            v-bind:name="client.name" 
+            v-bind:stream="client.stream" 
+            v-bind:show-name="true">
+          </base-video>
         </div>
       </div>
     </div>
@@ -14,14 +19,14 @@
 </template>
 
 <script>
-import BaseVideoComponent from "./BaseVideoComponent"
+import BaseVideo from "./BaseVideo"
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 
 export default {
-    name: 'video-conference-component',
+    name: 'video-conference',
     components: {
-        BaseVideoComponent
+        BaseVideo
     },
     data() {
         return {

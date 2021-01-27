@@ -2,11 +2,11 @@
     <div>
         <div class="shadow card bg-dark">
             <div class="card-body">
-                <video-conference-component
+                <video-conference
                     overlay-video-id="overlayVideo"
                     v-bind:clients-video="clients"
                     v-bind:show-overlay-video="true">
-                </video-conference-component>
+                </video-conference>
             </div>
         </div>
         <button v-on:click="connect">Connect</button>
@@ -16,14 +16,14 @@
 </template>
 
 <script>
-import VideoConferenceComponent from "./VideoConferenceComponent"
+import VideoConference from "./VideoConference"
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 
 export default {
-    name: 'opentera-wrapper-component',
+    name: 'opentera-wrapper',
     components: {
-        VideoConferenceComponent
+        VideoConference
     },
     data() {
         return {

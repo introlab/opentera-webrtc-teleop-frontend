@@ -9,7 +9,7 @@
 
 <script>
 export default {
-    name: 'base-video-component',
+    name: 'base-video',
     props: {
         id : String,
         name : String,

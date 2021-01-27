@@ -1,14 +1,14 @@
 <template>
-  <opentera-wrapper-component/>
+  <opentera-wrapper/>
 </template>
 
 <script>
-import OpenteraWrapperComponent from "./components/OpenteraWrapperComponent"
+import OpenteraWrapper from "./components/OpenteraWrapper"
 
 export default {
   name: "App",
   components: {
-    OpenteraWrapperComponent
+    OpenteraWrapper
   }
 };
 </script>
