@@ -4,7 +4,7 @@
             <div class="card-body">
                 <video-conference
                     overlay-video-id="overlayVideo"
-                    v-bind:clients-video="clients"
+                    v-bind:client-list="clientList"
                     v-bind:show-overlay-video="true">
                 </video-conference>
             </div>
@@ -16,88 +16,41 @@
 </template>
 
 <script>
-import VideoConference from "./VideoConference"
+import VideoConference from "./VideoConference";
 
-import openteraWebrtcWebClient from "opentera-webrtc-web-client";
+import useLocalStream from "../composables/OpenteraWrapper/useLocalStream";
+import useStreamClient from "../composables/OpenteraWrapper/useStreamClient";
 
 export default {
     name: 'opentera-wrapper',
     components: {
         VideoConference
     },
-    data() {
+    props: {
+        name: String,
+        data : Object,
+        room: String
+    },
+    setup(props) {
+
+        const { localStream } = useLocalStream();
+        
+        const { clientList, streamClient, connect } = useStreamClient(props, localStream);
+
         return {
-            clients : [],
-            localStream : null,
-            streamClient : null
+            localStream,
+            clientList,
+            streamClient,
+            connect
         }
     },
     methods: {
-        async connect()  {
-            const SignalingServerConfiguration = {
-                url: "http://localhost:8080/",
-                name: "Client Name",
-                data: {}, // Client custom data
-                room: "chat"
-            };
-            const StreamConfiguration = {
-                localStream: this.localStream,
-                isSendOnly: false
-            };
-            const RtcConfiguration = {
-                // See: https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/RTCPeerConnection#RTCConfiguration_dictionary
-                iceServers: [
-                    {
-                        urls: "stun:stun.l.google.com:19302"
-                    }
-                ]
-            };
-            let logger = (...args) => console.log(...args);
-
-            this.streamClient = new openteraWebrtcWebClient.StreamClient(
-                SignalingServerConfiguration,
-                StreamConfiguration,
-                RtcConfiguration,
-                logger
-            );
-            this.connectStreamClientEvents();
-
-            await this.streamClient.connect();
-        },
-        connectStreamClientEvents() {
-            this.streamClient.onSignalingConnectionOpen = () => {
-                // TODO
-            };
-            this.streamClient.onSignalingConnectionClose = async () => {
-                // TODO
-            };
-            this.streamClient.onSignalingConnectionError = message => {
-                alert(message);
-            };
-            // eslint-disable-next-line
-            this.streamClient.onRoomClientsChange = client => {
-                // TODO
-            };
-            this.streamClient.onAddRemoteStream = (id, name, clientData, stream) => {
-                this.clients.push({id, name, stream});
-            };
-            // eslint-disable-next-line
-            this.streamClient.onClientDisconnect = (id, name, clientData) => {
-                this.clients = this.clients.filter(item => item.id !== id);
-            };
-        },
         callAll() {
             this.streamClient.callAll();
         },
         hangUpAll() {
             this.streamClient.hangUpAll();
         }
-    },
-    mounted() {
-        // Setup local stream 
-        openteraWebrtcWebClient.devices.getDefaultStream().then(stream => {
-            this.localStream = stream;
-        });
     }
 }
 </script>

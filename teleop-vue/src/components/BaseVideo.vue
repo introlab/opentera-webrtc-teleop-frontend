@@ -18,11 +18,11 @@ export default {
     },
     computed: {
       videoId() {
-        return 'video' + this.id;
+        return 'video-' + this.id;
       }
     },
     mounted() {
-      document.getElementById('video' + this.id).srcObject = this.stream;
+      document.getElementById('video-' + this.id).srcObject = this.stream;
     }
 }
 </script>

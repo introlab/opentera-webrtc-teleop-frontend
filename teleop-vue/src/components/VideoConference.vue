@@ -1,11 +1,11 @@
 <template>
   <div class="video-with-overlay-container">
     <div class="video-with-overlay-video-overlay">
-      <video class="video-with-overlay-video mirror-y" v-bind:id="overlayVideoId" v-show="showOverlayVideo"></video>
+      <video ref="overlayVideoRef" class="video-with-overlay-video mirror-y" v-bind:id="overlayVideoId" v-show="showOverlayVideo"></video>
     </div>
     <div class="container-fluid grid-padding">
-      <div class="row g-2" v-bind:class="'row-cols-' + columnsToDisplay">
-        <div class="col" v-for="client in clientsVideo" v-bind:key="client.id">
+      <div class="row g-2" v-bind:class="'row-cols-' + nColumns">
+        <div class="col" v-for="client in clientList" v-bind:key="client.id">
           <base-video 
             v-bind:id="client.id" 
             v-bind:name="client.name" 
@@ -19,51 +19,38 @@
 </template>
 
 <script>
-import BaseVideo from "./BaseVideo"
+import { ref, toRefs } from "vue";
 
-import openteraWebrtcWebClient from "opentera-webrtc-web-client";
+import BaseVideo from "./BaseVideo";
+
+import useVideoOverlay from "../composables/VideoConference/useVideoOverlay";
+import useVideosLayout from "../composables/VideoConference/useVideosLayout";
 
 export default {
     name: 'video-conference',
     components: {
         BaseVideo
     },
-    data() {
-        return {
-            overlayVideo : null
-        }
-    },
     props: {
         overlayVideoId : String,
         showOverlayVideo : Boolean,
-        clientsVideo: {
+        clientList: {
             type: Array
         }
     },
-    computed: {
-      // Compute the quantity of columns to display with the number of clients
-      columnsToDisplay() {
-        let nClients = this.clientsVideo.length;
-        if (nClients === 0)
-          return 0;
+    setup(props) {
+      // eslint-disable-next-line
+      const { clientList } = toRefs(props);
 
-        for (let i = 1; i < 8; i++){
-          if (nClients > Math.pow(i-1, 2) && nClients <= Math.pow(i, 2))
-            return i;
-        }
-        alert("More than 64 for user the GUI can't handle as many");
-        return 8;
-      }
-    },
-    mounted() {
-        // Setup local video
-        this.overlayVideo = document.getElementById(this.overlayVideoId);
-        this.overlayVideo.muted = true;
-        this.overlayVideo.classList.add("mirror-y");
-        openteraWebrtcWebClient.devices.getDefaultStream().then(stream => {
-            this.overlayVideo.srcObject = stream;
-            this.overlayVideo.autoplay = true;
-        });
+      const overlayVideoRef = ref(null);
+      useVideoOverlay(overlayVideoRef);
+
+      const { nColumns } = useVideosLayout(clientList);
+
+      return {
+        overlayVideoRef,
+        nColumns
+      };
     }
 }
 </script>

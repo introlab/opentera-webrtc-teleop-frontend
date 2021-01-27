@@ -1,5 +1,5 @@
 <template>
-  <opentera-wrapper/>
+  <opentera-wrapper v-bind="{name:'Client Name', data:{}, room:'chat'}"/>
 </template>
 
 <script>
