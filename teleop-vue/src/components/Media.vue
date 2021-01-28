@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <slot v-if="matches"/>
+  <div v-if="matches" class="full-height">
+      <slot/>
   </div>
 </template>
 
@@ -42,5 +42,7 @@ export default {
 </script>
 
 <style>
-
+.full-height {
+    height: 100%;
+}
 </style>

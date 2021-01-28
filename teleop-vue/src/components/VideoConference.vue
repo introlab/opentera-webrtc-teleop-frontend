@@ -6,7 +6,7 @@
     <div class="container-fluid grid-padding">
       <!-- Laptops / Desktops -->
       <media query="(min-width: 992px)">
-        <div class="row g-2" v-bind:class="'row-cols-' + nColumns">
+        <div class="row g-0" v-bind:class="'row-cols-' + nColumns + ' rows-' + nRows" >
           <div class="col" v-for="client in clientList" v-bind:key="client.id">
             <base-video 
               v-bind:id="client.id" 
@@ -19,42 +19,15 @@
       </media>
       <!-- landscape tablets -->
       <media query="(min-width: 768px) and (max-width: 991.98px)">
-        <div class="row g-2" v-bind:class="'row-cols-' + nColumns">
-          <div class="col" v-for="client in clientList" v-bind:key="client.id">
-            <base-video 
-              v-bind:id="client.id" 
-              v-bind:name="client.name" 
-              v-bind:stream="client.stream" 
-              v-bind:show-name="true">
-            </base-video>
-          </div>
-        </div>
+        
       </media>
       <!-- portrait tablets / large phones -->
       <media query="(min-width: 600px) and (max-width: 767.98px)">
-        <div class="row row-cols-1 g-2">
-          <div class="col" v-for="client in clientList" v-bind:key="client.id">
-            <base-video 
-              v-bind:id="client.id" 
-              v-bind:name="client.name" 
-              v-bind:stream="client.stream" 
-              v-bind:show-name="true">
-            </base-video>
-          </div>
-        </div>
+        
       </media>
       <!-- phones -->
       <media query="(max-width: 599.98px)">
-        <div class="row row-cols-1 g-2">
-          <div class="col" v-for="client in clientList" v-bind:key="client.id">
-            <base-video 
-              v-bind:id="client.id" 
-              v-bind:name="client.name" 
-              v-bind:stream="client.stream" 
-              v-bind:show-name="true">
-            </base-video>
-          </div>
-        </div>
+        
       </media>
     </div>
   </div>
@@ -83,17 +56,17 @@ export default {
       }
     },
     setup(props) {
-      // eslint-disable-next-line
       const { clientList } = toRefs(props);
 
       const overlayVideoRef = ref(null);
       useVideoOverlay(overlayVideoRef);
 
-      const { nColumns } = useVideosLayout(clientList);
+      const { nColumns, nRows } = useVideosLayout(clientList);
 
       return {
         overlayVideoRef,
-        nColumns
+        nColumns,
+        nRows
       };
     }
 }
@@ -101,7 +74,9 @@ export default {
 
 <style>
 .video-with-overlay-container {
-  display: inline-block;
+  width: 100%;
+  height: 100%;
+  display: flex;
   position: relative;
 }
 .video-with-overlay-video-overlay {
@@ -124,6 +99,20 @@ export default {
   -moz-transform: rotateY(180deg); /* Firefox */
 }
 .grid-padding {
-  padding: .75rem .75rem .75rem .75rem;
+  padding: .75rem;
 }
+.row {
+  height: 100%;
+}
+.row > * {
+  padding: .25rem !important;
+}
+.rows-1 > * {height: 100%;}
+.rows-2 > * {height: 50%;}
+.rows-3 > * {height: 33.33%;}
+.rows-4 > * {height: 25%;}
+.rows-5 > * {height: 20%;}
+.rows-6 > * {height: 16.66%;}
+.rows-7 > * {height: 14.29%;}
+.rows-8 > * {height: 12.5%;}
 </style>

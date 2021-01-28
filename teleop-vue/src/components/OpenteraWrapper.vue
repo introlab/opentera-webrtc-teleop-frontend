@@ -56,5 +56,7 @@ export default {
 </script>
 
 <style>
-
+.card-body {
+    height: 100%;
+}
 </style>

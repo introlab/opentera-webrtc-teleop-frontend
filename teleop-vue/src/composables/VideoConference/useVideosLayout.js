@@ -3,12 +3,13 @@
 import { computed } from "vue";
 
 export default function(clientList) {
+
+    const getNumberOfClients = () => {
+      return clientList ? clientList.value.length : 0;
+    }
     
     const getNumberOfColumns = () => {
-        if (!clientList)
-            return 0
-
-        let nClients = clientList.value.length;
+        let nClients = getNumberOfClients();
         if (nClients === 0)
           return 0;
 
@@ -20,7 +21,16 @@ export default function(clientList) {
         return 8;
     };
 
-    const nColumns = computed(getNumberOfColumns);
+    const getNumberOfRows = () => {
+      let nClients = getNumberOfClients();
+      if (nClients === 0)
+        return 0;
 
-    return { nColumns };
+      return Math.floor((nClients - 1) / nColumns.value) + 1
+    }
+
+    const nColumns = computed(getNumberOfColumns);
+    const nRows = computed(getNumberOfRows);
+
+    return { nColumns, nRows };
 };
