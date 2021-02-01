@@ -1,30 +1,30 @@
 <template>
-    <div class="base-video-container">
-      <div class="base-video-name-layout" v-show="showName">
-        <span class="base-video-name-text">{{ name }}</span>
-      </div>
-      <video class="base-video-video" autoplay v-bind:id="videoId"></video>
+  <div class="base-video-container">
+    <div class="base-video-name-layout" v-show="showName">
+      <span class="base-video-name-text">{{ name }}</span>
     </div>
+    <video class="base-video-video" autoplay v-bind:id="videoId"></video>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'base-video',
-    props: {
-        id : String,
-        name : String,
-        stream: {},
-        showName : Boolean
-    },
-    computed: {
-      videoId() {
-        return 'video-' + this.id;
-      }
-    },
-    mounted() {
-      document.getElementById('video-' + this.id).srcObject = this.stream;
+  name: "base-video",
+  props: {
+    id: String,
+    name: String,
+    stream: {},
+    showName: Boolean
+  },
+  computed: {
+    videoId() {
+      return "video-" + this.id;
     }
-}
+  },
+  mounted() {
+    document.getElementById("video-" + this.id).srcObject = this.stream;
+  }
+};
 </script>
 
 <style>
@@ -51,7 +51,7 @@ export default {
   top: 0;
   left: 0;
   z-index: 1;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 .base-video-name-text {
   position: relative;

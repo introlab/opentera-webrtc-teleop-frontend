@@ -1,48 +1,47 @@
 <template>
   <div v-if="matches" class="full-height">
-      <slot/>
+    <slot />
   </div>
 </template>
 
 <script>
 export default {
-    name: 'media',
-    props: {
-        query: {
-            type: String,
-            required: true
-        },
-        visible: {
-            type: Boolean,
-            default: false
-        }
+  name: "media",
+  props: {
+    query: {
+      type: String,
+      required: true
     },
-    data() {
-        return {
-            matches: this.visible,
-            mediaQueryList: null
-        };
-    },
-    methods: {
-        updateMatches() {
-            this.matches = this.mediaQueryList.matches;
-        }
-    },
-    mounted() {
-        this.mediaQueryList = window.matchMedia(this.query)
-        this.updateMatches();
-        this.mediaQueryList.addListener(this.updateMatches);
-
-    },
-    beforeUnmount() { 
-        if (this.mediaQueryList)
-            this.mediaQueryList.removeListener(this.updateMatches);
+    visible: {
+      type: Boolean,
+      default: false
     }
-}
+  },
+  data() {
+    return {
+      matches: this.visible,
+      mediaQueryList: null
+    };
+  },
+  methods: {
+    updateMatches() {
+      this.matches = this.mediaQueryList.matches;
+    }
+  },
+  mounted() {
+    this.mediaQueryList = window.matchMedia(this.query);
+    this.updateMatches();
+    this.mediaQueryList.addListener(this.updateMatches);
+  },
+  beforeUnmount() {
+    if (this.mediaQueryList)
+      this.mediaQueryList.removeListener(this.updateMatches);
+  }
+};
 </script>
 
 <style>
 .full-height {
-    height: 100%;
+  height: 100%;
 }
 </style>

@@ -11,11 +11,13 @@
     "bootstrap": "^5.0.0-beta1",
     "core-js": "^3.6.5",
     "opentera-webrtc-web-client": "file:submodules/opentera-webrtc-teleop/opentera-webrtc-web-client",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "^4.5.11",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-prettier": "^6.0.0",
