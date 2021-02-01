@@ -5,6 +5,7 @@
                 <video-conference
                     overlay-video-id="overlayVideo"
                     v-bind:client-list="clientList"
+                    v-bind:is-fullscreen="true"
                     v-bind:show-overlay-video="true">
                 </video-conference>
             </div>

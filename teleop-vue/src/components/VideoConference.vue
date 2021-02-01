@@ -6,42 +6,52 @@
     <div v-if="!clientList.length" class="placeholder-container grid-padding">
       <img class="placeholder-svg" src="../assets/person-bounding-box.svg" alt="Person Icon">
     </div>
-    <div v-else class="container-fluid grid-padding">
-      <!-- Laptops / Desktops  OR landscape tablets / large landscape phone-->
-      <media query="(min-width: 992px) or ((min-width: 600px) and (max-width: 991.98px) and (orientation: landscape))">
-        <div class="row g-0" v-bind:class="'row-cols-' + nColumns + ' rows-' + nRows" >
-          <div class="col" v-for="client in clientList" v-bind:key="client.id">
-            <base-video 
-              v-bind:id="client.id" 
-              v-bind:name="client.name" 
-              v-bind:stream="client.stream" 
-              v-bind:show-name="true">
-            </base-video>
+    <div v-else class="grid-container grid-padding">
+      <div v-if="isFullscreen">
+        <!-- Laptops / Desktops  OR landscape tablets / large landscape phone-->
+        <media query="(min-width: 992px) or ((min-width: 600px) and (max-width: 991.98px) and (orientation: landscape))">
+          <div class="row g-0" v-bind:class="'row-cols-' + nColumns + ' rows-' + nRows" >
+            <div class="col" v-for="client in clientList" v-bind:key="client.id">
+              <base-video 
+                v-bind:id="client.id" 
+                v-bind:name="client.name" 
+                v-bind:stream="client.stream" 
+                v-bind:show-name="true">
+              </base-video>
+            </div>
           </div>
-        </div>
-      </media>
-      <!-- portrait tablets / large phones-->
-      <media query="(min-width: 600px) and (max-width: 991.98px) and (orientation: portrait)">
-        <div class="row g-0" v-bind:class="'row-cols-' + nRows + ' rows-' + nColumns" >
-          <div class="col" v-for="client in clientList" v-bind:key="client.id">
-            <base-video 
-              v-bind:id="client.id" 
-              v-bind:name="client.name" 
-              v-bind:stream="client.stream" 
-              v-bind:show-name="true">
-            </base-video>
+        </media>
+        <!-- portrait tablets / large phones-->
+        <media query="(min-width: 600px) and (max-width: 991.98px) and (orientation: portrait)">
+          <div class="row g-0" v-bind:class="'row-cols-' + nRows + ' rows-' + nColumns" >
+            <div class="col" v-for="client in clientList" v-bind:key="client.id">
+              <base-video 
+                v-bind:id="client.id" 
+                v-bind:name="client.name" 
+                v-bind:stream="client.stream" 
+                v-bind:show-name="true">
+              </base-video>
+            </div>
           </div>
-        </div>
-      </media>
-      <!-- phones -->
-      <media query="(max-width: 599.98px)">
-        <base-video 
-              v-bind:id="this.clientList[0].id" 
-              v-bind:name="this.clientList[0].name" 
-              v-bind:stream="this.clientList[0].stream" 
-              v-bind:show-name="true">
+        </media>
+        <!-- phones -->
+        <media query="(max-width: 599.98px)">
+          <base-video 
+            v-bind:id="this.clientList[0].id" 
+            v-bind:name="this.clientList[0].name" 
+            v-bind:stream="this.clientList[0].stream" 
+            v-bind:show-name="true">
           </base-video>
-      </media>
+        </media>
+      </div>
+      <div v-else>
+        <base-video 
+          v-bind:id="this.clientList[0].id" 
+          v-bind:name="this.clientList[0].name" 
+          v-bind:stream="this.clientList[0].stream" 
+          v-bind:show-name="true">
+        </base-video>
+      </div>      
     </div>
   </div>
 </template>
@@ -63,6 +73,7 @@ export default {
     },
     props: {
       overlayVideoId : String,
+      isFullscreen : Boolean,
       showOverlayVideo : Boolean,
       clientList: {
         type: Array
@@ -111,6 +122,13 @@ export default {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg); /* Safari and Chrome */
   -moz-transform: rotateY(180deg); /* Firefox */
+}
+.grid-container {
+  width: 100%;
+}
+.grid-container > * {
+  width: 100%;
+  height: 100%;
 }
 .grid-padding {
   padding: .75rem !important;
