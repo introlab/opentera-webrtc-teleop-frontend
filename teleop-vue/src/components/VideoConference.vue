@@ -3,7 +3,10 @@
     <div class="video-with-overlay-video-overlay">
       <video ref="overlayVideoRef" class="video-with-overlay-video mirror-y" v-bind:id="overlayVideoId" v-show="showOverlayVideo"></video>
     </div>
-    <div class="container-fluid grid-padding">
+    <div v-if="!clientList.length" class="placeholder-container grid-padding">
+      <img class="placeholder-svg" src="../assets/person-bounding-box.svg" alt="Person Icon">
+    </div>
+    <div v-else class="container-fluid grid-padding">
       <!-- Laptops / Desktops  OR landscape tablets / large landscape phone-->
       <media query="(min-width: 992px) or ((min-width: 600px) and (max-width: 991.98px) and (orientation: landscape))">
         <div class="row g-0" v-bind:class="'row-cols-' + nColumns + ' rows-' + nRows" >
@@ -110,7 +113,17 @@ export default {
   -moz-transform: rotateY(180deg); /* Firefox */
 }
 .grid-padding {
-  padding: .75rem;
+  padding: .75rem !important;
+}
+.placeholder-container {
+  background-color: var(--bs-gray-dark);
+  width: 100%;
+  height: 100%;
+}
+.placeholder-svg {
+  height: 100%;
+  width: 100%;
+  padding: 5em;
 }
 .row {
   height: 100%;
