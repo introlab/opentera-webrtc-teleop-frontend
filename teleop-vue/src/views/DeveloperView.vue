@@ -1,48 +1,52 @@
 <template>
-    <opentera-wrapper  v-bind="{ name: 'Client Name', data: {}, room: 'chat'}">
-        <template v-slot:header>
-            <navigation-bar 
-                name="Opentera Developper Interface"
-                defaultPath="/dev/dashboard"
-                v-bind:links="this.links">
-            </navigation-bar>
-        </template>
-    </opentera-wrapper>
-    <!-- <div>
-        <navigation-bar 
-            name="Opentera Developper Interface"
-            defaultPath="/dev/dashboard"
-            v-bind:links="this.links">
-        </navigation-bar>
-        <router-view></router-view>
-    </div> -->
+  <opentera-wrapper v-bind="{ name: 'Client Name', data: {}, room: 'chat' }">
+    <template v-slot:header>
+      <navigation-bar
+        name="Opentera Developper Interface"
+        v-bind:defaultPath="defaultPath"
+        v-bind:links="links">
+      </navigation-bar>
+    </template>
+  </opentera-wrapper>
 </template>
 
 <script>
-import store from '../store';
-import NavigationBar from '../components/NavigationBar'
-import OpenteraWrapper from '../components/OpenteraWrapper'
+import { mapState } from "vuex";
 
-const devChildrens = store.links.dev.childrens;
+import NavigationBar from "../components/NavigationBar";
+import OpenteraWrapper from "../components/OpenteraWrapper";
 
 export default {
     name: "developer-view",
-    data() {
-        return {
-            links: [
-                { name: devChildrens.dashboard.name, params: { name: devChildrens.dashboard.name, params: {} }},
-                { name: devChildrens.conference.name, params: { name: devChildrens.conference.name, params: {} }},
-                { name: devChildrens.conference.name, params: { name: devChildrens.map.name, params: {} }}
-            ]
-        }
-    },
     components: {
         NavigationBar,
-        OpenteraWrapper 
-    }    
-}
+        OpenteraWrapper
+    },
+    computed: {
+        ...mapState({
+            links: state => {
+                let dev = state.links.dev.childrens;
+                return [
+                    {
+                        name: dev.dashboard.name,
+                        params: {}
+                    },
+                    {
+                        name: dev.conference.name,
+                        params: {}
+                    },
+                    {
+                        name: dev.map.name,
+                        params: {}
+                    }
+                ];
+            },
+            defaultPath: state => {
+                return state.links.dev.defaultPath;
+            }
+        })
+    }
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

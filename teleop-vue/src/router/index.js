@@ -1,24 +1,32 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import store from "../store";
+
 import DeveloperView from "../views/DeveloperView";
-import VideoConference from "../components/VideoConference";
+import ConferenceView from "../views/ConferenceView";
+
+const dev = store.state.links.dev;
 
 const routes = [
   {
     // TODO Check for auth
-    path: "/dev",
-    name: "dev",
+    path: dev.path,
+    name: dev.name,
     component: DeveloperView,
     children: [
       {
-        name: "Dashboard",
-        path: "dashboard"
+        name: dev.childrens.dashboard.name,
+        path: dev.childrens.dashboard.path
       },
       {
-        name: "Conference",
-        path: "conference",
-        component: VideoConference,
+        name: dev.childrens.conference.name,
+        path: dev.childrens.conference.path,
+        component: ConferenceView,
         props: true
+      },
+      {
+        name: dev.childrens.map.name,
+        path: dev.childrens.map.path
       }
     ]
   }

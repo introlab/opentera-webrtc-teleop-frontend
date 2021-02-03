@@ -1,13 +1,15 @@
 // src/composables/OpenteraWrapper/useStreamClient.js
 
-import { ref, toRefs } from "vue";
+import { computed, ref, toRefs } from "vue";
+import { useStore } from "vuex";
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 
 export default function(props, localStream) {
+  const store = useStore();
   const { name, data, room } = toRefs(props);
 
-  const clientList = ref([]);
+  const clientList = computed(() => store.state.opentera.clientList);
   const streamClient = ref();
 
   // Configurations
@@ -42,15 +44,15 @@ export default function(props, localStream) {
       alert(message);
     };
     // eslint-disable-next-line
-        streamClient.value.onRoomClientsChange = client => {
+    streamClient.value.onRoomClientsChange = client => {
       // TODO
     };
     streamClient.value.onAddRemoteStream = (id, name, clientData, stream) => {
-      clientList.value.push({ id, name, stream });
+      store.commit("opentera/pushClient", { id, name, clientData, stream });
     };
     // eslint-disable-next-line
-        streamClient.value.onClientDisconnect = (id, name, clientData) => {
-      clientList.value = clientList.value.filter(item => item.id !== id);
+    streamClient.value.onClientDisconnect = (id, name, clientData) => {
+      store.commit("opentera/removeClientById", id);
     };
   };
 
