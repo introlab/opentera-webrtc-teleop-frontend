@@ -1,5 +1,13 @@
 <template>
   <div>
+    <header>
+      <slot name="header" ></slot>
+    </header>
+    <main>
+      <router-view></router-view>
+    </main>
+  </div>
+  <!-- <div>
     <div class="shadow card bg-dark">
       <div class="card-body">
         <video-conference
@@ -14,11 +22,11 @@
     <button v-on:click="connect">Connect</button>
     <button v-on:click="callAll">Call all</button>
     <button v-on:click="hangUpAll">Hang up</button>
-  </div>
+  </div> -->
 </template>
 
 <script>
-import VideoConference from "./VideoConference";
+//import VideoConference from "./VideoConference";
 
 import useLocalStream from "../composables/OpenteraWrapper/useLocalStream";
 import useStreamClient from "../composables/OpenteraWrapper/useStreamClient";
@@ -26,7 +34,7 @@ import useStreamClient from "../composables/OpenteraWrapper/useStreamClient";
 export default {
   name: "opentera-wrapper",
   components: {
-    VideoConference
+    //VideoConference
   },
   props: {
     name: String,

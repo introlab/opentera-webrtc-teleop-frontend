@@ -12,7 +12,7 @@ export default function(props, localStream) {
 
   // Configurations
   const SignalingServerConfiguration = {
-    url: "http://localhost:8080/",
+    url: "http://127.0.0.1:40075",
     name: name,
     data: data, // Client custom data
     room: room

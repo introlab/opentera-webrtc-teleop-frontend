@@ -1,20 +1,26 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
+
+import DeveloperView from "../views/DeveloperView";
+import VideoConference from "../components/VideoConference";
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+    // TODO Check for auth
+    path: "/dev",
+    name: "dev",
+    component: DeveloperView,
+    children: [
+      {
+        name: "Dashboard",
+        path: "dashboard"
+      },
+      {
+        name: "Conference",
+        path: "conference",
+        component: VideoConference,
+        props: true
+      }
+    ]
   }
 ];
 
