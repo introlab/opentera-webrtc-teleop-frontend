@@ -3,9 +3,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import store from "../store";
 
 import DeveloperView from "../views/DeveloperView";
+import OperatorView from "../views/OperatorView";
 import ConferenceView from "../views/ConferenceView";
 
 const dev = store.state.links.dev;
+const operator = store.state.links.operator;
 
 const routes = [
   {
@@ -29,6 +31,11 @@ const routes = [
         path: dev.childrens.map.path
       }
     ]
+  },
+  {
+    path: operator.path,
+    name: operator.name,
+    component: OperatorView
   }
 ];
 

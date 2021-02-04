@@ -20,6 +20,10 @@ const Links = {
                 path: "map"
               }
             }
+        },
+        operator: {
+          name: "Operator",
+          path: "/operator"
         }
     })
 }

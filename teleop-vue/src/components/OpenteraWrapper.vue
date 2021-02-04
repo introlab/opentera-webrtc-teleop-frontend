@@ -3,9 +3,8 @@
     <header>
       <slot name="header"></slot>
     </header>
-    <main>
-      <router-view 
-        v-on:connect="connect"
+    <main class="main-height">
+      <router-view
         v-on:call-all="callAll"
         v-on:hang-up-all="hangUpAll">
       </router-view>
@@ -14,6 +13,7 @@
 </template>
 
 <script>
+import { onMounted } from 'vue';
 import useLocalStream from "../composables/OpenteraWrapper/useLocalStream";
 import useStreamClient from "../composables/OpenteraWrapper/useStreamClient";
 
@@ -28,6 +28,8 @@ export default {
     const { localStream } = useLocalStream();
 
     const { clientList, streamClient, connect } = useStreamClient(props, localStream);
+
+    onMounted(connect);
 
     return {
       localStream,
@@ -48,7 +50,7 @@ export default {
 </script>
 
 <style>
-.card-body {
-  height: 100%;
+.main-height {
+  height: calc(100vh - 56px);
 }
 </style>

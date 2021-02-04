@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div class="shadow card bg-dark">
-      <div class="card-body">
+  <div class="full-height">
+    <div class="flex-outer-container full-height bg-dark">
+      <div class="flex-inner-container full-height">
         <video-conference
           overlay-video-id="overlayVideo"
           v-bind:client-list="clientList"
@@ -11,29 +11,28 @@
         </video-conference>
       </div>
     </div>
-    <button v-on:click="connect">Connect</button>
-    <button v-on:click="callAll">Call all</button>
-    <button v-on:click="hangUpAll">Hang up</button>
+    <button-conference 
+        v-on:call-all="callAll"
+        v-on:hang-up-all="hangUpAll">
+    </button-conference>
   </div>
 </template>
 
 <script>
 import VideoConference from "../components/VideoConference";
+import ButtonConference from "../components/ButtonConference";
 
 export default {
     name: "conference-view",
     components: {
-        VideoConference
+        VideoConference,
+        ButtonConference
     },
     emits : [
-        "connect",
         "callAll",
         "hangUpAll"
     ],
     methods: {
-        connect() {
-            this.$emit("connect");
-        },
         callAll() {
             this.$emit("callAll");
         },
@@ -50,5 +49,25 @@ export default {
 </script>
 
 <style>
-
+.flex-outer-container {
+    position: relative;
+    display: flex;
+    background-clip: border-box;
+}
+.flex-inner-container {
+    flex: 1 1 auto;
+    padding: 1rem 1rem;
+}
+.full-height {
+    height: 100%;
+}
+.button-controler {
+    position: absolute;
+    align-content: center;
+    right: 50%;
+    left: 50%;
+    margin: 10px;
+    padding: 5px 5px;
+    z-index: 1;
+}
 </style>
