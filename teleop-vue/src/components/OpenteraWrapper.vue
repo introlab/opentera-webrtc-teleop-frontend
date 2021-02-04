@@ -1,9 +1,9 @@
 <template>
   <div>
-    <header>
+    <header class="header">
       <slot name="header"></slot>
     </header>
-    <main class="main-height">
+    <main class="main">
       <router-view
         v-on:call-all="callAll"
         v-on:hang-up-all="hangUpAll">
@@ -50,7 +50,21 @@ export default {
 </script>
 
 <style>
-.main-height {
-  height: calc(100vh - 56px);
+:root {
+  --header-height: 56px
+}
+.header {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  width: 100%;
+  height: var(--header-height);
+}
+.main {
+  position: absolute;
+  top: --header-height;
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - --header-height);
 }
 </style>
