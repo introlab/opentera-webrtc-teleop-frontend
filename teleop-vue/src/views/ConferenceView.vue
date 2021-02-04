@@ -11,10 +11,7 @@
         </video-conference>
       </div>
     </div>
-    <button-conference 
-        v-on:call-all="callAll"
-        v-on:hang-up-all="hangUpAll">
-    </button-conference>
+    <button-conference></button-conference>
   </div>
 </template>
 
@@ -27,18 +24,6 @@ export default {
     components: {
         VideoConference,
         ButtonConference
-    },
-    emits : [
-        "callAll",
-        "hangUpAll"
-    ],
-    methods: {
-        callAll() {
-            this.$emit("callAll");
-        },
-        hangUpAll() {
-            this.$emit("hangUpAll");
-        }
     },
     computed: {
         clientList() {

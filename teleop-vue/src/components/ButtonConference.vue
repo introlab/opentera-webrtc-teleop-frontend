@@ -41,9 +41,11 @@ export default {
             this.isOnCall = this.nextState(this.isOnCall);
             if (this.isOnCall) {
                 this.callImg = require("../assets/telephone-outbound-fill.svg");
+                this.$store.commit("opentera/callAll");
                 this.$emit("callAll");
             } else {
-                this.callImg = require("../assets/telephone-inbound.svg")
+                this.callImg = require("../assets/telephone-inbound.svg");
+                this.$store.commit("opentera/hangUpAll");
                 this.$emit("hangUpAll");
             }           
         },
@@ -53,7 +55,7 @@ export default {
                 this.micImg = require("../assets/mic-mute-fill.svg");
                 //this.$emit("callAll");
             } else {
-                this.micImg = require("../assets/mic-fill.svg")
+                this.micImg = require("../assets/mic-fill.svg");
                 //this.$emit("hangUpAll");
             } 
         },
@@ -63,7 +65,7 @@ export default {
                 this.cameraImg = require("../assets/camera-video-off-fill.svg");
                 //this.$emit("callAll");
             } else {
-                this.cameraImg = require("../assets/camera-video-fill.svg")
+                this.cameraImg = require("../assets/camera-video-fill.svg");
                 //this.$emit("hangUpAll");
             }  
         }

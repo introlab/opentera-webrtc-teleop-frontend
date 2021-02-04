@@ -2,7 +2,8 @@
 const OpenteraStates = {
     namespaced: true,
     state: () => ({
-        clientList: []
+        clientList: [],
+        isInCall: false
     }),
     mutations: {
         pushClient(state, payload) {
@@ -10,6 +11,12 @@ const OpenteraStates = {
         },
         removeClientById(state, id) {
             state.clientList = state.clientList.filter(client => client.id !== id);
+        },
+        callAll(state) {
+            state.isInCall = true;
+        },
+        hangUpAll(state) {
+            state.isInCall = false;
         }
     },
     actions: {},

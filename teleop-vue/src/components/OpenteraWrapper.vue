@@ -4,18 +4,17 @@
       <slot name="header"></slot>
     </header>
     <main class="main">
-      <router-view
-        v-on:call-all="callAll"
-        v-on:hang-up-all="hangUpAll">
-      </router-view>
+      <router-view></router-view>
     </main>
   </div>
 </template>
 
 <script>
 import { onMounted } from 'vue';
+
 import useLocalStream from "../composables/OpenteraWrapper/useLocalStream";
 import useStreamClient from "../composables/OpenteraWrapper/useStreamClient";
+import useEvent from "../composables/OpenteraWrapper/useEvent";
 
 export default {
   name: "opentera-wrapper",
@@ -29,6 +28,8 @@ export default {
 
     const { clientList, streamClient, connect } = useStreamClient(props, localStream);
 
+    useEvent(streamClient);
+
     onMounted(connect);
 
     return {
@@ -37,14 +38,6 @@ export default {
       streamClient,
       connect
     };
-  },
-  methods: {
-    callAll() {
-      this.streamClient.callAll();
-    },
-    hangUpAll() {
-      this.streamClient.hangUpAll();
-    }
   }
 };
 </script>
