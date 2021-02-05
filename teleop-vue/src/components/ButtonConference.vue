@@ -15,59 +15,21 @@
 </template>
 
 <script>
+import useButtons from "../composables/ButtonConference/useButtons";
+
 export default {
     name: "button-conference",
-    data() {
-        return {
-            callImg: require("../assets/telephone-inbound.svg"),
-            micImg : require("../assets/mic-fill.svg"),
-            cameraImg: require("../assets/camera-video-fill.svg"),
+    setup() {
+        const { callImg, micImg, cameraImg, callEvent, micEvent, cameraEvent } = useButtons();
 
-            isConnected: false,
-            isMuted: false,
-            isCameraOff: false,
-            isOnCall: false
-        }
-    },
-    emits : [
-        "callAll",
-        "hangUpAll"
-    ],
-    methods: {
-        nextState(bool) {
-            return bool ? false : true;
-        },
-        callEvent() {
-            this.isOnCall = this.nextState(this.isOnCall);
-            if (this.isOnCall) {
-                this.callImg = require("../assets/telephone-outbound-fill.svg");
-                this.$store.commit("opentera/callAll");
-                this.$emit("callAll");
-            } else {
-                this.callImg = require("../assets/telephone-inbound.svg");
-                this.$store.commit("opentera/hangUpAll");
-                this.$emit("hangUpAll");
-            }           
-        },
-        micEvent() {
-            this.isMuted = this.nextState(this.isMuted);
-            if (this.isMuted) {
-                this.micImg = require("../assets/mic-mute-fill.svg");
-                //this.$emit("callAll");
-            } else {
-                this.micImg = require("../assets/mic-fill.svg");
-                //this.$emit("hangUpAll");
-            } 
-        },
-        cameraEvent() {
-            this.isCameraOff = this.nextState(this.isCameraOff);
-            if (this.isCameraOff) {
-                this.cameraImg = require("../assets/camera-video-off-fill.svg");
-                //this.$emit("callAll");
-            } else {
-                this.cameraImg = require("../assets/camera-video-fill.svg");
-                //this.$emit("hangUpAll");
-            }  
+        return {
+            callImg,
+            micImg,
+            cameraImg,
+
+            callEvent,
+            micEvent, 
+            cameraEvent
         }
     }
 }

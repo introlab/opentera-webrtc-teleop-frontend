@@ -3,7 +3,9 @@ const OpenteraStates = {
     namespaced: true,
     state: () => ({
         clientList: [],
-        isInCall: false
+        isInCall: false,
+        isMuted: false,
+        isCameraOff: false
     }),
     mutations: {
         pushClient(state, payload) {
@@ -12,11 +14,16 @@ const OpenteraStates = {
         removeClientById(state, id) {
             state.clientList = state.clientList.filter(client => client.id !== id);
         },
-        callAll(state) {
-            state.isInCall = true;
+
+        // Event mutations
+        setCallState(state, bool) {
+            state.isInCall = bool;
         },
-        hangUpAll(state) {
-            state.isInCall = false;
+        setMuteState(state, bool) {
+            state.isMuted = bool;
+        },
+        setCameraState(state, bool) {
+            state.isCameraOff = bool;
         }
     },
     actions: {},

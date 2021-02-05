@@ -47,12 +47,22 @@ export default function(props, localStream) {
     streamClient.value.onRoomClientsChange = client => {
       // TODO
     };
+    // Accept or not the incoming call
+    streamClient.value.callAcceptor = () => {
+      // TODO
+      return true;
+    }
     streamClient.value.onAddRemoteStream = (id, name, clientData, stream) => {
       store.commit("opentera/pushClient", { id, name, clientData, stream });
     };
     // eslint-disable-next-line
+    streamClient.value.onClientConnect = (id, name, clientData) => {
+      store.commit("opentera/setCallState", true);
+    };
+    // eslint-disable-next-line
     streamClient.value.onClientDisconnect = (id, name, clientData) => {
       store.commit("opentera/removeClientById", id);
+      store.commit("opentera/setCallState", false);
     };
   };
 

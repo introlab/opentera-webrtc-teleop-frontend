@@ -14,7 +14,7 @@ import { onMounted } from 'vue';
 
 import useLocalStream from "../composables/OpenteraWrapper/useLocalStream";
 import useStreamClient from "../composables/OpenteraWrapper/useStreamClient";
-import useEvent from "../composables/OpenteraWrapper/useEvent";
+import useEvents from "../composables/OpenteraWrapper/useEvents";
 
 export default {
   name: "opentera-wrapper",
@@ -28,7 +28,7 @@ export default {
 
     const { clientList, streamClient, connect } = useStreamClient(props, localStream);
 
-    useEvent(streamClient);
+    useEvents(streamClient);
 
     onMounted(connect);
 
@@ -52,12 +52,13 @@ export default {
   z-index: 3;
   width: 100%;
   height: var(--header-height);
+  max-height: var(--header-height);
 }
 .main {
   position: absolute;
-  top: --header-height;
+  top: var(--header-height);
   width: 100%;
   height: 100%;
-  max-height: calc(100vh - --header-height);
+  max-height: calc(100vh - var(--header-height));
 }
 </style>
