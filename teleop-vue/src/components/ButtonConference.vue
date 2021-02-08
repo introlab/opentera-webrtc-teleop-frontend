@@ -39,8 +39,7 @@ export default {
 .button-group {
     position: absolute !important;
     display: inline-table !important;
-    bottom: 4.5rem;
-    margin: 15px auto;
+    margin: 16px auto;
     right: 0;
     left: 0;
     z-index: 2;

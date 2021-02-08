@@ -1,11 +1,11 @@
-// src/composables/VideoConference/useVideoOverlay.js
+// src/composables/ConferenceView/useVideoOverlay.js
 
 import { onMounted } from "vue";
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 
 export default function(overlayVideoRef) {
   // Setup local video
-  const initLocalVideo = () => {
+  const _initLocalVideo = () => {
     let overlayVideo = overlayVideoRef.value;
     overlayVideo.muted = true;
     openteraWebrtcWebClient.devices.getDefaultStream().then(stream => {
@@ -14,7 +14,7 @@ export default function(overlayVideoRef) {
     });
   };
 
-  onMounted(initLocalVideo);
+  onMounted(_initLocalVideo);
 
   return {};
 }

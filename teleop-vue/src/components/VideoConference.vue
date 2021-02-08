@@ -1,13 +1,5 @@
 <template>
-  <div class="video-with-overlay-container">
-    <div class="video-with-overlay-video-overlay">
-      <video
-        ref="overlayVideoRef"
-        class="video-with-overlay-video mirror-y"
-        v-bind:id="overlayVideoId"
-        v-show="showOverlayVideo"
-      ></video>
-    </div>
+  <div class="video-conference-container">
     <div v-if="!clientList.length" class="placeholder-container grid-padding">
       <img
         class="placeholder-svg"
@@ -88,12 +80,11 @@
 </template>
 
 <script>
-import { ref, toRefs } from "vue";
+import { toRefs } from "vue";
 
 import Media from "./Media";
 import BaseVideo from "./BaseVideo";
 
-import useVideoOverlay from "../composables/VideoConference/useVideoOverlay";
 import useVideosLayout from "../composables/VideoConference/useVideosLayout";
 
 export default {
@@ -103,9 +94,7 @@ export default {
     BaseVideo
   },
   props: {
-    overlayVideoId: String,
     isFullscreen: Boolean,
-    showOverlayVideo: Boolean,
     clientList: {
       type: Array
     }
@@ -113,13 +102,9 @@ export default {
   setup(props) {
     const { clientList } = toRefs(props);
 
-    const overlayVideoRef = ref(null);
-    useVideoOverlay(overlayVideoRef);
-
     const { nColumns, nRows } = useVideosLayout(clientList);
 
     return {
-      overlayVideoRef,
       nColumns,
       nRows
     };
@@ -128,31 +113,11 @@ export default {
 </script>
 
 <style>
-.video-with-overlay-container {
+.video-conference-container {
   width: 100%;
   height: 100%;
   display: flex;
   position: relative;
-}
-.video-with-overlay-video-overlay {
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  margin: 10px;
-  padding: 5px 5px;
-  width: 20%;
-  height: 20%;
-  z-index: 1;
-}
-.video-with-overlay-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.mirror-y {
-  transform: rotateY(180deg);
-  -webkit-transform: rotateY(180deg); /* Safari and Chrome */
-  -moz-transform: rotateY(180deg); /* Firefox */
 }
 .grid-container {
   width: 100%;

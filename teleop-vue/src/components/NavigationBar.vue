@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     navToggler() {
-      this.showNav = this.showNav ? false : true;
+      this.showNav = !this.showNav;
     }
   }
 };
