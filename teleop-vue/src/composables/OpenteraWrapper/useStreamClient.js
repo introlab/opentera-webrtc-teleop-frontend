@@ -62,7 +62,8 @@ export default function(props, localStream) {
     // eslint-disable-next-line
     streamClient.value.onClientDisconnect = (id, name, clientData) => {
       store.commit("opentera/removeClientById", id);
-      store.commit("opentera/setCallState", false);
+      if (store.state.opentera.clientList.length <= 0)
+        store.commit("opentera/setCallState", false);
     };
   };
 
