@@ -28,7 +28,7 @@ export default {
 
     const { clientList, streamClient, connect } = useStreamClient(props, localStream);
 
-    useEvents(streamClient);
+    useEvents(streamClient, localStream);
 
     onMounted(connect);
 
