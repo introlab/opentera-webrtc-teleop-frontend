@@ -11,37 +11,40 @@
               <img v-bind:src="this.callImg" alt="Call all">
           </button>
       </div>
+      <div class="btn-group button-group btn-group-lg" role="group" aria-label="Room's informations">
+          <button type="button" class="btn btn-secondary" v-on:click="participantsEvent">
+              <img v-bind:src="this.participantsIcon" alt="Participants">
+          </button>
+      </div>
   </div>
 </template>
 
 <script>
-import useButtons from "../composables/ButtonConference/useButtons";
+import useCallsButtons from "../composables/ButtonConference/useCallsButtons";
+import useRoomsButtons from "../composables/ButtonConference/useRoomsButtons";
 
 export default {
     name: "button-conference",
     setup() {
-        const { callImg, micImg, cameraImg, callEvent, micEvent, cameraEvent } = useButtons();
+        const { callImg, micImg, cameraImg, callEvent, micEvent, cameraEvent } = useCallsButtons();
+        const { participantsIcon, participantsEvent } = useRoomsButtons();
 
         return {
-            callImg,
-            micImg,
-            cameraImg,
-
-            callEvent,
-            micEvent, 
-            cameraEvent
+            callImg, micImg, cameraImg, callEvent, micEvent, cameraEvent,
+            participantsIcon, participantsEvent
         }
     }
 }
 </script>
 
 <style>
+.btn-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 .button-group {
-    position: absolute !important;
-    display: inline-table !important;
-    margin: 16px auto;
-    right: 0;
-    left: 0;
+    margin: .5rem;
     z-index: 2;
 }
 </style>

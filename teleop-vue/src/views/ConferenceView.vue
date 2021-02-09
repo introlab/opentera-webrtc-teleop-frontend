@@ -1,7 +1,7 @@
 <template>
-  <div class="full-height" v-on:mousemove="showButtons">
+  <div class="full-height">
     <div class="flex-outer-container full-height bg-dark">
-      <div class="flex-inner-container full-height">
+      <div class="flex-inner-container full-height" v-on:mousemove="showButtons">
         <video-conference
           v-bind:client-list="clientList"
           v-bind:is-fullscreen="true"
@@ -18,6 +18,11 @@
       ></video>
       <button-conference></button-conference>
     </div>
+    <transition name="participants">
+      <div class="red-div" v-if="showParticipants">
+          
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -26,6 +31,7 @@ import { ref } from "vue";
 
 import useVideoOverlay from "../composables/ConferenceView/useVideoOverlay";
 import useButtons from "../composables/ConferenceView/useButtons";
+import useParticipantsList from "../composables/ConferenceView/useParticipantsList";
 
 import VideoConference from "../components/VideoConference";
 import ButtonConference from "../components/ButtonConference";
@@ -48,11 +54,13 @@ export default {
 
       useVideoOverlay(overlayVideoRef);
       const { showButtons } = useButtons(toolbarRef, overlayVideoRef);
+      const { showParticipants } = useParticipantsList(overlayVideoRef);
 
       return { 
         overlayVideoRef,
         toolbarRef,
-        showButtons
+        showButtons,
+        showParticipants
       };
     },
     computed: {
@@ -88,15 +96,6 @@ export default {
   height: var(--default-height);
   transition: height var(--transition-speed) ease;
 }
-.button-controler {
-    position: absolute;
-    align-content: center;
-    right: 50%;
-    left: 50%;
-    margin: 10px;
-    padding: 5px 5px;
-    z-index: 1;
-}
 .overlay-video {
   position: absolute;
   right: 0px;
@@ -111,5 +110,22 @@ export default {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg); /* Safari and Chrome */
   -moz-transform: rotateY(180deg); /* Firefox */
+}
+.red-div {
+  background-color: red;
+  position: absolute;
+  top: 0;
+  right: 0px;
+  width: 16rem;
+  height: 100%;
+  z-index: 4;
+}
+.participants-enter-active,
+.participants-leave-active {
+  transition: all 500ms ease;
+}
+.participants-enter-from,
+.participants-leave-to {
+  transform: translate(16rem);
 }
 </style>
