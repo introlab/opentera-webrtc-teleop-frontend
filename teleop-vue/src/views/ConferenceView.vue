@@ -3,7 +3,7 @@
     <div class="flex-outer-container full-height bg-dark">
       <div class="flex-inner-container full-height" v-on:mousemove="showButtons">
         <video-conference
-          v-bind:client-list="clientList"
+          v-bind:client-list="clientsInCall"
           v-bind:is-fullscreen="true"
         >
         </video-conference>
@@ -19,9 +19,12 @@
       <button-conference></button-conference>
     </div>
     <transition name="participants">
-      <div class="red-div" v-if="showParticipants">
-          
-      </div>
+      <participants-list
+        class="right-side-bar" 
+        v-if="showParticipants" 
+        v-bind:clients-in-call="clientsInCall"
+        v-bind:clients-in-room="clientsInRoom">
+      </participants-list>
     </transition>
   </div>
 </template>
@@ -35,12 +38,14 @@ import useParticipantsList from "../composables/ConferenceView/useParticipantsLi
 
 import VideoConference from "../components/VideoConference";
 import ButtonConference from "../components/ButtonConference";
+import ParticipantsList from '../components/ParticipantsList';
 
 export default {
     name: "conference-view",
     components: {
       VideoConference,
-      ButtonConference
+      ButtonConference,
+      ParticipantsList
     },
     data() {
       return {
@@ -64,8 +69,11 @@ export default {
       };
     },
     computed: {
-        clientList() {
-            return this.$store.state.opentera.clientList;
+        clientsInCall() {
+            return this.$store.state.opentera.clientsInCall;
+        },
+        clientsInRoom() {
+          return this.$store.state.opentera.clientsInRoom;
         }
     }
 }
@@ -111,13 +119,15 @@ export default {
   -webkit-transform: rotateY(180deg); /* Safari and Chrome */
   -moz-transform: rotateY(180deg); /* Firefox */
 }
-.red-div {
-  background-color: red;
+.right-side-bar {
+  color: #fff;
+  background-color: var(--bs-dark);
   position: absolute;
   top: 0;
   right: 0px;
   width: 16rem;
   height: 100%;
+  padding: 1rem 0;
   z-index: 4;
 }
 .participants-enter-active,

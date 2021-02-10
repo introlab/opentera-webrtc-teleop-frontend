@@ -9,7 +9,6 @@ export default function(props, localStream) {
   const store = useStore();
   const { name, data, room } = toRefs(props);
 
-  const clientList = computed(() => store.state.opentera.clientList);
   const streamClient = ref();
 
   // Configurations
@@ -43,9 +42,8 @@ export default function(props, localStream) {
     streamClient.value.onSignalingConnectionError = message => {
       alert(message);
     };
-    // eslint-disable-next-line
-    streamClient.value.onRoomClientsChange = client => {
-      // TODO
+    streamClient.value.onRoomClientsChange = clients => {
+      store.commit("opentera/setClientInRoom", clients)
     };
     // Accept or not the incoming call
     streamClient.value.callAcceptor = () => {
@@ -53,7 +51,7 @@ export default function(props, localStream) {
       return true;
     }
     streamClient.value.onAddRemoteStream = (id, name, clientData, stream) => {
-      store.commit("opentera/pushClient", { id, name, clientData, stream });
+      store.commit("opentera/pushClientInCall", { id, name, clientData, stream });
     };
     // eslint-disable-next-line
     streamClient.value.onClientConnect = (id, name, clientData) => {
@@ -61,8 +59,8 @@ export default function(props, localStream) {
     };
     // eslint-disable-next-line
     streamClient.value.onClientDisconnect = (id, name, clientData) => {
-      store.commit("opentera/removeClientById", id);
-      if (store.state.opentera.clientList.length <= 0)
+      store.commit("opentera/removeClientInCallById", id);
+      if (store.state.opentera.clientsInCall.length <= 0)
         store.commit("opentera/setCallState", false);
     };
   };
@@ -78,7 +76,12 @@ export default function(props, localStream) {
     connectEvents();
 
     await streamClient.value.connect();
+
+    // Save this client state
+    store.commit("opentera/setThisClient", { id: streamClient.value.id, name: name, data: data, room: room });
   };
+
+  const clientList = computed(() => store.state.opentera.clientList);
 
   return { clientList, streamClient, connect };
 }

@@ -2,17 +2,25 @@
 const OpenteraStates = {
     namespaced: true,
     state: () => ({
-        clientList: [],
+        thisClient: {},
+        clientsInCall: [],
+        clientsInRoom: [],
         isInCall: false,
         isMuted: false,
         isCameraOff: false
     }),
     mutations: {
-        pushClient(state, payload) {
-            state.clientList.push(payload);
+        setThisClient(state, payload) {
+            state.thisClient = payload;
         },
-        removeClientById(state, id) {
-            state.clientList = state.clientList.filter(client => client.id !== id);
+        pushClientInCall(state, payload) {
+            state.clientsInCall.push(payload);
+        },
+        removeClientInCallById(state, id) {
+            state.clientsInCall = state.clientsInCall.filter(client => client.id !== id);
+        },
+        setClientInRoom(state, payload) {
+            state.clientsInRoom = payload;
         },
 
         // Event mutations
