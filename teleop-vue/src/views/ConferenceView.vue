@@ -19,12 +19,20 @@
       <button-conference></button-conference>
     </div>
     <transition name="participants">
-      <participants-list
-        class="right-side-bar" 
-        v-if="showParticipants" 
-        v-bind:clients-in-call="clientsInCall"
-        v-bind:clients-in-room="clientsInRoom">
-      </participants-list>
+      <div class="right-side-bar" v-if="showParticipants">
+        <div class="participants-top-bar">
+          <span class="participants-title">Participants</span>
+          <button type="button" class="icon-button" v-on:click="closeParticipantsEvent">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+          </button>
+        </div>
+        <participants-list 
+          v-bind:clients-in-call="clientsInCall"
+          v-bind:clients-in-room="clientsInRoom">
+        </participants-list>
+      </div>
     </transition>
   </div>
 </template>
@@ -59,13 +67,14 @@ export default {
 
       useVideoOverlay(overlayVideoRef);
       const { showButtons } = useButtons(toolbarRef, overlayVideoRef);
-      const { showParticipants } = useParticipantsList(overlayVideoRef);
+      const { showParticipants, closeParticipantsEvent } = useParticipantsList(overlayVideoRef);
 
       return { 
         overlayVideoRef,
         toolbarRef,
         showButtons,
-        showParticipants
+        showParticipants,
+        closeParticipantsEvent
       };
     },
     computed: {
@@ -137,5 +146,36 @@ export default {
 .participants-enter-from,
 .participants-leave-to {
   transform: translate(16rem);
+}
+.icon-button {
+    display: inline-block;
+    color: inherit;
+    border-color: rgba(255, 255, 255, 0.3);
+    border-radius: 0.25rem !important;
+    background-color: transparent;
+}
+.icon-button:focus {
+    outline: none;
+}
+.icon-button > svg {
+    transition: filter 150ms ease-in-out, -webkit-filter 150ms ease-in-out;
+}
+.icon-button:hover > svg {
+    -webkit-filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
+    filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
+}
+.participants-top-bar {
+  position: relative;
+  display: inline-flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 0 0.5rem;
+  width: 100%;
+}
+.participants-title {
+  font-size: 1.25rem;
+  font-weight: 1000;
+  text-align: start;
+  line-height: 2;
 }
 </style>
