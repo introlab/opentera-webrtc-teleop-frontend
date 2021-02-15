@@ -1,8 +1,12 @@
 import { createStore } from "vuex";
 
-export default createStore({
+import Router from "./modules/router";
+
+export default createStore<any>({
   state: {},
   mutations: {},
   actions: {},
-  modules: {}
+  modules: {
+    router: Router
+  }
 });
