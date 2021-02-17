@@ -1,6 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import store from "../store";
+
+import Home from "../views/Home.vue";
 
 const dev = store.state.router.dev;
 const operator = store.state.router.operator;
@@ -10,7 +12,7 @@ const routes: Array<any> = [
     // TODO Check for auth
     path: dev.path,
     name: dev.name,
-    //component: DeveloperView,
+    component: Home,
     children: [
       {
         name: dev.childrens.dashboard.name,
@@ -30,7 +32,7 @@ const routes: Array<any> = [
   },
   {
     path: operator.path,
-    name: operator.name,
+    name: operator.name
     //component: OperatorView
   }
 ];
