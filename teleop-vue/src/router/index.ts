@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import store from "../store";
 
-import Home from "../views/Home.vue";
+import { DevelopperView } from "@/views/DevelopperView";
 
 const dev = store.state.router.dev;
 const operator = store.state.router.operator;
@@ -12,7 +12,7 @@ const routes: Array<any> = [
     // TODO Check for auth
     path: dev.path,
     name: dev.name,
-    component: Home,
+    component: DevelopperView,
     children: [
       {
         name: dev.childrens.dashboard.name,
