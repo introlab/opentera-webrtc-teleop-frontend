@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <router-link class="navbar-brand" v-bind:to="defaultPath">{{brand}}</router-link>
             <button class="icon-button navbar-toggler" type="button" v-on:click="navToggler">
-            <svg-icon class="navbar-toggler-icon" icon="list"></svg-icon>
+                <svg-icon class="navbar-toggler-icon" icon="list"></svg-icon>
             </button>
             <div class="flex-container navbar-collapse" v-show="showNav">
                 <ul ref="nav" class="navbar-nav">
@@ -15,7 +15,7 @@
                         </router-link>
                     </li>
                 </ul>
-            </div>     
+            </div>
         </div>
     </nav>
 </template>
@@ -51,7 +51,6 @@ export default {
         navToggler() {
             this.showNav = !this.showNav;
         }
-        
     }
 }
 </script>

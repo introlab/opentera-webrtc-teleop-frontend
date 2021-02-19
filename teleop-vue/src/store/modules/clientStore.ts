@@ -32,7 +32,7 @@ const ClientStore = {
     stream: undefined,
     isInCall: false,
     isMuted: false,
-    isCameraOn: false
+    isCameraOn: true
   }),
   mutations: {
     setClient(state: Client, payload: Client) {
