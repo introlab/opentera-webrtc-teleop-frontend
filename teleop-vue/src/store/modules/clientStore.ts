@@ -51,7 +51,55 @@ const ClientStore = {
       state.isCameraOn = isCameraOn;
     }
   },
-  actions: {},
+  actions: {
+    toggleCall(context: any) {
+      return new Promise<void>((resolve, reject) => {
+        if (!context.rootState.opentera.streamClient) {
+          reject(new Error("Unable to call, you are not connected."));
+          return;
+        }
+
+        if (context.rootState.opentera.clientsInRoom.length < 2) {
+          reject(new Error("There are no participants to call."));
+          return;
+        }
+        
+        context.commit("setCallState", !context.state.isInCall);
+        context.state.isInCall ? context.rootState.opentera.streamClient.callAll() : context.rootState.opentera.streamClient.hangUpAll();
+        resolve();
+      })
+    },
+
+    toggleMute(context: any) {
+      return new Promise<void>((resolve, reject) => {
+        if (!context.rootState.opentera.localStream) {
+          reject(new Error("Unable to toggle the mic options, you are not streaming."));
+          return;
+        }
+
+        context.commit("setMuteState", !context.state.isMuted);
+        context.rootState.opentera.localStream.getAudioTracks().forEach((track: any) => {
+          track.enabled = context.state.isMuted;
+        });
+        resolve();
+      });
+    },
+
+    toggleCamera(context: any) {
+      return new Promise<void>((resolve, reject) => {
+        if (!context.rootState.opentera.localStream) {
+          reject(new Error("Unable to toggle the camera options, you are not streaming."));
+          return;
+        }
+
+        context.commit("setCameraState", !context.state.isCameraOn);
+        context.rootState.opentera.localStream.getVideoTracks().forEach((track: any) => {
+          track.enabled = context.state.isCameraOn;
+        });
+        resolve();
+      });
+    }
+  },
   modules: {}
 };
 

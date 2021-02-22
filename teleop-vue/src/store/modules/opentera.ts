@@ -75,45 +75,48 @@ const Opentera = {
   },
 
   actions: {
-    async initialize(context: any, payload: Client) {
-      context.commit("localClient/setClient", payload);
+    initialize(context: any, payload: Client) {
+      return new Promise<void>(resolve => {
+        context.commit("localClient/setClient", payload);
 
-      const signalingServerConfirguration: SignalingServerConfirguration = {
-        url: "http://127.0.0.1:40075", // TODO NOT PRODUCTION READY
-        name: payload.name,
-        data: payload.data,
-        room: payload.room
-      };
+        const signalingServerConfirguration: SignalingServerConfirguration = {
+          url: "http://127.0.0.1:40075", // TODO NOT PRODUCTION READY
+          name: payload.name,
+          data: payload.data,
+          room: payload.room
+        };
 
-      await context.dispatch("fetchLocalStream");
+        context.dispatch("fetchLocalStream");
 
-      const streamConfiguration: StreamConfiguration = {
-        localStream: context.state.localStream,
-        isSendOnly: false
-      };
+        const streamConfiguration: StreamConfiguration = {
+          localStream: context.state.localStream,
+          isSendOnly: false
+        };
 
-      const dataChannelConfiguration = {};
+        const dataChannelConfiguration = {};
 
-      const rtcConfiguration: RtcConfiguration = {
-        iceServers: [
-          {
-            urls: "stun:stun.l.google.com:19302" // TODO NOT PRODUCTION READY
-          }
-        ]
-      };
+        const rtcConfiguration: RtcConfiguration = {
+          iceServers: [
+            {
+              urls: "stun:stun.l.google.com:19302" // TODO NOT PRODUCTION READY
+            }
+          ]
+        };
 
-      context.commit(
-        "setStreamClient",
-        new openteraWebrtcWebClient.StreamDataChannelClient(
-          signalingServerConfirguration,
-          streamConfiguration,
-          dataChannelConfiguration,
-          rtcConfiguration,
-          context.state.logger
-        )
-      );
+        context.commit(
+          "setStreamClient",
+          new openteraWebrtcWebClient.StreamDataChannelClient(
+            signalingServerConfirguration,
+            streamConfiguration,
+            dataChannelConfiguration,
+            rtcConfiguration,
+            context.state.logger
+          )
+        );
 
-      context.dispatch("connectStreamClientEvents");
+        context.dispatch("connectStreamClientEvents");
+        resolve();
+      });
     },
 
     connectStreamClientEvents({ state, commit }: {state: State; commit: any;}) {

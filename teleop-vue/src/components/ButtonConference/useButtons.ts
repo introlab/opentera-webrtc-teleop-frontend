@@ -12,9 +12,20 @@ export default function() {
     const isMuted = computed(() => localClient.isMuted);
     const isCameraOn = computed(() =>localClient.isCameraOn);
 
-    const toggleCall = () => store.commit(namespace + "setCallState", !localClient.isInCall);
-    const toggleMute = () => store.commit(namespace + "setMuteState", !localClient.isMuted);
-    const toggleCamera = () => store.commit(namespace + "setCameraState", !localClient.isCameraOn);
+    const toggleCall = () => store.dispatch(namespace + "toggleCall").catch(error => {
+        // TODO
+        alert(error.message);
+    });
+
+    const toggleMute = () => store.dispatch(namespace + "toggleMute").catch(error => {
+        // TODO
+         alert(error.message);
+    });
+
+    const toggleCamera = () => store.dispatch(namespace + "toggleCamera").catch(error => {
+        // TODO
+        alert(error.message);
+    });
 
     return {
         isInCall,
