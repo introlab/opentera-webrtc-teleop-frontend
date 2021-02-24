@@ -1,0 +1,33 @@
+.container-fluid {
+    height: 100%;
+}
+
+.toolbar {
+    --transition-speed: 500ms;
+    --default-height: 0px;
+    --hovering-height: 7rem;
+    --hovering-video-height: 6rem;
+
+    position: absolute;
+    bottom: 0px;
+    width: 100vw;
+    height: var(--default-height);
+    transition: height var(--transition-speed) ease-in-out;
+}
+
+.overlay-video {
+    position: absolute;
+    right: 0px;
+    bottom: var(--default-height);
+    margin: 1.5rem;
+    padding: 5px;
+    width: 20%;
+    transition: bottom var(--transition-speed) ease-in-out;
+    z-index: 3;
+}
+
+.mirror-y {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+}

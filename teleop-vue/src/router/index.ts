@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import store from "../store";
 
 import { DevelopperView } from "@/views/DevelopperView";
+import { ConferenceView } from "@/views/ConferenceView";
 
 const dev = store.state.router.dev;
 const operator = store.state.router.operator;
@@ -21,7 +22,7 @@ const routes: Array<any> = [
       {
         name: dev.childrens.conference.name,
         path: dev.childrens.conference.path,
-        //component: ConferenceView,
+        component: ConferenceView,
         props: true
       },
       {
