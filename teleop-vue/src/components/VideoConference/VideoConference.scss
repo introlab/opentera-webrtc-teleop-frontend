@@ -1,0 +1,11 @@
+.container-fluid {
+    height: 100%;
+    padding-right: .75rem;
+    padding-left: .75rem;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+.container-fluid > * {
+    width: 100%;
+    height: 100%;
+}
