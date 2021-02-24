@@ -5,10 +5,10 @@ export interface Client {
   name?: string;
   data?: Record<string, any>; // TODO define data interface
   room?: string;
-  stream?: Record<string, any>;
-  isInCall: boolean;
-  isMuted: boolean;
-  isCameraOn: boolean;
+  stream?: MediaStream;
+  isInCall?: boolean;
+  isMuted?: boolean;
+  isCameraOn?: boolean;
 }
 
 export function copyAttribute<T, K extends keyof T>(obj1: T, obj2: T, key: K) {

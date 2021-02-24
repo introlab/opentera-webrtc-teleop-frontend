@@ -31,6 +31,7 @@ export default {
 .svg-container {
     width: 100%;
     height: auto;
+    max-height: 100%;
     display: inline-flex;
 }
 </style>

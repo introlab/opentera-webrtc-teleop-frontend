@@ -75,48 +75,46 @@ const Opentera = {
   },
 
   actions: {
-    initialize(context: any, payload: Client) {
-      return new Promise<void>(resolve => {
-        context.commit("localClient/setClient", payload);
+    async initialize(context: any, payload: Client) {
+      
+      context.commit("localClient/setClient", payload);
 
-        const signalingServerConfirguration: SignalingServerConfirguration = {
-          url: "http://127.0.0.1:40075", // TODO NOT PRODUCTION READY
-          name: payload.name,
-          data: payload.data,
-          room: payload.room
-        };
+      const signalingServerConfirguration: SignalingServerConfirguration = {
+        url: "http://127.0.0.1:40075", // TODO NOT PRODUCTION READY
+        name: payload.name,
+        data: payload.data,
+        room: payload.room
+      };
 
-        context.dispatch("fetchLocalStream");
+      await context.dispatch("fetchLocalStream");
 
-        const streamConfiguration: StreamConfiguration = {
-          localStream: context.state.localStream,
-          isSendOnly: false
-        };
+      const streamConfiguration: StreamConfiguration = {
+        localStream: context.state.localStream,
+        isSendOnly: false
+      };
 
-        const dataChannelConfiguration = {};
+      const dataChannelConfiguration = {};
 
-        const rtcConfiguration: RtcConfiguration = {
-          iceServers: [
-            {
-              urls: "stun:stun.l.google.com:19302" // TODO NOT PRODUCTION READY
-            }
-          ]
-        };
+      const rtcConfiguration: RtcConfiguration = {
+        iceServers: [
+          {
+            urls: "stun:stun.l.google.com:19302" // TODO NOT PRODUCTION READY
+          }
+        ]
+      };
 
-        context.commit(
-          "setStreamClient",
-          new openteraWebrtcWebClient.StreamDataChannelClient(
-            signalingServerConfirguration,
-            streamConfiguration,
-            dataChannelConfiguration,
-            rtcConfiguration,
-            context.state.logger
-          )
-        );
+      context.commit(
+        "setStreamClient",
+        new openteraWebrtcWebClient.StreamDataChannelClient(
+          signalingServerConfirguration,
+          streamConfiguration,
+          dataChannelConfiguration,
+          rtcConfiguration,
+          context.state.logger
+        )
+      );
 
-        context.dispatch("connectStreamClientEvents");
-        resolve();
-      });
+      context.dispatch("connectStreamClientEvents");
     },
 
     connectStreamClientEvents({ state, commit }: {state: State; commit: any;}) {
@@ -135,7 +133,7 @@ const Opentera = {
       state.streamClient.onRoomClientsChange = (clients: Array<Record<string, any>>) => {
         commit("updateClientsInRoom", clients);
       };
-      state.streamClient.onAddRemoteStream = (id: string, name: string, clientData: Record<string, any>, stream: Record<string, any>) => {
+      state.streamClient.onAddRemoteStream = (id: string, name: string, clientData: Record<string, any>, stream: MediaStream) => {
         commit("addClientInCall", { id: id, name: name, data: clientData, stream: stream });
       };
       state.streamClient.onClientConnect = (id: string, name: string, clientData: Record<string, any>) => {
@@ -152,7 +150,7 @@ const Opentera = {
     fetchLocalStream(context: any) {
       return openteraWebrtcWebClient.devices
         .getDefaultStream()
-        .then((stream: any): void => {
+        .then((stream: MediaStream): void => {
           context.commit("setLocalStream", stream);
         });
     },

@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar bg-dark">
+    <nav class="navbar bg-secondary-dark">
         <div class="container-fluid">
             <router-link class="navbar-brand" v-bind:to="defaultPath">{{brand}}</router-link>
             <button class="icon-button navbar-toggler" type="button" v-on:click="navToggler">
