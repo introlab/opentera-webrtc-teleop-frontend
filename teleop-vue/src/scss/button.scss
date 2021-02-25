@@ -11,17 +11,17 @@ button:not(:disabled) {
 .icon-button {
     display: inline-block;
     color: inherit;
-    border: 1px solid transparent !important;
+    border: 1px solid transparent;
     background-color: transparent;
     transition: box-shadow 150ms ease-in-out;
 }
 .icon-button:focus {
     outline: none;
 }
-.icon-button > svg {
+.icon-button > * {
     transition: filter 150ms ease-in-out, -webkit-filter 150ms ease-in-out;
 }
-.icon-button:hover > svg {
+.icon-button:hover > * {
     -webkit-filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
     filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
 }

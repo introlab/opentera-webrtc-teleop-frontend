@@ -31,3 +31,12 @@
     -webkit-transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
 }
+
+.participants-enter-active,
+.participants-leave-active {
+  transition: all 500ms ease;
+}
+.participants-enter-from,
+.participants-leave-to {
+  transform: translate(20rem);
+}

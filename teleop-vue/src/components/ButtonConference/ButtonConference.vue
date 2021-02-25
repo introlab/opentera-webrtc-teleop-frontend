@@ -15,8 +15,9 @@
             </button>
         </div>
         <div class="btn-group" role="group" aria-label="Group button">
-            <button type="button" class="btn btn-primary-dark" v-on:click="null">
-                <svg-icon icon="people-fill"/>
+            <button type="button" class="btn btn-primary-dark" v-on:click="toggleParticipantsList">
+                <svg-icon icon="people-fill" v-if="showParticipants"/>
+                <svg-icon icon="people" v-else/>
             </button>
         </div>
     </div>
@@ -33,10 +34,28 @@ export default {
     },
     setup() {
 
-        const { isInCall, isMuted, isCameraOn, toggleCall, toggleMute, toggleCamera } = useButtons();
+        const { 
+            isInCall, 
+            isMuted, 
+            isCameraOn, 
+            showParticipants, 
+
+            toggleCall, 
+            toggleMute, 
+            toggleCamera, 
+            toggleParticipantsList 
+        } = useButtons();
 
         return {
-            isInCall, isMuted, isCameraOn, toggleCall, toggleMute, toggleCamera
+            isInCall, 
+            isMuted, 
+            isCameraOn,
+            showParticipants,
+
+            toggleCall, 
+            toggleMute, 
+            toggleCamera,
+            toggleParticipantsList
         }
     }
 }

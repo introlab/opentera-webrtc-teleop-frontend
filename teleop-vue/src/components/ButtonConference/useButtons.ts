@@ -11,6 +11,7 @@ export default function() {
     const isInCall = computed(() => localClient.isInCall);
     const isMuted = computed(() => localClient.isMuted);
     const isCameraOn = computed(() =>localClient.isCameraOn);
+    const showParticipants = computed(() => store.state.opentera.showParticipants);
 
     const toggleCall = () => store.dispatch(namespace + "toggleCall").catch(error => {
         // TODO
@@ -27,13 +28,17 @@ export default function() {
         alert(error.message);
     });
 
+    const toggleParticipantsList = () => store.commit("opentera/toggleParticipantsList");
+
     return {
         isInCall,
         isMuted,
         isCameraOn,
+        showParticipants,
 
         toggleCall,
         toggleMute,
-        toggleCamera
+        toggleCamera,
+        toggleParticipantsList
     }
 }

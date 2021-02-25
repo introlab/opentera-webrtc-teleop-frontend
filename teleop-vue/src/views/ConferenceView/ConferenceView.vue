@@ -13,23 +13,31 @@
             </video>
             <button-conference/>
         </div>
+        <transition name="participants">
+            <participants-list v-if="showParticipants"
+                v-bind:clients-in-call="clientsInCall"
+                v-bind:clients-in-room="clientsInRoom">
+            </participants-list>
+        </transition>
     </div>
 </template>
 
 <script>
-import { computed, ref, watch } from "vue";
+import { ref } from "vue";
+
 import useToolbar from "./useToolbar";
 import useVideoLayout from "./useVideoOverlay";
 
 import { VideoConference } from "@/components/VideoConference";
 import { ButtonConference } from '@/components/ButtonConference';
-import { useStore } from 'vuex';
+import { ParticipantsList } from "@/components/ParticipantsList";
 
 export default {
     name: "conference-view",
     components: {
         VideoConference,
-        ButtonConference
+        ButtonConference,
+        ParticipantsList
     },
     setup() {
 
@@ -51,6 +59,9 @@ export default {
         },
         clientsInRoom() {
             return this.$store.state.opentera.clientsInRoom;
+        },
+        showParticipants() {
+            return this.$store.state.opentera.showParticipants;
         }
     }
 }

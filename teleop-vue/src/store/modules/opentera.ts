@@ -32,6 +32,7 @@ export interface State {
   logger: Logger | null;
   clientsInRoom: Array<Client>;
   clientsInCall: Array<Client>;
+  showParticipants: boolean;
 };
 
 const Opentera = {
@@ -41,7 +42,8 @@ const Opentera = {
     streamClient: null,
     logger: (...args) => console.log(...args),
     clientsInRoom: [],
-    clientsInCall: []
+    clientsInCall: [],
+    showParticipants: false
   }),
 
   mutations: {
@@ -71,6 +73,10 @@ const Opentera = {
 
     setCallAcceptor(state: State, payload: () => boolean) {
       state.streamClient.callAcceptor = payload;
+    },
+
+    toggleParticipantsList(state: State) {
+      state.showParticipants = !state.showParticipants;
     }
   },
 
