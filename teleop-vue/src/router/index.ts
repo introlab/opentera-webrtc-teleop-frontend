@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, Router } from "vue-router";
 
 import store from "../store";
 
@@ -38,9 +38,28 @@ const routes: Array<any> = [
   }
 ];
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-});
+export default function() : Router {
 
-export default router;
+  const pathName: string = window.location.pathname;
+  const basePath = pathName.substring(0,  pathName.lastIndexOf('/'));
+
+  const router = store.state.router
+
+  // Remove this application's routes from the base path used by vue-router 
+  for (const key in router) {
+    if (router[key]) {
+      const regex = new RegExp(router[key].path + ".*");
+
+      if (regex.test(basePath))
+        return createRouter({
+          history: createWebHistory(basePath.replace(regex, "/")),
+          routes
+        })
+    }
+  }
+
+  return createRouter({
+    history: createWebHistory(basePath ? basePath : process.env.BASE_URL),
+    routes
+  })
+};
