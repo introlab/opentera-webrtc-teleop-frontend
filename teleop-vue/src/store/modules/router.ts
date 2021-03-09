@@ -25,6 +25,14 @@ const Router = {
     operator: {
       name: "Operator",
       path: "/operator"
+    },
+    client: {
+      name: "Client",
+      path: "/client"
+    },
+    notFound: {
+      name: "404",
+      path: "*"
     }
   })
 };

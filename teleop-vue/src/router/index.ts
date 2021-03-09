@@ -4,9 +4,12 @@ import store from "../store";
 
 import { DevelopperView } from "@/views/DevelopperView";
 import { ConferenceView } from "@/views/ConferenceView";
+import { NotFoundView } from "@/views/NotFoundView";
 
 const dev = store.state.router.dev;
 const operator = store.state.router.operator;
+const client = store.state.router.client;
+const notFound = store.state.router.notFound;
 
 const routes: Array<any> = [
   {
@@ -35,6 +38,16 @@ const routes: Array<any> = [
     path: operator.path,
     name: operator.name
     //component: OperatorView
+  },
+  {
+    path: client.path,
+    name: client.name
+    //component: TODO
+  },
+  {
+    path: notFound.path,
+    name: notFound.name,
+    component: NotFoundView
   }
 ];
 
