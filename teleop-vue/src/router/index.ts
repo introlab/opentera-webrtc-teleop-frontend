@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, Router } from "vue-router";
 
 import store from "../store";
+import { getBasePath } from "@/config/location";
 
 import { DevelopperView } from "@/views/DevelopperView";
 import { ConferenceView } from "@/views/ConferenceView";
@@ -17,20 +18,24 @@ const routes: Array<any> = [
     path: dev.path,
     name: dev.name,
     component: DevelopperView,
+    props: (route: any) => ({
+      name: route.query.name,
+      password: route.query.pwd
+    }),
     children: [
       {
-        name: dev.childrens.dashboard.name,
-        path: dev.childrens.dashboard.path
+        name: dev.childrens?.dashboard.name,
+        path: dev.childrens?.dashboard.path
       },
       {
-        name: dev.childrens.conference.name,
-        path: dev.childrens.conference.path,
+        name: dev.childrens?.conference.name,
+        path: dev.childrens?.conference.path,
         component: ConferenceView,
         props: true
       },
       {
-        name: dev.childrens.map.name,
-        path: dev.childrens.map.path
+        name: dev.childrens?.map.name,
+        path: dev.childrens?.map.path
       }
     ]
   },
@@ -52,27 +57,8 @@ const routes: Array<any> = [
 ];
 
 export default function() : Router {
-
-  const pathName: string = window.location.pathname;
-  const basePath = pathName.substring(0,  pathName.lastIndexOf('/'));
-
-  const router = store.state.router
-
-  // Remove this application's routes from the base path used by vue-router 
-  for (const key in router) {
-    if (router[key]) {
-      const regex = new RegExp(router[key].path + ".*");
-
-      if (regex.test(basePath))
-        return createRouter({
-          history: createWebHistory(basePath.replace(regex, "/")),
-          routes
-        })
-    }
-  }
-
   return createRouter({
-    history: createWebHistory(basePath ? basePath : process.env.BASE_URL),
+    history: createWebHistory(getBasePath()),
     routes
   })
 };

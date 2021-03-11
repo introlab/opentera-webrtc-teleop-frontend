@@ -1,8 +1,17 @@
 // src/store/modules/router.ts
 
+export interface RouteRawConfig {
+  path: string;
+  name?: string;
+  defaultPath?: string;
+  childrens?: Record<string, RouteRawConfig>;
+}
+
+export type RouterState = Record<string, RouteRawConfig>;
+
 const Router = {
   namespaced: true,
-  state: () => ({
+  state: (): RouterState => ({
     dev: {
       name: "Dev",
       path: "/dev",
@@ -32,7 +41,7 @@ const Router = {
     },
     notFound: {
       name: "404",
-      path: "*"
+      path: "/:catchAll(.*)"
     }
   })
 };

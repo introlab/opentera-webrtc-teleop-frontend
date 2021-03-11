@@ -23,6 +23,12 @@ export default {
     components: {
         NavigationBar
     },
+    props: {
+        name: String,
+        data: Object,
+        room: String,
+        password: String
+    },
     computed: {
         ...mapState({
             links: state => {
@@ -48,7 +54,7 @@ export default {
         })
     },
     mounted() {
-        this.$store.dispatch("opentera/initialize", { name: "Gab", data: {}, room: "chat" }).then(() => {
+        this.$store.dispatch("opentera/initialize", { name: this.name, data: {}, room: "chat", password: this.password }).then(() => {
             this.$store.dispatch("opentera/connectStreamClient").then(() => console.log("CONNECTED"));
         });
     }

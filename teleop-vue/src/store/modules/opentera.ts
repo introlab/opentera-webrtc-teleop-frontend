@@ -1,14 +1,17 @@
 // src/store/modules/opentera.ts
 
+import { getBasePath, getOrigin } from "@/config/location";
+
 import ClientStore, { Client } from "./clientStore";
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 
 export interface SignalingServerConfirguration {
-  url: string;
+  url?: string;
   name?: string;
   data?: Record<string, any>;
   room?: string;
+  password?: string;
 }
 
 export interface StreamConfiguration {
@@ -81,15 +84,18 @@ const Opentera = {
   },
 
   actions: {
-    async initialize(context: any, payload: Client) {
+    async initialize(context: any, payload: SignalingServerConfirguration) {
       
       context.commit("localClient/setClient", payload);
 
+      const signalingServerURL = await context.dispatch("getSignalingServerURL");
+
       const signalingServerConfirguration: SignalingServerConfirguration = {
-        url: "http://127.0.0.1:40075", // TODO NOT PRODUCTION READY
+        url: process.env.NODE_ENV !== "production" ? process.env.VUE_APP_SIGNALING_SERVER_URL : signalingServerURL + "/socket.io",
         name: payload.name,
         data: payload.data,
-        room: payload.room
+        room: payload.room,
+        password: payload.password
       };
 
       await context.dispatch("fetchLocalStream");
@@ -102,11 +108,7 @@ const Opentera = {
       const dataChannelConfiguration = {};
 
       const rtcConfiguration: RtcConfiguration = {
-        iceServers: [
-          {
-            urls: "stun:stun.l.google.com:19302" // TODO NOT PRODUCTION READY
-          }
-        ]
+        iceServers: await openteraWebrtcWebClient.iceServers.fetchFromServer(signalingServerURL + "/iceservers", payload.password)
       };
 
       context.commit(
@@ -173,6 +175,10 @@ const Opentera = {
           resolve();
         });
       });
+    },
+
+    getSignalingServerURL() {
+      return getOrigin() + getBasePath();
     }
   },
 
