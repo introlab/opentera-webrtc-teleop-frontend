@@ -1,26 +1,7 @@
-// src/store/modules/clientStore.ts
+// src/store/modules/opentera/clientStore.ts
 
-export interface Client {
-  id?: string;
-  name?: string;
-  data?: Record<string, any>; // TODO define data interface
-  room?: string;
-  stream?: MediaStream;
-  isInCall?: boolean;
-  isMuted?: boolean;
-  isCameraOn?: boolean;
-}
-
-export function copyAttribute<T, K extends keyof T>(obj1: T, obj2: T, key: K) {
-  obj1[key] = obj2[key];
-}
-
-export function copyAttributes<T>(copy: T, original: T) {
-  for (const key in original) {
-    if(original[key as keyof T])
-      copyAttribute(copy, original, key as keyof T);
-  }
-}
+import { Client } from "./types";
+import { copyAttributes } from "./utils";
 
 const ClientStore = {
   namespaced: true,

@@ -3,7 +3,7 @@
 process.env.VUE_APP_VERSION = require("./package.json").version;
 
 module.exports = {
-    publicPath: "./",
+    publicPath: process.env.VUE_APP_SUBPATH,
     css: {
         loaderOptions: {
             css: {},

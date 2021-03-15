@@ -20,7 +20,7 @@ export default {
         if (this.$refs.svg.firstElementChild.nodeName === "svg") {
             const svgElement = this.$refs.svg.firstElementChild;
             svgElement.setAttribute("width", "100%");
-            svgElement.setAttribute("height", "auto");
+            svgElement.setAttribute("height", "100%");
             svgElement.classList.add("svg-class");
         }
     }
@@ -30,7 +30,7 @@ export default {
 <style lang="scss" scoped>
 .svg-container {
     width: 100%;
-    height: auto;
+    height: 100%;
     max-height: 100%;
     display: inline-flex;
 }

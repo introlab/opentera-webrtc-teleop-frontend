@@ -1,42 +1,11 @@
 // src/store/modules/opentera.ts
 
-import { getBasePath, getOrigin } from "@/config/location";
-
-import ClientStore, { Client } from "./clientStore";
+import ClientStore from "./clientStore";
+import { Client, Logger, SignalingServerConfirguration, State, StreamDataChannelClient } from "./types";
+import { initDataChannelConfiguration, initRtcConfiguration, initSignalingServerConfiguration, initStreamConfiguration } from "./init";
+import { fetchLocalStream } from "./utils";
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
-
-export interface SignalingServerConfirguration {
-  url?: string;
-  name?: string;
-  data?: Record<string, any>;
-  room?: string;
-  password?: string;
-}
-
-export interface StreamConfiguration {
-  localStream: Record<string, any>;
-  isSendOnly: boolean;
-}
-
-export interface RtcConfiguration {
-  iceServers: [{ urls: string }];
-}
-
-type StreamDataChannelClient = typeof openteraWebrtcWebClient.StreamDataChannelClient;
-
-export interface Logger {
-  (...args: any[]): void | string;
-}
-
-export interface State {
-  localStream: Record<string, any> | null;
-  streamClient: StreamDataChannelClient | null;
-  logger: Logger | null;
-  clientsInRoom: Array<Client>;
-  clientsInCall: Array<Client>;
-  showParticipants: boolean;
-};
 
 const Opentera = {
   namespaced: true,
@@ -50,7 +19,7 @@ const Opentera = {
   }),
 
   mutations: {
-    setLocalStream(state: State, payload: any) {
+    setLocalStream(state: State, payload: MediaStream) {
       state.localStream = payload;
     },
 
@@ -87,29 +56,12 @@ const Opentera = {
     async initialize(context: any, payload: SignalingServerConfirguration) {
       
       context.commit("localClient/setClient", payload);
+      context.commit("setLocalStream", await fetchLocalStream());
 
-      const signalingServerURL = await context.dispatch("getSignalingServerURL");
-
-      const signalingServerConfirguration: SignalingServerConfirguration = {
-        url: process.env.NODE_ENV !== "production" ? process.env.VUE_APP_SIGNALING_SERVER_URL : signalingServerURL + "/socket.io",
-        name: payload.name,
-        data: payload.data,
-        room: payload.room,
-        password: payload.password
-      };
-
-      await context.dispatch("fetchLocalStream");
-
-      const streamConfiguration: StreamConfiguration = {
-        localStream: context.state.localStream,
-        isSendOnly: false
-      };
-
-      const dataChannelConfiguration = {};
-
-      const rtcConfiguration: RtcConfiguration = {
-        iceServers: await openteraWebrtcWebClient.iceServers.fetchFromServer(signalingServerURL + "/iceservers", payload.password)
-      };
+      const signalingServerConfirguration = initSignalingServerConfiguration(payload);
+      const streamConfiguration = initStreamConfiguration(context.state.localStream);
+      const dataChannelConfiguration = initDataChannelConfiguration();
+      const rtcConfiguration = await initRtcConfiguration(payload.password).catch(err => context.state.logger(err));
 
       context.commit(
         "setStreamClient",
@@ -155,14 +107,6 @@ const Opentera = {
       };
     },
 
-    fetchLocalStream(context: any) {
-      return openteraWebrtcWebClient.devices
-        .getDefaultStream()
-        .then((stream: MediaStream): void => {
-          context.commit("setLocalStream", stream);
-        });
-    },
-
     connectStreamClient({ state, commit, rootState }: {state: State; commit: any; rootState: any;}) {
       return new Promise<void>(resolve => {
         state.streamClient.connect().then(() => {
@@ -175,10 +119,6 @@ const Opentera = {
           resolve();
         });
       });
-    },
-
-    getSignalingServerURL() {
-      return getOrigin() + getBasePath();
     }
   },
 

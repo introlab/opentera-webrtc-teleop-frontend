@@ -2,7 +2,7 @@
 
 import { computed, Ref} from "vue";
 
-import { Client } from "@/store/modules/clientStore";
+import { Client } from "@/store/modules/opentera";
 
 export default function(clientsList: Ref<Client[]>) {
     
