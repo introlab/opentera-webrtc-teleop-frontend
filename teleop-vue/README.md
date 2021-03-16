@@ -10,13 +10,13 @@ npm install
 
 ### Start nginx-dev reverse proxy
 ```
-cd nginx-dev & ./start_nginx.sh & cd ..
+cd nginx-dev && ./start_nginx.sh & cd ..
 ```
 
 ### Start the signaling server
 In the [opentera-webrtc-teleop](https://github.com/introlab/opentera-webrtc) repository:
 ```
-cd signaling-server & python3 signaling_server.py --port 4040
+cd signaling-server && python3 signaling_server.py --port 4040
 ```
 You can change the port as you want, be sure to adjust the proxy_pass of the file [opentera-webrtc-teleop-frontend.conf](nginx-dev/opentera-webrtc-teleop-frontend.conf) according to your changes.
 

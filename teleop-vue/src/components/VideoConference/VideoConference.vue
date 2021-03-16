@@ -1,6 +1,6 @@
 <template>
     <div>
-        <media-query query="(min-width: 992px) or ((min-width: 600px) and (max-width: 991.98px) and (orientation: landscape))">
+        <media-query query="(min-width: 992px), (min-aspect-ratio: 1/1)">
             <div class="container-fluid">
                 <div class="row" v-bind:class="'rows-' + nRows + ' cols-' + nColumns">
                     <div
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </media-query>
-        <media-query query="(min-width: 600px) and (max-width: 991.98px) and (orientation: portrait)">
+        <media-query query="(min-width: 600px) and (max-width: 991.98px) and (max-aspect-ratio: 1/1)">
             <div class="container-fluid">
                 <div class="row" v-bind:class="'rows-' + nColumns + ' cols-' + nRows">
                     <div

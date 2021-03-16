@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid" v-on:mousemove="showToolbar">
-        <div class="container-fluid bg-primary-dark">
+        <div class="container-fluid">
             <video-conference 
                 v-bind:clients-list="clientsInCall">
             </video-conference>

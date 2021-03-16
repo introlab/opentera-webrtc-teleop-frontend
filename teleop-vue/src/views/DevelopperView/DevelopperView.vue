@@ -7,7 +7,7 @@
                 v-bind:links="links">
             </navigation-bar>
         </header>
-        <main class="main">
+        <main class="main bg-primary-dark">
             <router-view/>
         </main>
     </div>
@@ -54,7 +54,8 @@ export default {
         })
     },
     mounted() {
-        this.$store.dispatch("opentera/initialize", { name: this.name, data: {}, room: "chat", password: this.password }).then(() => {
+        const name = this.name ? this.name : "Undefined";
+        this.$store.dispatch("opentera/initialize", { name: name, data: {}, room: "chat", password: this.password }).then(() => {
             this.$store.dispatch("opentera/connectStreamClient").then(() => console.log("CONNECTED"));
         });
     }

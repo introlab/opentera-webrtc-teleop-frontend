@@ -1,4 +1,5 @@
 <template>
+  <router-link to="/dev">Click on this link to be redirect</router-link>
   <router-view />
 </template>
 
