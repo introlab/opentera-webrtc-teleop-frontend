@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar bg-secondary-dark">
         <div class="container-fluid">
-            <router-link class="navbar-brand" v-bind:to="defaultPath">{{brand}}</router-link>
+            <router-link class="navbar-brand" v-bind:to="defaultPath">{{brand}} |</router-link>
             <button class="icon-button navbar-toggler" type="button" v-on:click="navToggler">
                 <svg-icon class="navbar-toggler-icon" icon="list"></svg-icon>
             </button>
@@ -11,7 +11,7 @@
                         <router-link
                             class="nav-link"
                             v-bind:to="link">
-                            {{link.name}}
+                            {{link.meta.name}}
                         </router-link>
                     </li>
                 </ul>

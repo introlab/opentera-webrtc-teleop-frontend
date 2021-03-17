@@ -1,7 +1,7 @@
 <template>
   <default-template
     brand="Opentera User Interface"
-    route="dev"
+    route="user"
     v-bind:client="{ name: name, data: data, room: room, password: password}"
   />
 </template>
@@ -10,7 +10,7 @@
 import { DefaultTemplate } from '@/components/DefaultTemplate';
 
 export default {
-    name: "developper-view",
+    name: "user-view",
     components: { 
         DefaultTemplate 
     },
@@ -24,5 +24,5 @@ export default {
 </script>
 
 <style>
-    @import "./DevelopperView.scss";
+    @import "./UserView.scss";
 </style>

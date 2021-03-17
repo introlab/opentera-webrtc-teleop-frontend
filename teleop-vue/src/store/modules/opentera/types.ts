@@ -26,6 +26,7 @@ export interface Logger {
 }
   
 export interface State {
+    isInitPending: boolean;
     localStream: MediaStream | null;
     streamClient: StreamDataChannelClient | null;
     logger: Logger | null;

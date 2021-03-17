@@ -5,11 +5,13 @@ import { getBasePath } from "@/config/location";
 
 import { DevelopperView } from "@/views/DevelopperView";
 import { ConferenceView } from "@/views/ConferenceView";
+import { UserView } from "@/views/UserView";
 import { NotFoundView } from "@/views/NotFoundView";
 
 const dev = store.state.router.dev;
-const operator = store.state.router.operator;
-const client = store.state.router.client;
+const user = store.state.router.user;
+const participant = store.state.router.participant;
+const device = store.state.router.device;
 const notFound = store.state.router.notFound;
 
 const routes: Array<any> = [
@@ -24,30 +26,73 @@ const routes: Array<any> = [
     }),
     children: [
       {
-        name: dev.childrens?.dashboard.name,
-        path: dev.childrens?.dashboard.path
+        path: "",
+        component: ConferenceView
       },
       {
-        name: dev.childrens?.conference.name,
+        path: dev.childrens?.teleop.path,
+        component: NotFoundView // TODO
+      },
+      {
+        path: dev.childrens?.dashboard.path,
+        component: NotFoundView // TODO
+      },
+      {
         path: dev.childrens?.conference.path,
         component: ConferenceView,
         props: true
       },
       {
-        name: dev.childrens?.map.name,
-        path: dev.childrens?.map.path
+        path: dev.childrens?.map.path,
+        component: NotFoundView // TODO
       }
     ]
   },
   {
-    path: operator.path,
-    name: operator.name
-    //component: OperatorView
+    path: user.path,
+    name: user.name,
+    component: UserView,
+    props: (route: any) => ({
+      name: route.query.name,
+      password: route.query.pwd
+    }),
+    children: [
+      {
+        path: "",
+        component: ConferenceView
+      },
+      {
+        path: user.childrens?.teleop.path,
+        component: NotFoundView // TODO
+      },
+      {
+        path: user.childrens?.conference.path,
+        component: ConferenceView,
+        props: true
+      },
+      {
+        path: user.childrens?.map.path,
+        component: NotFoundView // TODO
+      }
+    ]
   },
   {
-    path: client.path,
-    name: client.name
-    //component: TODO
+    path: participant.path,
+    name: participant.name,
+    component: ConferenceView, // TODO
+    props: (route: any) => ({
+      name: route.query.name,
+      password: route.query.pwd
+    })
+  },
+  {
+    path: device.path,
+    name: device.name,
+    component: ConferenceView, // TODO
+    props: (route: any) => ({
+      name: route.query.name,
+      password: route.query.pwd
+    })
   },
   {
     path: notFound.path,

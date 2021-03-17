@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid" v-on:mousemove="showToolbar">
+    <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
         <div class="container-fluid">
             <video-conference 
                 v-bind:clients-list="clientsInCall">
@@ -39,6 +39,12 @@ export default {
         ButtonConference,
         ParticipantsList
     },
+    props: {
+        name: String,
+        data: Object,
+        room: String,
+        password: String
+    },
     setup() {
 
         const toolbarRef = ref(null);
@@ -62,6 +68,14 @@ export default {
         },
         showParticipants() {
             return this.$store.state.opentera.showParticipants;
+        }
+    },
+    mounted() {
+        if (this.$store.state.opentera.streamClient || !this.$store.state.opentera.isInitPending) {
+            const name = this.name ? this.name : "Undefined";
+                this.$store.dispatch("opentera/initialize", { name: name, data: {}, room: "chat", password: this.password }).then(() => {
+                this.$store.dispatch("opentera/connectStreamClient").then(() => console.log("CONNECTED CONFERENCE"));
+            });
         }
     }
 }

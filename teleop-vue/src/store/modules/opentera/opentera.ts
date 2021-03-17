@@ -10,6 +10,7 @@ import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 const Opentera = {
   namespaced: true,
   state: (): State => ({
+    isInitPending: false,
     localStream: null,
     streamClient: null,
     logger: (...args) => console.log(...args),
@@ -19,6 +20,10 @@ const Opentera = {
   }),
 
   mutations: {
+    setInitPendingState(state: State, payload: boolean) {
+      state.isInitPending = payload;
+    },
+
     setLocalStream(state: State, payload: MediaStream) {
       state.localStream = payload;
     },
@@ -55,6 +60,7 @@ const Opentera = {
   actions: {
     async initialize(context: any, payload: SignalingServerConfirguration) {
       
+      context.commit("setInitPendingState", true);
       context.commit("localClient/setClient", payload);
       context.commit("setLocalStream", await fetchLocalStream());
 
@@ -75,6 +81,7 @@ const Opentera = {
       );
 
       context.dispatch("connectStreamClientEvents");
+      context.commit("setInitPendingState", false);
     },
 
     connectStreamClientEvents({ state, commit }: {state: State; commit: any;}) {
