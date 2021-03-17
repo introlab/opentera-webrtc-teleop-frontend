@@ -71,10 +71,10 @@ export default {
         }
     },
     mounted() {
-        if (this.$store.state.opentera.streamClient || !this.$store.state.opentera.isInitPending) {
+        if (this.$store.state.opentera.streamClient === null && !this.$store.state.opentera.isInitPending) {
             const name = this.name ? this.name : "Undefined";
                 this.$store.dispatch("opentera/initialize", { name: name, data: {}, room: "chat", password: this.password }).then(() => {
-                this.$store.dispatch("opentera/connectStreamClient").then(() => console.log("CONNECTED CONFERENCE"));
+                this.$store.dispatch("opentera/connectStreamClient").then(() => console.log("CONNECTED"));
             });
         }
     }
