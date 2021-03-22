@@ -27,6 +27,7 @@ export interface Logger {
   
 export interface State {
     isInitPending: boolean;
+    beforeunloadEventHandler: Function | null
     localStream: MediaStream | null;
     streamClient: StreamDataChannelClient | null;
     logger: Logger | null;
@@ -44,4 +45,5 @@ export interface Client {
     isInCall?: boolean;
     isMuted?: boolean;
     isCameraOn?: boolean;
+    isConnected?: boolean;
 }

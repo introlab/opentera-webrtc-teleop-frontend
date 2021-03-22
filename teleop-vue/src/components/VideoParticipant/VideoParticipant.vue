@@ -35,6 +35,10 @@ export default {
     },
     mounted() {
         this.$refs.video.srcObject = this.stream;
+    },
+    activated() {
+        this.$refs.video.srcObject = this.stream;
+        this.$refs.video.autoplay = true;
     }
 }
 </script>

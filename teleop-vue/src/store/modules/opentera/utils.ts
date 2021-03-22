@@ -31,3 +31,27 @@ export function getSignalingServerURL() {
     else
         return getOrigin() + getBasePath();
 }
+
+export interface PromiseState<T = undefined> extends Promise<T> {
+    isPending?: Function
+}
+
+export function makePromiseState<T>(promise: PromiseState<T>) : T | PromiseState<T> {
+    if (promise.isPending) return promise;
+
+    let isPending = true;
+
+    const result : PromiseState<T> = promise.then(
+        value => {
+            isPending = false;
+            return value;
+        },
+        err => {
+            isPending = false;
+            throw err
+        }
+    );
+
+    result.isPending = () => isPending;
+    return result;
+}

@@ -3,14 +3,24 @@
 import ClientStore from "./clientStore";
 import { Client, Logger, SignalingServerConfirguration, State, StreamDataChannelClient } from "./types";
 import { initDataChannelConfiguration, initRtcConfiguration, initSignalingServerConfiguration, initStreamConfiguration } from "./init";
-import { fetchLocalStream } from "./utils";
+import { fetchLocalStream} from "./utils";
+import { BusyException } from "./exceptions";
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
+
+import { setCookie, getCookie, SESSION_COOKIE } from "@/config/cookie";
+import { useContext } from "@vue/runtime-core";
+
+function setTemporarySessionCookie(config: SignalingServerConfirguration) {
+  // Set a cookie containing the login information with max-age of 5 seconds
+  setCookie(SESSION_COOKIE, JSON.stringify(config), 5)
+}
 
 const Opentera = {
   namespaced: true,
   state: (): State => ({
     isInitPending: false,
+    beforeunloadEventHandler: null,
     localStream: null,
     streamClient: null,
     logger: (...args) => console.log(...args),
@@ -22,6 +32,10 @@ const Opentera = {
   mutations: {
     setInitPendingState(state: State, payload: boolean) {
       state.isInitPending = payload;
+    },
+
+    setBeforeunloadEventHandler(state: State, payload: Function) {
+      state.beforeunloadEventHandler = payload;
     },
 
     setLocalStream(state: State, payload: MediaStream) {
@@ -84,7 +98,7 @@ const Opentera = {
       context.commit("setInitPendingState", false);
     },
 
-    connectStreamClientEvents({ state, commit }: {state: State; commit: any;}) {
+    connectStreamClientEvents({ state, commit, dispatch }: {state: State; commit: any; dispatch: any}) {
       state.streamClient.onSignalingConnectionOpen;
 
       state.streamClient.onSignalingConnectionOpen = () => {
@@ -95,6 +109,7 @@ const Opentera = {
       };
       state.streamClient.onSignalingConnectionError = (message: string) => {
         // TODO
+        dispatch("destroy"); // remove the beforeunload event listener
         alert(message);
       };
       state.streamClient.onRoomClientsChange = (clients: Array<Record<string, any>>) => {
@@ -126,6 +141,48 @@ const Opentera = {
           resolve();
         });
       });
+    },
+
+    initAndConnect(context: any, payload: SignalingServerConfirguration) {
+      return new Promise<void>((resolve, reject) => {
+        
+        if (context.state.streamClient === null && !context.state.isInitPending) {
+        
+          context.commit("setBeforeunloadEventHandler", () => {
+            setTemporarySessionCookie(payload);
+          });
+
+          window.addEventListener("beforeunload", context.state.beforeunloadEventHandler);
+
+          // Check if there is a cookie with the login information
+          let cookie = getCookie(SESSION_COOKIE);
+    
+          if (cookie) // Check for empty string
+            cookie = JSON.parse(cookie);
+
+          if (cookie) { // Check for null
+            payload = cookie as SignalingServerConfirguration;
+          } else {
+            payload = {
+              name: payload.name ? payload.name : "Undefined",
+              data: payload.data ? payload.data : {},
+              room: payload.room ? payload.room : "chat",
+              password: payload.password
+            }
+          }
+
+          context.dispatch("initialize", payload).then(() => {
+            context.dispatch("connectStreamClient").then(() => resolve());
+          })
+
+        } else {
+          reject(new BusyException("Already connect or in process of connecting"));
+        }
+      });
+    },
+
+    destroy(context: any) {
+      window.removeEventListener("beforeunload", context.state.beforeunloadEventHandler);
     }
   },
 

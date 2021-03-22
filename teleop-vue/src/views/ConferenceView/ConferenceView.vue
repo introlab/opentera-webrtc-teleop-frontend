@@ -28,6 +28,8 @@ import { ref } from "vue";
 import useToolbar from "./useToolbar";
 import useVideoLayout from "./useVideoOverlay";
 
+import { BusyException } from "@/store/modules/opentera";
+
 import { VideoConference } from "@/components/VideoConference";
 import { ButtonConference } from '@/components/ButtonConference';
 import { ParticipantsList } from "@/components/ParticipantsList";
@@ -38,6 +40,11 @@ export default {
         VideoConference,
         ButtonConference,
         ParticipantsList
+    },
+    data() {
+        return {
+            client: null
+        }
     },
     props: {
         name: String,
@@ -70,13 +77,30 @@ export default {
             return this.$store.state.opentera.showParticipants;
         }
     },
-    mounted() {
-        if (this.$store.state.opentera.streamClient === null && !this.$store.state.opentera.isInitPending) {
-            const name = this.name ? this.name : "Undefined";
-                this.$store.dispatch("opentera/initialize", { name: name, data: {}, room: "chat", password: this.password }).then(() => {
-                this.$store.dispatch("opentera/connectStreamClient").then(() => console.log("CONNECTED"));
-            });
+    beforeMount() {
+        this.client = {
+            name: this.name,
+            data: this.data,
+            room: this.room,
+            password: this.password
         }
+
+        this.$store.dispatch("opentera/initAndConnect", this.client)
+            .then(() => console.log("CONNECTED")) // Do something after ther connection
+            .catch(err => {
+                if (!(err instanceof BusyException))
+                    console.log(err)
+            });
+    },
+    activated() {
+        // Reactivate the local video when it's render from cache
+        const overlayVideo = this.$refs.overlayVideoRef;
+        overlayVideo.muted = true;
+        overlayVideo.srcObject = this.$store.state.opentera.localStream;
+        overlayVideo.autoplay = true;
+    },
+    unmounted() {
+        this.$store.dispatch("opentera/destroy");
     }
 }
 </script>

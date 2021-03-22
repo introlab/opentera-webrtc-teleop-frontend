@@ -8,13 +8,19 @@
             </navigation-bar>
         </header>
         <main class="main bg-primary-dark">
-            <router-view/>
+            <router-view v-slot="{ Component }">
+                <keep-alive v-bind:include="/.*-view$/">
+                    <component v-bind:is="Component"/>
+                </keep-alive>
+            </router-view>
         </main>
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+
+import { BusyException } from "@/store/modules/opentera";
 
 import { NavigationBar } from '@/components/NavigationBar';
 
@@ -44,11 +50,16 @@ export default {
             return this.$store.state.router[this.route].defaultPath;
         }
     },
-    created() {
-        const name = this.client.name ? this.client.name : "Undefined";
-        this.$store.dispatch("opentera/initialize", { name: name, data: {}, room: "chat", password: this.client.password }).then(() => {
-            this.$store.dispatch("opentera/connectStreamClient").then(() => console.log("CONNECTED"));
-        });
+    beforeMount() {
+        this.$store.dispatch("opentera/initAndConnect", this.client)
+            .then(() => console.log("CONNECTED")) // Do something after the connection
+            .catch(err => {
+                if (!(err instanceof BusyException))
+                    console.log(err)
+            });
+    },
+    unmounted() {
+        this.$store.dispatch("opentera/destroy");
     }
 }
 </script>
