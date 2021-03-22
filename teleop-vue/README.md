@@ -32,6 +32,11 @@ npm run build
 ```
 This will create a `dist` folder where your static application will stand.
 
+## Docker
+Recommand in order to easily test your application with the [opentera](https://github.com/introlab/opentera) and [opentera-teleop-service](https://github.com/introlab/opentera-teleop-service) environment.
+### Mount your application as a volume
+See this [Docker example](https://github.com/introlab/opentera-teleop-service/tree/main/docker/examples)
+
 ## Lints and fixes files
 ```
 npm run lint
