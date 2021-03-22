@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "opentera-webrtc-web-client": "file:submodules/opentera-webrtc-teleop/opentera-webrtc-web-client",
+    "opentera-webrtc-web-client": "file:submodules/opentera-webrtc/opentera-webrtc-web-client",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
