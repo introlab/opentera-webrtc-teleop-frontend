@@ -6,8 +6,8 @@
                 <svg-icon icon="camera-video-off-fill" v-else/>
             </button>
             <button type="button" class="btn btn-primary-dark" v-on:click="toggleMute">
-                <svg-icon icon="mic-mute-fill" v-if="isMuted"/>
-                <svg-icon icon="mic-fill" v-else/>
+                <svg-icon icon="mic-fill" v-if="!isMuted"/>
+                <svg-icon icon="mic-mute-fill" v-else/>
             </button>
             <button type="button" class="btn btn-primary-dark" v-on:click="toggleCall">
                 <svg-icon icon="telephone-outbound-fill" v-if="isInCall"/>

@@ -60,7 +60,7 @@ const ClientStore = {
 
         context.commit("setMuteState", !context.state.isMuted);
         context.rootState.opentera.localStream.getAudioTracks().forEach((track: any) => {
-          track.enabled = context.state.isMuted;
+          track.enabled = !context.state.isMuted;
         });
         resolve();
       });
