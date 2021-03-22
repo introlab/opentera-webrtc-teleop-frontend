@@ -1,0 +1,23 @@
+.participant-container {
+    position: relative;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-content: center;
+    padding: 0 1rem;
+    width: 100%;
+    background-color: inherit;
+    transition: filter 150ms ease-in-out, -webkit-filter 150ms ease-in-out;
+}
+.participant-container:hover {
+    -webkit-filter: brightness(160%);
+    filter: brightness(160%);
+}
+
+.right-side {
+    position: absolute;
+    right: 1rem;
+}
+
+.icon-button > * {
+    width: 1rem !important;
+}

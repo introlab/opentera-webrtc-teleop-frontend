@@ -1,0 +1,88 @@
+
+.navbar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+.navbar > .container-fluid {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-brand {
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    margin-left: 1rem;
+    font-size: 1.25rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.navbar-brand:any-link {
+    color: inherit
+}
+
+.navbar-toggler {
+    font-size: 1.25rem;
+    line-height: 1rem;
+    border: 3px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: .25rem;
+    margin-right: 1rem;
+}
+.navbar-toggler-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: .25rem;
+    vertical-align: middle;
+}
+
+.navbar-collapse {
+    flex-basis: 100%;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    list-style: none;
+}
+
+.nav-link {
+    display: block;
+    padding: .5rem 1rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    text-decoration: none;
+    text-align: left !important;
+    transition: 
+        color 150ms ease-in-out,
+        background-color 150ms ease-in-out
+        border-color 150ms ease-in-out;
+}
+.nav-link:any-link {
+    color: inherit
+}
+
+@media only screen and (min-width: 992px) {
+    .navbar-toggler {
+        display: none;
+    }
+
+    .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto;
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+    }
+}

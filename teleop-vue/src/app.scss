@@ -1,0 +1,95 @@
+:root {
+    // Dark theme color
+    --bg-primary-dark: rgba(36, 36, 36, 1);
+    --bg-secondary-dark: rgba(66, 66, 66, 1);
+    --bg-secondary-hover-dark: rgb(99, 99, 99);
+
+    --text-primary-dark: rgba(255, 255, 255, 1);
+
+    --btn-primary-dark: rgba(66, 66, 66, 1);
+    --btn-primary-hover-dark: rgb(99, 99, 99);
+    
+    // Light theme color
+    --bg-primary-light: rgba(255, 255, 255, 1);
+    --bg-secondary-light: rgba(74, 189, 255, 1);
+    --bg-secondary-hover-light: rgb(0, 162, 255);
+
+    --text-primary-light: rgba(0, 0, 0, 1);
+
+    --btn-primary-light: rgba(74, 189, 255, 1);
+    --btn-primary-hover-light: rgb(0, 162, 255);
+
+    // Gutter
+    --gutter-x: 0.25rem;
+    --gutter-y: 0.25rem;
+}
+
+body {
+    margin: auto;
+    overflow: hidden;
+}
+
+/*****************************************************************
+    THEME
+*****************************************************************/
+// Dark theme
+.bg-primary-dark {
+    background-color: var(--bg-primary-dark);
+}
+.bg-primary-dark > * {
+    color: var(--text-primary-dark);
+    border-color: rgba(var(--bg-primary-dark), 0.1);
+}
+
+.bg-secondary-dark {
+    background-color: var(--bg-secondary-dark);
+}
+.bg-secondary-dark > * {
+    color: var(--text-primary-dark);
+    border-color: rgba(var(--bg-primary-dark), 0.1);
+}
+
+.btn-primary-dark {
+    color: var(--text-primary-dark) !important;
+    background-color: var(--btn-primary-dark) !important;
+    border-color: var(--btn-primary-dark) !important;
+}
+.btn-primary-dark:hover {
+    background-color: var(--btn-primary-hover-dark) !important;
+    border-color: var(--btn-primary-hover-dark) !important;
+}
+
+// Light theme
+.bg-light {
+    background-color: var(--bg-secondary-light);
+}
+
+.bg-light > * {
+    color: var(--text-primary-light);
+    border-color: rgba(var(--bg-primary-light), 0.1);
+}
+
+.btn-primary-light {
+    color: var(--text-primary-light) !important;
+    background-color: var(--btn-primary-light) !important;
+    border-color: var(--btn-primary-light) !important;
+}
+.btn-primary-light:hover {
+    background-color: var(--btn-primary-hover-light) !important;
+    border-color: var(--btn-primary-hover-light) !important;
+}
+
+/*****************************************************************
+    CONTAINER
+*****************************************************************/
+.container-fluid {
+    width: 100%;
+    margin: auto;
+}
+
+.flex-container {
+    display: flex;
+}
+
+@import "./scss/button.scss";
+@import "./scss/grid.scss";

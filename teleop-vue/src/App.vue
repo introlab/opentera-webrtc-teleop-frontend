@@ -1,26 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <TestClient msg="OpenTera Test for WebRTC VUE components" />
+  <router-link to="/dev">Click on this link to be redirect</router-link>
+  <router-view v-slot="{ Component }">
+    <keep-alive v-bind:include="/.*-view$/">
+       <component v-bind:is="Component"/>
+    </keep-alive>
+  </router-view>
 </template>
 
-<script>
-import TestClient from "./components/TestClient.vue";
-
-export default {
-  name: "App",
-  components: {
-    TestClient
-  }
-};
-</script>
-
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
