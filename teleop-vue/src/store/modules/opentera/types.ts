@@ -14,9 +14,16 @@ export interface StreamConfiguration {
     localStream?: MediaStream;
     isSendOnly: boolean;
 }
+
+export interface IceServer {
+    urls: string;
+    username?: string;
+    credential?: string;
+    credentialType?: string;
+}
   
 export interface RtcConfiguration {
-    iceServers: [{ urls: string }];
+    iceServers: Array<IceServer>;
 }
   
 export type StreamDataChannelClient = typeof openteraWebrtcWebClient.StreamDataChannelClient;
