@@ -83,6 +83,8 @@ const Opentera = {
       const dataChannelConfiguration = initDataChannelConfiguration();
       const rtcConfiguration = await initRtcConfiguration(payload.password).catch(err => context.state.logger(err));
 
+      console.log("loaded ice servers: ", rtcConfiguration);
+
       context.commit(
         "setStreamClient",
         new openteraWebrtcWebClient.StreamDataChannelClient(

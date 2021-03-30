@@ -1,5 +1,5 @@
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
-import { RtcConfiguration, SignalingServerConfirguration, StreamConfiguration } from "./types";
+import { IceServer, RtcConfiguration, SignalingServerConfirguration, StreamConfiguration } from "./types";
 import { getBasePath, getOrigin } from "@/config/location";
 import { getSignalingServerURL } from "./utils";
 
@@ -28,7 +28,9 @@ export async function initRtcConfiguration(password? : string) : Promise<RtcConf
     return new Promise<RtcConfiguration>((resolve , reject) => {
         const url = process.env.NODE_ENV !== "production" ? getOrigin() + getBasePath() + "/iceservers.json" : getSignalingServerURL() + "/iceservers";
         openteraWebrtcWebClient.iceServers.fetchFromServer(url, password)
-            .then((config : RtcConfiguration) => resolve(config))
+            .then((config : Array<IceServer>) => resolve({
+                iceServers: config,
+            }))
             .catch((err: Error) => reject(err));
     });
 }
