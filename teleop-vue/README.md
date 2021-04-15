@@ -91,15 +91,69 @@ This will create a `dist` folder where your static application will stand.
 
 ## Docker
 Recommand in order to easily test your application with the [opentera](https://github.com/introlab/opentera) and [opentera-teleop-service](https://github.com/introlab/opentera-teleop-service) environment.
+
+**Important:** It's recommand to close all Nginx process running in background in order to avoid the usage of the same port which will leas to an error.
+
+### Pull the docker image
+```bash
+docker pull introlab3it/opentera_teleop_service_dev
+```
+You can verify that the image was correctly pulled with:
+```bash
+docker images
+```
+
 ### Mount your application as a volume
-See this [Docker example](https://github.com/introlab/opentera-teleop-service/tree/main/docker/examples)
+
+Wherever you want create a `docker-compose.yml` file with the following in it:
+```yaml
+opentera-teleop-service:
+  image: introlab3it/opentera_teleop_service_dev
+  restart: always
+  ports:
+    - "40075:40075"
+  volumes:
+    - opentera-db:/var/lib/postgresql
+    - opentera-certificates:/opentera/teraserver/python/certificates
+    - teleop-static:/opentera-teleop-service/static
+    - teleop-signaling-static:/opentera-teleop-service/signaling-static
+    - teleop-config:/opentera-teleop-service/config
+```
+Then link your `dist/` folder created in the previous section with `npm run build` with the volume specified in de `docker-compose.yml`. Be sure to write the path to your `dist/` folder in the `device` argument:
+```bash
+docker volume create --name=teleop-signaling-static --opt type=none --opt device=<Path to your dist/ folder> --opt o=bind
+```
+
+### Start in background
+Where the file `docker-compose.yml` stand use:
+```bash
+docker-compose up -d
+```
+To visualize which container has been created:
+```bash
+docker container ls
+```
+
+### Update the image
+Where the file `docker-compose.yml` stand use:
+```bash
+docker-compose pull
+```
+
+### Interact with the container
+In order to open a bash in the docker container use:
+```bash
+docker exec -it <name of your container> bash
+```
+
+**Note:** For more information about the different volumes you can mount see this [Docker example](https://github.com/introlab/opentera-teleop-service/tree/main/docker/examples)
 
 ## Lints and fixes files
 ```
 npm run lint
 ```
 
-### Customize configuration
+## Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
