@@ -1,6 +1,7 @@
 // src/store/modules/opentera/types.ts
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
+import { SignalingClientStore } from "./signalingClientStore";
 
 export interface SignalingServerConfirguration {
     url?: string;
@@ -53,4 +54,56 @@ export interface Client {
     isMuted?: boolean;
     isCameraOn?: boolean;
     isConnected?: boolean;
+}
+
+// REFACTOR TYPES
+export interface SignalingClientRoom {
+    isInitPending: boolean,
+    beforeunloadEventHandler: Function | null;
+    logger: Logger;
+    client?: openteraWebrtcWebClient.SignalingClient;
+    clientsInRoom: Array<Client>;
+    numberClientsInCall: number;
+    inCallState: boolean
+    //clientsInCall: Array<Client>;
+}
+
+export interface StreamClientState extends SignalingClientRoom {
+    localStream: MediaStream | null;
+    client: openteraWebrtcWebClient.StreamClient;
+    clientsInCall: Array<Client>;
+    showParticipants: boolean;
+}
+
+export interface DataChannelClientState extends SignalingClientRoom {
+    client: openteraWebrtcWebClient.DataChannelClient,
+    onMessageEventHandler: Function | null
+}
+
+export interface RoomClient {
+    id?: string;
+    name?: string;
+    data?: Record<string, any>; // TODO define data interface
+    room?: string;
+}
+
+export interface SignalingClientContext extends Context{ 
+    state: SignalingClientRoom
+}
+
+export interface StreamClientContext extends SignalingClientContext {
+    state: StreamClientState
+}
+
+export interface DataChannelClientContext extends SignalingClientContext {
+    state: DataChannelClientState
+}
+
+export interface Context {
+    state: Record<string, any> | Function,
+    rootState: Record<string, any> | Function,
+    commit: {(type: string, payload?: any, options?: Record<string, any>): void},
+    dispatch: {(type: string, payload?: any, options?: Record<string, any>): void},
+    getters: {[key: string]: Function},
+    rootGetters: {[key: string]: Function}
 }

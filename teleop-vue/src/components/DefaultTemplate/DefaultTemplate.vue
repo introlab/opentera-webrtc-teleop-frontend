@@ -51,15 +51,27 @@ export default {
         }
     },
     beforeMount() {
-        this.$store.dispatch("opentera/initAndConnect", this.client)
-            .then(() => console.log("CONNECTED")) // Do something after the connection
-            .catch(err => {
-                if (!(err instanceof BusyException))
-                    console.log(err)
-            });
+        // this.$store.dispatch("openteraVideoConf/initAndConnect", this.client)
+        //     .then(() => console.log("VIDEO CONF CONNECTED")) // Do something after the connection
+        //     .catch(err => {
+        //         if (!(err instanceof BusyException))
+        //             console.log(err)
+        //     });
+
+        // const aClient = this.client;
+        // aClient.room = "Teleop"
+        // this.$store.dispatch("openteraTeleop/initAndConnect", aClient)
+        //     .then(() => console.log("TELEOP CONNECTED")) // Do something after the connection
+        //     .catch(err => {
+        //         if (!(err instanceof BusyException))
+        //             console.log(err)
+        //     });
+        this.$store.dispatch("localClient/start", this.client);
     },
     unmounted() {
-        this.$store.dispatch("opentera/destroy");
+        // this.$store.dispatch("openteraVideoConf/destroy");
+        // this.$store.dispatch("openteraTeleop/destroy");
+        this.$store.dispatch("localClient/destroy");
     }
 }
 </script>

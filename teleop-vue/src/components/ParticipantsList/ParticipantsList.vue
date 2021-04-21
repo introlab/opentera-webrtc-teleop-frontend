@@ -31,18 +31,25 @@ export default {
     },
     methods: {
         closeParticipantsList() {
-            this.$store.commit("opentera/toggleParticipantsList");
+            //this.$store.commit("opentera/toggleParticipantsList");
+            this.$store.commit("localClient/openteraVideoConf/toggleParticipantsList");
         }
     },
     computed: {
         localClient() {
-            return this.$store.state.opentera.localClient;
+            //return this.$store.state.opentera.localClient;
+            return this.$store.state.localClient;
+        },
+        localStreamClient() {
+            return this.$store.state.localClient.openteraVideoConf.client;
         },
         isInCall() {
-            return this.$store.state.opentera.localClient.isInCall;
+            //return this.$store.state.opentera.localClient.isInCall;
+            return this.$store.state.localClient.isInCall;
         },
         clientsNotInCall() {
-            return this.clientsInRoom.filter(client => !this.clientsInCall.some(i => i.id === client.id) && client.id !== this.localClient.id);
+            //return this.clientsInRoom.filter(client => !this.clientsInCall.some(i => i.id === client.id) && client.id !== this.localClient.id);
+            return this.clientsInRoom.filter(client => !this.clientsInCall.some(i => i.id === client.id) && client.id !== this.localStreamClient.id);
         }
     }
 }
