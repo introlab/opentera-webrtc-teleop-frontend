@@ -75,7 +75,7 @@ export abstract class SignalingClientStore {
             start(context: any, config: SignalingServerConfirguration) {
                 return new Promise<void>((resolve, reject)=> {
                     SignalingClientStore.cookieHandler(context, config)
-                        .then(() => {
+                        .then((config: SignalingServerConfirguration) => {
                             context.dispatch("initialize", config).then(() => {
                                 context.dispatch("connectClient").then(() => resolve());
                             });
@@ -115,27 +115,28 @@ export abstract class SignalingClientStore {
                 window.sessionStorage.setItem(config.room ? config.room : "chat", "busy");
             
                 context.commit("setBeforeunloadEventHandler", () => {
-                    SignalingClientStore.setTemporarySessionCookie(config);
+                    setCookie(config.room + "-" + SESSION_COOKIE, JSON.stringify(config), 5);
+                    setCookie(SESSION_COOKIE, JSON.stringify(config), 5)
                     window.sessionStorage.removeItem(config.room ? config.room : "chat");
                 });
 
                 window.addEventListener("beforeunload", context.state.beforeunloadEventHandler);
 
                 // Check if there is a cookie with the login information
-                let cookie = getCookie(SESSION_COOKIE);
+                let cookie = getCookie(config.room + "-" + SESSION_COOKIE);
         
                 if (cookie) // Check for empty string
-                cookie = JSON.parse(cookie);
+                    cookie = JSON.parse(cookie);
 
                 if (cookie) { // Check for null
-                config = cookie as SignalingServerConfirguration;
+                    config = cookie as SignalingServerConfirguration;
                 } else {
-                config = {
-                    name: config.name ? config.name : "Undefined",
-                    data: config.data ? config.data : {},
-                    room: config.room ? config.room : "chat",
-                    password: config.password
-                }
+                    config = {
+                        name: config.name ? config.name : "Undefined",
+                        data: config.data ? config.data : {},
+                        room: config.room ? config.room : "chat",
+                        password: config.password
+                    }
                 }
 
                 resolve(config);
@@ -202,11 +203,6 @@ export abstract class SignalingClientStore {
     }
 
     protected abstract initialize(context: SignalingClientContext, payload: SignalingServerConfirguration): Promise<void>;
-
-    private static setTemporarySessionCookie(config: SignalingServerConfirguration) {
-        // Set a cookie containing the login information with max-age of 5 seconds
-        setCookie(config.room + "-" + SESSION_COOKIE, JSON.stringify(config), 5)
-    }
 
     public getModule() {
         return {

@@ -1,7 +1,9 @@
 // src/store/modules/opentera/clientStore.ts
 
 //import { Opentera } from "./opentera";
+import { getCookie, SESSION_COOKIE } from "@/config/cookie";
 import { DataChannelClientStore } from "./opentera/dataChannelClientStore";
+import { SignalingClientStore } from "./opentera/signalingClientStore";
 import { StreamClientStore }from "./opentera/streamClientStore";
 import { Client, SignalingServerConfirguration } from "./opentera/types";
 import { copyAttributes } from "./opentera/utils";
@@ -80,6 +82,17 @@ const ClientStore = {
         room: "Teleop",
         password: payload.password
       };
+
+      // Temporary name persitence on refreshing the page
+      let cookie = getCookie(SESSION_COOKIE);
+      if (cookie) {
+        cookie = JSON.parse(cookie);
+        if (cookie) {
+          context.commit("setClient", {
+            name: (cookie as SignalingServerConfirguration).name
+          })
+        }
+      }
 
       //context.dispatch("openteraVideoConf/initAndConnect", videoConfSignalingServerConfirguaration).then(() => console.log("VIDEO CONF CONNECTED"));
       context.dispatch("openteraVideoConf/start", videoConfSignalingServerConfirguaration).then(() => console.log("VIDEO CONF CONNECTED"));
