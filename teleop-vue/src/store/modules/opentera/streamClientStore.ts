@@ -35,8 +35,6 @@ export class StreamClientStore extends SignalingClientStore {
 
             toggleParticipantsList(state: StreamClientState) {
                 state.showParticipants = !state.showParticipants;
-                window.sessionStorage.removeItem("VideoConf")
-                window.sessionStorage.removeItem("Teleop")
             }
         };
     };

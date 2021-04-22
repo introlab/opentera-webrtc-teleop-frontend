@@ -3,7 +3,6 @@
 import { createStore } from "vuex";
 
 import Router from "./modules/router";
-//import { Opentera } from "./modules/opentera";
 import ClientStore from "./modules/clientStore";
 
 export default createStore<any>({
@@ -12,8 +11,6 @@ export default createStore<any>({
   actions: {},
   modules: {
     router: Router,
-    localClient: ClientStore,
-    // openteraVideoConf: Opentera,
-    // openteraTeleop: Opentera
+    localClient: ClientStore
   }
 });

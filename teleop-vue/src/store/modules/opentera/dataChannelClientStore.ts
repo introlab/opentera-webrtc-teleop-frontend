@@ -1,7 +1,6 @@
 // src/store/modules/opentera/dataChannelClientStore.ts
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
-import { fetchLocalStream } from ".";
 import { initSignalingServerConfiguration, initRtcConfiguration, initDataChannelConfiguration } from "./init";
 import { SignalingClientStore } from "./signalingClientStore";
 import { DataChannelClientContext, DataChannelClientState, SignalingServerConfirguration } from "./types";

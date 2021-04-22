@@ -81,16 +81,10 @@ export default {
         this.client = {
             name: this.name,
             data: this.data,
-            room: "VideoConf",//this.room,
+            room: "VideoConf",
             password: this.password
         }
-
-        // this.$store.dispatch("openteraVideoConf/initAndConnect", this.client)
-        //     .then(() => console.log("CONNECTED")) // Do something after ther connection
-        //     .catch(err => {
-        //         if (!(err instanceof BusyException))
-        //             console.log(err)
-        //     });
+        this.$store.commit("localClient/setClient", { name : this.name });
         this.$store.dispatch("localClient/openteraVideoConf/start", this.client)
             .then(() => console.log("CONNECTED")) // Do something after ther connection
             .catch(err => {

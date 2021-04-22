@@ -1,10 +1,7 @@
 // src/store/modules/opentera/clientStore.ts
 
-//import { Opentera } from "./opentera";
 import { getCookie, SESSION_COOKIE } from "@/config/cookie";
-import { DataChannelClientStore } from "./opentera/dataChannelClientStore";
-import { SignalingClientStore } from "./opentera/signalingClientStore";
-import { StreamClientStore }from "./opentera/streamClientStore";
+import { StreamClientStore, DataChannelClientStore } from "./opentera";
 import { Client, SignalingServerConfirguration } from "./opentera/types";
 import { copyAttributes } from "./opentera/utils";
 
@@ -94,29 +91,28 @@ const ClientStore = {
         }
       }
 
-      //context.dispatch("openteraVideoConf/initAndConnect", videoConfSignalingServerConfirguaration).then(() => console.log("VIDEO CONF CONNECTED"));
       context.dispatch("openteraVideoConf/start", videoConfSignalingServerConfirguaration).then(() => console.log("VIDEO CONF CONNECTED"));
-      //context.dispatch("openteraTeleop/initAndConnect", teleopSignalingServerConfirguaration).then(() => console.log("TELEOP CONNECTED"));
       context.dispatch("openteraTeleop/start", teleopSignalingServerConfirguaration).then(() => console.log("TELEOP CONNECTED"));
     },
 
+    // TODO: Make call functions more consistent
+    // A function for each type of call? A big function to call everyone?
+    // Make it better.
     toggleCall(context: any) {
       return new Promise<void>((resolve, reject) => {
         
-        //if (!context.rootState.opentera.streamClient) {
         if (!context.state.openteraVideoConf.client) {
           reject(new Error("Unable to call, you are not connected."));
           return;
         }
 
-        //if (context.rootState.opentera.clientsInRoom.length < 2) {
         if (context.state.openteraVideoConf.clientsInRoom.length < 2) {
           reject(new Error("There are no participants to call."));
           return;
         }
         
         context.commit("setCallState", !context.state.isInCall);
-        // context.state.isInCall ? context.rootState.opentera.streamClient.callAll() : context.rootState.opentera.streamClient.hangUpAll();
+        
         context.state.isInCall ? context.state.openteraVideoConf.client.callAll() : context.state.openteraVideoConf.client.hangUpAll();
         context.state.isInCall ? context.state.openteraTeleop.client.callAll() : context.state.openteraTeleop.client.hangUpAll();
         resolve();
@@ -131,7 +127,6 @@ const ClientStore = {
         }
 
         context.commit("setMuteState", !context.state.isMuted);
-        //context.rootState.opentera.localStream.getAudioTracks().forEach((track: any) => {
         context.state.openteraVideoConf.localStream.getAudioTracks().forEach((track: any) => {
           track.enabled = !context.state.isMuted;
         });
@@ -147,7 +142,6 @@ const ClientStore = {
         }
 
         context.commit("setCameraState", !context.state.isCameraOn);
-        //context.rootState.opentera.localStream.getVideoTracks().forEach((track: any) => {
         context.state.openteraVideoConf.localStream.getVideoTracks().forEach((track: any) => {
           track.enabled = context.state.isCameraOn;
         });
@@ -156,7 +150,7 @@ const ClientStore = {
     }
   },
   modules: {
-    openteraVideoConf: new StreamClientStore().getModule(),//Opentera,
+    openteraVideoConf: new StreamClientStore().getModule(),
     openteraTeleop: new DataChannelClientStore().getModule()
   }
 };

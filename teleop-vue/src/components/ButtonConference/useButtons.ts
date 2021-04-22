@@ -5,7 +5,6 @@ import { useStore } from "vuex";
 
 export default function() {
     const store = useStore();
-    //const localClient = store.state.opentera.localClient;
     const localClient = store.state.localClient;
     const namespace = "localClient/"
 
