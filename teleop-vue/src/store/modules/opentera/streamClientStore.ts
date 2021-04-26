@@ -7,6 +7,14 @@ import { SignalingClientStore } from "./signalingClientStore";
 import { Client, SignalingClientContext, SignalingServerConfirguration, StreamClientContext, StreamClientState } from "./types";
 
 export class StreamClientStore extends SignalingClientStore {
+    canSendStream : boolean;
+
+    constructor(canSendStream : boolean) {
+        super();
+
+        this.canSendStream = canSendStream;
+    };
+    
     protected state(): StreamClientState {
         return {
             ...super.state(),
@@ -41,7 +49,10 @@ export class StreamClientStore extends SignalingClientStore {
 
     protected async initialize(context: StreamClientContext, payload: SignalingServerConfirguration): Promise<void> {
         context.commit("setInitPendingState", true);
-        context.commit("setLocalStream", await fetchLocalStream());
+
+        if (this.canSendStream) {
+            context.commit("setLocalStream", await fetchLocalStream());
+        }
 
         const signalingServerConfirguration = initSignalingServerConfiguration(payload);
         const streamConfiguration = initStreamConfiguration(context.state.localStream as MediaStream);

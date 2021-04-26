@@ -37,9 +37,9 @@
         <media-query query="(max-width: 599.98px)">
             <div class="container-fluid">
                 <video-participant
-                    v-bind:id="clientsList[0].id"
-                    v-bind:name="clientsList[0].name"
-                    v-bind:stream="clientsList[0].stream"
+                    v-bind:id="getPriorisedClient.id"
+                    v-bind:name="getPriorisedClient.name"
+                    v-bind:stream="getPriorisedClient.stream"
                     v-bind:show-name="true">
                 </video-participant>
             </div>
@@ -74,6 +74,20 @@ export default {
         return {
             nColumns,
             nRows
+        }
+    },
+    computed: {
+        getPriorisedClient() {
+            // TODO: make an algorythm that priorise a client to be shown
+            if (this.clientsList > 0) {
+                return this.clientsList[0];
+            } else {
+                return {
+                    id: "null",
+                    name: "null",
+                    stream: null
+                };
+            }
         }
     }
 }

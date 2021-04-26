@@ -92,6 +92,7 @@ const ClientStore = {
       }
 
       context.dispatch("openteraVideoConf/start", videoConfSignalingServerConfirguaration).then(() => console.log("VIDEO CONF CONNECTED"));
+      context.dispatch("openteraCameraX/start", cameraXSignalingServerConfirguaration).then(() => console.log("CAMERA X CONNECTED"));
       context.dispatch("openteraTeleop/start", teleopSignalingServerConfirguaration).then(() => console.log("TELEOP CONNECTED"));
     },
 
@@ -114,6 +115,7 @@ const ClientStore = {
         context.commit("setCallState", !context.state.isInCall);
         
         context.state.isInCall ? context.state.openteraVideoConf.client.callAll() : context.state.openteraVideoConf.client.hangUpAll();
+        context.state.isInCall ? context.state.openteraCameraX.client.callAll() : context.state.openteraCameraX.client.hangUpAll();
         context.state.isInCall ? context.state.openteraTeleop.client.callAll() : context.state.openteraTeleop.client.hangUpAll();
         resolve();
       })
@@ -150,7 +152,8 @@ const ClientStore = {
     }
   },
   modules: {
-    openteraVideoConf: new StreamClientStore().getModule(),
+    openteraVideoConf: new StreamClientStore(true).getModule(),
+    openteraCameraX: new StreamClientStore(false).getModule(),
     openteraTeleop: new DataChannelClientStore().getModule()
   }
 };
