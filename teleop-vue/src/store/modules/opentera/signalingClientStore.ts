@@ -189,12 +189,14 @@ export abstract class SignalingClientStore {
     protected onClientConnect(context: SignalingClientContext, id: string, name: string, clientData: Record<string, any>) {
         context.commit("incrementClientsInCall");
         context.commit("setCallState", true);
+        context.commit("localClient/setCallState", true, {root : true});
     }
 
     protected onClientDisconnect(context: SignalingClientContext, id: string, name: string, clientData: Record<string, any>) {
         context.commit("decrementClientInCall");
         if (context.state.numberClientsInCall <= 0) {
             context.commit("setCallState", false);
+            context.commit("localClient/setCallState", false, {root : true});
         }
     }
 
