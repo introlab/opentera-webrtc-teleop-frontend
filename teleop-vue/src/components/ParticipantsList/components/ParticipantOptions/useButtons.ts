@@ -6,12 +6,12 @@ import { useStore } from "vuex";
 export default function() {
     const store = useStore();
 
-    const toggleMute = () => store.dispatch("opentera/localClient/toggleMute").catch(error => {
+    const toggleMute = () => store.dispatch("localClient/toggleMute").catch(error => {
         // TODO
          alert(error.message);
     });
     
-    const isMuted = computed(() => store.state.opentera.localClient.isMuted);
+    const isMuted = computed(() => store.state.localClient.isMuted);
 
     return {
         toggleMute,

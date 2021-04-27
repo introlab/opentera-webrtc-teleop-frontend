@@ -5,13 +5,13 @@ import { useStore } from "vuex";
 
 export default function() {
     const store = useStore();
-    const localClient = store.state.opentera.localClient;
-    const namespace = "opentera/localClient/"
+    const localClient = store.state.localClient;
+    const namespace = "localClient/"
 
     const isInCall = computed(() => localClient.isInCall);
     const isMuted = computed(() => localClient.isMuted);
     const isCameraOn = computed(() =>localClient.isCameraOn);
-    const showParticipants = computed(() => store.state.opentera.showParticipants);
+    const showParticipants = computed(() => store.state.localClient.openteraVideoConf.showParticipants);
 
     const toggleCall = () => store.dispatch(namespace + "toggleCall").catch(error => {
         // TODO
@@ -28,7 +28,7 @@ export default function() {
         alert(error.message);
     });
 
-    const toggleParticipantsList = () => store.commit("opentera/toggleParticipantsList");
+    const toggleParticipantsList = () => store.commit("localClient/openteraVideoConf/toggleParticipantsList");
 
     return {
         isInCall,

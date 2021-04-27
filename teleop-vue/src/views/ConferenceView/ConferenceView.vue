@@ -68,24 +68,24 @@ export default {
     },
     computed: {
         clientsInCall() {
-            return this.$store.state.opentera.clientsInCall;
+            return this.$store.state.localClient.openteraVideoConf.clientsInCall;
         },
         clientsInRoom() {
-            return this.$store.state.opentera.clientsInRoom;
+            return this.$store.state.localClient.openteraVideoConf.clientsInRoom;
         },
         showParticipants() {
-            return this.$store.state.opentera.showParticipants;
+            return this.$store.state.localClient.openteraVideoConf.showParticipants;
         }
     },
     beforeMount() {
         this.client = {
             name: this.name,
             data: this.data,
-            room: this.room,
+            room: "VideoConf",
             password: this.password
         }
-
-        this.$store.dispatch("opentera/initAndConnect", this.client)
+        this.$store.commit("localClient/setClient", { name : this.name });
+        this.$store.dispatch("localClient/openteraVideoConf/start", this.client)
             .then(() => console.log("CONNECTED")) // Do something after ther connection
             .catch(err => {
                 if (!(err instanceof BusyException))
@@ -96,11 +96,12 @@ export default {
         // Reactivate the local video when it's render from cache
         const overlayVideo = this.$refs.overlayVideoRef;
         overlayVideo.muted = true;
-        overlayVideo.srcObject = this.$store.state.opentera.localStream;
+        overlayVideo.srcObject = this.$store.state.localClient.openteraVideoConf.localStream;
         overlayVideo.autoplay = true;
     },
     unmounted() {
-        this.$store.dispatch("opentera/destroy");
+        //this.$store.dispatch("openteraVideoConf/destroy");
+        this.$store.dispatch("localClient/destroy");
     }
 }
 </script>
