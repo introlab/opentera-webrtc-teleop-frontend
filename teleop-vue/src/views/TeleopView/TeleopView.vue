@@ -1,26 +1,32 @@
 <template>
   <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
-    <h1>Teleop-View</h1>
-    
-    <video-participant
-        id="videoconf"
-        name="VideoConf"
-        v-bind:stream="videoConfClientStream"
-        v-bind:show-name="true">
-    </video-participant>
-
-    <video-participant
-        id="camerax"
-        name="CameraX"
-        v-bind:stream="cameraXClientStream"
-        v-bind:show-name="true">
-    </video-participant>
-
-    <textarea class="btn-primary-dark" id="chat_text_area" rows="10" cols="50" readonly></textarea>
-
-    <joystick width="150" height="150" class="telepresence-joystick"
-        v-bind:absolute-max-x="1" v-bind:absolute-max-y="1"
-        v-on:joystickPositionChange="onJoystickPositionChange"/>
+    <div class="fluid pad">
+        <div v-if="videoConfClientStream !== null || cameraXClientStream !== null" class="fluid col-flexbox">
+            <div class="row50 gutter">
+                <!-- <div style="background: red;">1</div> -->
+                <video-participant
+                    id="videoconf"
+                    name="VideoConf"
+                    v-bind:stream="videoConfClientStream"
+                    v-bind:show-name="true">
+                </video-participant> 
+            </div>
+            <div class="row50 gutter">
+                <!-- <div style="background: red;">2</div> -->
+                <video-participant
+                    id="camerax"
+                    name="CameraX"
+                    v-bind:stream="cameraXClientStream"
+                    v-bind:show-name="true">
+                </video-participant> 
+            </div>
+            <div class="row50 gutter center-left">
+                <joystick width="150" height="150" class="telepresence-joystick"
+                    v-bind:absolute-max-x="1" v-bind:absolute-max-y="1"
+                    v-on:joystickPositionChange="onJoystickPositionChange"/>
+            </div>
+        </div>
+    </div>
 
     <div ref="toolbarRef" class="toolbar">
         <video 
@@ -119,17 +125,12 @@ export default {
     },
     beforeMount() {
         this.$store.commit("localClient/openteraTeleop/setMessageEventHandler", (id, name, clientData, message) => {
-            this.chatTextArea.value += id + " - " + name + ": ";
-            this.chatTextArea.value += message;
-            this.chatTextArea.value += "\n";
+            // TODO
         })
-    },
-    mounted(){
-      this.chatTextArea = document.getElementById("chat_text_area");
     }
 }
 </script>
 
-<style>
+<style scoped>
     @import "./TeleopView.scss";
 </style>

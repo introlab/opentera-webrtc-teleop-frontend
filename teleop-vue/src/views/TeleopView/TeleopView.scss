@@ -1,20 +1,15 @@
 /* Temporary style for debugging purpose */
-.main {
-    overflow: scroll !important;
-}
-.video-layout {
-    width: auto !important;
-}
+
 /****************************************/
 
-/*#app > .container-fluid {
+#app > .container-fluid {
   position: absolute;
   top: 0;
   height: 100vh;
 }
 .container-fluid {
     height: 100%;
-}*/
+}
 
 .toolbar {
     --transition-speed: 500ms;
@@ -56,9 +51,42 @@
 }
 
 .telepresence-joystick {
-  position: absolute;
   opacity: 0.75;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
+}
+
+.center-left {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.fluid {
+  height: 100%;
+  width: 100%;
+}
+
+.col-flexbox {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-content: center;
+}
+
+.col66 {
+  width: 66%;
+}
+.col33 {
+  width: 33%;
+}
+.row50 {
+  height: 50%;
+}
+
+.gutter {
+  padding: 0.125rem 0.25rem;
+}
+
+.pad {
+  padding: var(--gutter-x) var(--gutter-y);
 }
