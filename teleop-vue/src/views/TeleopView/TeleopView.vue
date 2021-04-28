@@ -6,7 +6,7 @@
                 <!-- <div style="background: red;">1</div> -->
                 <video-participant
                     id="videoconf"
-                    name="VideoConf"
+                    name="Front Camera"
                     v-bind:stream="videoConfClientStream"
                     v-bind:show-name="true">
                 </video-participant> 
@@ -15,7 +15,7 @@
                 <!-- <div style="background: red;">2</div> -->
                 <video-participant
                     id="camerax"
-                    name="CameraX"
+                    name="Bottom camera"
                     v-bind:stream="cameraXClientStream"
                     v-bind:show-name="true">
                 </video-participant> 
