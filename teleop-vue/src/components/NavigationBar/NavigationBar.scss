@@ -72,6 +72,10 @@
     color: inherit
 }
 
+.justify-end {
+    justify-content: end;
+}
+
 @media only screen and (min-width: 992px) {
     .navbar-toggler {
         display: none;

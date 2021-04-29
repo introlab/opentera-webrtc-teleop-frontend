@@ -16,6 +16,9 @@
                     </li>
                 </ul>
             </div>
+            <button class="icon-button navbar-collapse justify-end" type="button" v-show="showNav" v-on:click="null">
+                <svg-icon class="navbar-toggler-icon navbar-nav" icon="gear"></svg-icon>
+            </button>
         </div>
     </nav>
 </template>
