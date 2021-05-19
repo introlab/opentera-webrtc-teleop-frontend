@@ -33,6 +33,11 @@ export default {
             return "video-" + this.id;
         }
     },
+    watch: {
+        stream(newStream, oldStream) {
+            this.$refs.video.srcObject = newStream;
+        }
+    },
     mounted() {
         this.$refs.video.srcObject = this.stream;
     },

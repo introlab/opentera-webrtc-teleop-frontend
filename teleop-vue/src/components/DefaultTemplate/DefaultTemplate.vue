@@ -51,15 +51,10 @@ export default {
         }
     },
     beforeMount() {
-        this.$store.dispatch("opentera/initAndConnect", this.client)
-            .then(() => console.log("CONNECTED")) // Do something after the connection
-            .catch(err => {
-                if (!(err instanceof BusyException))
-                    console.log(err)
-            });
+        this.$store.dispatch("localClient/start", this.client);
     },
     unmounted() {
-        this.$store.dispatch("opentera/destroy");
+        this.$store.dispatch("localClient/destroy");
     }
 }
 </script>
