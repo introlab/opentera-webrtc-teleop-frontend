@@ -35,6 +35,9 @@ export abstract class SignalingClientStore {
             },
 
             setClient(state: SignalingClientRoom, payload: openteraWebrtcWebClient.SignalingClient) {
+                if (state.client !== null) {
+                    delete state.client;
+                }
                 state.client = payload;
             },
         
