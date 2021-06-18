@@ -1,6 +1,6 @@
 <template>
   <default-template
-    brand="OpenteraUser Interface"
+    brand="Opentera User Interface DV"
     route="dev"
     v-bind:client="{ name: name, data: data, room: room, password: password }"
   />
