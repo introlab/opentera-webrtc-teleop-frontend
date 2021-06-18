@@ -1,1 +1,1 @@
-export { default as ButtonConference} from "./ButtonConference.vue";
+export { default as ButtonConference } from "./ButtonConference.vue";

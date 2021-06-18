@@ -3,7 +3,6 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
             <slot name="header">
               default header
@@ -32,10 +31,10 @@
 
 <script>
 export default {
-    name: "modal"
-}
+  name: "modal"
+};
 </script>
 
 <style>
-    @import "./Modal.scss";
+@import "./Modal.scss";
 </style>

@@ -3,11 +3,9 @@
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style lang="scss" scoped>
-    @import "./NotFoundView.scss";
+@import "./NotFoundView.scss";
 </style>

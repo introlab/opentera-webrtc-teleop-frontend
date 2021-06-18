@@ -1,1 +1,1 @@
-export { default as MediaQuery} from "./MediaQuery.vue";
+export { default as MediaQuery } from "./MediaQuery.vue";

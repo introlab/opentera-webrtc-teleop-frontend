@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, createWebHashHistory, Router } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+  Router
+} from "vue-router";
 
 import store from "../store";
 import { getBasePath } from "@/config/location";
@@ -101,11 +106,11 @@ const routes: Array<any> = [
   }
 ];
 
-export default function() : Router {
+export default function(): Router {
   return createRouter({
     //history: createWebHistory(getBasePath()),
     //history: createWebHistory(),
     history: createWebHashHistory(),
     routes
-  })
-};
+  });
+}

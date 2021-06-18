@@ -1,7 +1,7 @@
 <template>
   <router-view v-slot="{ Component }">
     <keep-alive v-bind:include="/.*-view$/">
-       <component v-bind:is="Component"/> 
+      <component v-bind:is="Component" />
     </keep-alive>
   </router-view>
 </template>
