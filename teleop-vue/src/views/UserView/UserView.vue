@@ -1,6 +1,6 @@
 <template>
   <default-template
-    brand="Opentera User Interface"
+    brand="Opentera User Interface views/UserView.vue"
     route="user"
     v-bind:client="{ name: name, data: data, room: room, password: password }"
   />
