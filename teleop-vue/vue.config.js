@@ -24,5 +24,13 @@ module.exports = {
             .use("raw-loader")
             .loader("raw-loader")
             .end();
+    }, 
+    devServer: {
+        proxy: {
+          '^/signaling': {
+            target: 'http://localhost:8080',
+            changeOrigin: true
+          },
+        }
     }
 };
