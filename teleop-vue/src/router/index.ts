@@ -6,6 +6,7 @@ import { getBasePath } from "@/config/location";
 import { DevelopperView } from "@/views/DevelopperView";
 import { ConferenceView } from "@/views/ConferenceView";
 import { UserView } from "@/views/UserView";
+import { TeleopView } from "@/views/TeleopView";
 import { NotFoundView } from "@/views/NotFoundView";
 
 const dev = store.state.router.dev;
@@ -31,7 +32,7 @@ const routes: Array<any> = [
       },
       {
         path: dev.childrens?.teleop.path,
-        component: NotFoundView // TODO
+        component: TeleopView
       },
       {
         path: dev.childrens?.dashboard.path,
@@ -63,7 +64,7 @@ const routes: Array<any> = [
       },
       {
         path: user.childrens?.teleop.path,
-        component: NotFoundView // TODO
+        component: TeleopView
       },
       {
         path: user.childrens?.conference.path,
@@ -79,7 +80,7 @@ const routes: Array<any> = [
   {
     path: participant.path,
     name: participant.name,
-    component: ConferenceView, // TODO
+    component: ConferenceView,
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd
@@ -88,7 +89,7 @@ const routes: Array<any> = [
   {
     path: device.path,
     name: device.name,
-    component: ConferenceView, // TODO
+    component: ConferenceView,
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd

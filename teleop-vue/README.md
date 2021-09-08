@@ -83,7 +83,11 @@ See the [Url Endpoints](#url-endpoint) section bellow for more informations on w
 ## Production
 ### Compiles and minifies for production
 
-** repertoire
+Got to:
+```bash
+cd opentera-webrtc-teleop-frontend/teleop-vue/
+```
+Then:
 ```
 npm run build
 ```
@@ -105,7 +109,7 @@ docker images
 
 ### Mount your application as a volume
 
-Wherever you want create a `docker-compose.yml` file with the following in it:
+Wherever you want create a `docker-compose.yml` (`touch docker-compose.yml`) file with the following in it:
 ```yaml
 opentera-teleop-service:
   image: introlab3it/opentera_teleop_service_dev
@@ -125,6 +129,10 @@ docker volume create --name=teleop-signaling-static --opt type=none --opt device
 ```
 
 ### Start in background
+You will need docker-compose for the following steps. You can get it with:
+```bash
+sudo apt install docker-compose
+```
 Where the file `docker-compose.yml` stand use:
 ```bash
 docker-compose up -d
@@ -143,7 +151,7 @@ docker-compose pull
 ### Interact with the container
 In order to open a bash in the docker container use:
 ```bash
-docker exec -it <name of your container> bash
+docker exec -it <name of your container>or<CONTAINER ID> bash
 ```
 
 **Note:** For more information about the different volumes you can mount see this [Docker example](https://github.com/introlab/opentera-teleop-service/tree/main/docker/examples)
