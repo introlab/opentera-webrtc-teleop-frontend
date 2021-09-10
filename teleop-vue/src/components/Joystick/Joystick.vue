@@ -1,5 +1,7 @@
 <template>
     <canvas ref="canvas" v-bind:width="width" v-bind:height="height"
+        v-on:touchstart="onTouchStart" v-on:touchmove="onTouchMove" 
+        v-on:touchend="onTouchEnd" v-on:touchcancel="onTouchEnd"
         v-on:mousedown="onMouseDown" v-on:mouseup="onMouseUp"
         v-on:mousemove="onMouseMove" v-on:mouseout="onMouseOut"/>
 </template>
@@ -46,12 +48,15 @@ export default {
             }
         },
         onMouseUp(event) {
-            if (event.button === 0) {
-                this.x = this.getCenterX();
-                this.y = this.getCenterY();
-                this.isMouseDown = false;
-                this.emitJoystickPosition();
+            if (event.button === 0){
+                this.onRelease();
             }
+        },
+        onRelease() {
+            this.x = this.getCenterX();
+            this.y = this.getCenterY();
+            this.isMouseDown = false;
+            this.emitJoystickPosition();
         },
         onMouseMove(event) {
             if (this.isMouseDown) {
@@ -63,6 +68,23 @@ export default {
             this.y = this.getCenterY();
             this.isMouseDown = false;
             this.emitJoystickPosition();
+        },
+        onTouchMove(event) {
+            this.updateJoystickPositionFromMouseEvent(event.touches[0]); // Only use the first touch
+        },
+        onTouchStart(event) {
+            event.preventDefault(); // Prevents scrolling when touching the joystick
+            this.isMouseDown = true;
+            this.updateJoystickPositionFromMouseEvent(event.touches[0]); // Only use the first touch
+        },
+        onTouchEnd(event) {
+            // Make sure the joystick interaction is only stopped if the touchend event was triggered
+            // by the finger that was controlling the joystick and not another.
+            for (const changedTouch of event.changedTouches){
+                if(changedTouch.identifier === 0){
+                    this.onRelease();
+                }
+            }
         },
         updateJoystickPositionFromMouseEvent(event) {
             const rect = this.canvas.getBoundingClientRect();      
