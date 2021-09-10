@@ -32,7 +32,11 @@ export default {
             }.bind(this), 1000 / 60); // 60 Hz
 
             this.positionChangeIntervalId = setInterval(function() {
-                this.emitJoystickPosition();
+                // Only emit the joystick signal when the mouse is pressed to avoid constantly
+                // sending zeros when the joystick is not in use.
+                if(this.isMouseDown){
+                    this.emitJoystickPosition();
+                }
             }.bind(this), 100) // 100 ms
         },
         initVariables() {
@@ -193,7 +197,7 @@ export default {
                 x: (this.x - this.getCenterX()) * this.absoluteMaxX / (this.getCanvasRadius() - this.getJoystickRadius()),
                 y: (this.y - this.getCenterY()) * this.absoluteMaxY / (this.getCanvasRadius() - this.getJoystickRadius()),
             };
-            this.$emit("joystickPositionChange", event)
+            this.$emit("joystickPositionChange", event);
         },
         getCenterX() {
             return this.canvas.width / 2;
