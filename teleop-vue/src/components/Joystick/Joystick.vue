@@ -17,7 +17,8 @@ export default {
             positionChangeIntervalId: null,
             canvas: null,
             context: null,
-            isMouseDown: false
+            isMouseDown: false,
+            activeTouchID: null
         }
     },
     props: ["width", "height", "absoluteMaxX", "absoluteMaxY"],
@@ -79,13 +80,14 @@ export default {
         onTouchStart(event) {
             event.preventDefault(); // Prevents scrolling when touching the joystick
             this.isMouseDown = true;
+            this.activeTouchID = event.touches[0].identifier;
             this.updateJoystickPositionFromMouseEvent(event.touches[0]); // Only use the first touch
         },
         onTouchEnd(event) {
             // Make sure the joystick interaction is only stopped if the touchend event was triggered
             // by the finger that was controlling the joystick and not another.
             for (const changedTouch of event.changedTouches){
-                if(changedTouch.identifier === 0){
+                if(changedTouch.identifier === this.activeTouchID){
                     this.onRelease();
                 }
             }
@@ -223,7 +225,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

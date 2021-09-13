@@ -10,7 +10,6 @@ export default {
         "keyboardTeleopEvent"
     ],
     created() {
-        console.log("Starting keyboard teleop");
         window.addEventListener("keydown", this.onKeyDown);
         window.addEventListener("keyup", this.onKeyUp);
     },
