@@ -16,7 +16,7 @@
                             </router-link>
                         </li>
                     </ul>
-                    <device-settings class="navbar-nav margin"/>
+                    <device-settings class="navbar-button margin-left-extend"/>
                 </div>
             </div>
         </nav>

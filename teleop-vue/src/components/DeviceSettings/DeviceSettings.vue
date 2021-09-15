@@ -1,13 +1,13 @@
 <template>
-    <div>
-    <button class="icon-button">
-        <svg-icon class="navbar-toggler-icon navbar-nav" icon="gear" v-on:click="toggleShowSettings"></svg-icon>
-    </button>
-    <div v-if="showSettings" class="menu">
-        <!-- TODO: menu should close when clicking outside of it -->
-        <div class="menu-item" v-on:click="toggleAudioSettings">Select audio source</div>
-        <div class="menu-item" v-on:click="toggleVideoSettings">Select video source</div>
-    </div>
+    <div class="menu-parent">
+        <button class="icon-button">
+            <svg-icon class="navbar-toggler-icon navbar-nav" icon="gear" v-on:click="toggleShowSettings"></svg-icon>
+        </button>
+        <div class="menu" v-if="showSettings">
+            <!-- TODO: menu should close when clicking outside of it -->
+            <div class="menu-item" v-on:click="toggleAudioSettings">Select audio source</div>
+            <div class="menu-item" v-on:click="toggleVideoSettings">Select video source</div>
+        </div>
     <modal v-if="showAudioSettings" v-on:close="toggleAudioSettings">
         <template v-slot:header>
             <h3>Audio Settings</h3>
@@ -171,6 +171,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    // FIXME: Should not depend on external css
+    // FIXME: Should not depend on css from parent component
     @import "../NavigationBar/NavigationBar.scss";
+    @import "./DeviceSettings.scss";
 </style>

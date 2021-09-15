@@ -1,16 +1,16 @@
 <template>
     <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
+        <video 
+            ref="overlayVideoRef"
+            id="overlayVideo"
+            class="overlay-video mirror-y">
+        </video>
         <div class="container-fluid">
             <video-conference 
                 v-bind:clients-list="clientsInCall">
             </video-conference>
         </div>
         <div ref="toolbarRef" class="toolbar">
-            <video 
-                ref="overlayVideoRef"
-                id="overlayVideo"
-                class="overlay-video mirror-y">
-            </video>
             <button-conference/>
         </div>
         <transition name="participants">
@@ -58,7 +58,7 @@ export default {
         const overlayVideoRef = ref(null);
 
         useVideoLayout(overlayVideoRef);
-        const { showToolbar } = useToolbar(toolbarRef, overlayVideoRef);
+        const { showToolbar } = useToolbar(toolbarRef);
 
         return {
             toolbarRef,
