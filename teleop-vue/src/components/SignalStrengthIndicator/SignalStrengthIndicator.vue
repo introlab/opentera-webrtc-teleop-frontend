@@ -19,7 +19,7 @@ export default {
   methods: {
     onSignalStrengthChanged(newSignalStrength) {
       this.signalStrength = newSignalStrength;
-      this.signalBars = Math.ceil(this.signalStrength / 100 * 5);
+      this.signalBars = Math.ceil((this.signalStrength / 100) * 5);
     }
   }
 };

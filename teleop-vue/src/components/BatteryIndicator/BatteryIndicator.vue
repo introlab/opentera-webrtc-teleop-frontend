@@ -39,7 +39,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// FIXME: Should not depend on css from parent component
-@import "../NavigationBar/NavigationBar.scss";
 @import "./BatteryIndicator.scss";
 </style>

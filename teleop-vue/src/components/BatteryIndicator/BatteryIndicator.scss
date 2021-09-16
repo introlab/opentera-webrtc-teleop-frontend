@@ -2,10 +2,13 @@
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.25rem;
+    gap: 10%;
     height: 1.5rem;
     width: 2.5rem;
     box-sizing: border-box;
+    --fill-color: white;
+    --border-color: white;
+    --font-size: 80%;
 }
 
 .battery {
@@ -18,7 +21,7 @@
 }
 
 .top {
-  background: rgb(255, 255, 255);
+  background: var(--fill-color);
   width: 40%;
   height: 15%;
   border-radius: 1px 1px 0 0;
@@ -27,7 +30,7 @@
 
 .outer {
   width: 100%;
-  border: 1px solid rgb(255, 255, 255);
+  border: 1px solid var(--border-color);
   height: 85%;
   border-radius: 0.125rem;
   display: flex;
@@ -35,7 +38,7 @@
 }
 
 .inner {
-  background: rgb(255, 255, 255);
+  background: var(--fill-color);
   flex: 1;
 }
 
@@ -44,5 +47,6 @@
 }
 
 .percentage {
-    font-size: 80%;
+  display: inline-flex;
+  font-size: var(--font-size);
 }

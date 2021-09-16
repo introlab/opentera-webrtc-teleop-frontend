@@ -1,24 +1,26 @@
 .signal-bars{
     height: 1.5rem;
-    width: 2rem;
+    width: 1.5rem;
     box-sizing: border-box;
     display: inline-block;
+    --fill-color: white;
+    --border-color: #6D6D6D;
 }
 
 .bar {
-    width: 18%;
-    margin-left: 2%;
+    width: 19%;
+    margin-left: 1%;
     min-height: 20%;
     display: inline-block;
-    border-color: rgb(109, 109, 109);
+    border-color: var(--border-color);
     border-style: solid;
     border-width: 1px;
     border-radius: 1px;
 }
 
 .good {
-    border-color: white;
-    background-color: white;
+    border-color: var(--fill-color);
+    background-color: var(--fill-color);
 }
 
 .signal-bars .bar.first-bar  { height: 20%; margin-left: 0% }
