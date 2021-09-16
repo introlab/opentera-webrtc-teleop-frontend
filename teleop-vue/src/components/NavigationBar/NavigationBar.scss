@@ -5,8 +5,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
+    padding: 0.2rem 0 0.2rem 0;
 }
 .navbar > .container-fluid {
     display: flex;
@@ -58,11 +57,12 @@
     list-style: none;
 }
 
+.navbar-item {
+    margin: 0.35rem 0.5rem 0.35rem 0.5rem;
+}
+
 .nav-link {
     display: flex;
-    padding: .5rem 1rem;
-    padding-left: .5rem;
-    padding-right: .5rem;
     text-decoration: none;
     text-align: left !important;
     transition: 
@@ -95,6 +95,7 @@
         display: flex !important;
         flex-basis: auto;
         flex-direction: row;
+        align-items: center;
     }
 
     .navbar-nav {

@@ -3,6 +3,9 @@
     flex-direction: row;
     align-items: center;
     gap: 0.25rem;
+    height: 1.5rem;
+    width: 2.5rem;
+    box-sizing: border-box;
 }
 
 .battery {
@@ -10,20 +13,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100%;
+  width: 75%;
 }
 
 .top {
   background: rgb(255, 255, 255);
-  width: 0.5rem;
-  height: 0.25rem;
-  border-radius: 0.125rem .125rem 0 0;
+  width: 40%;
+  height: 15%;
+  border-radius: 1px 1px 0 0;
   margin-bottom: 0px;
 }
 
 .outer {
-  width: 1rem;
-  border: 0.125rem solid rgb(255, 255, 255);
-  height: 1.8rem;
+  width: 100%;
+  border: 1px solid rgb(255, 255, 255);
+  height: 85%;
   border-radius: 0.125rem;
   display: flex;
   flex-direction: column;
@@ -39,5 +44,5 @@
 }
 
 .percentage {
-    font-size: 1rem;
+    font-size: 80%;
 }

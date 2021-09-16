@@ -1,1 +1,1 @@
-export { default as BatteryIndicator} from "./BatteryIndicator.vue";
+export { default as BatteryIndicator } from "./BatteryIndicator.vue";
