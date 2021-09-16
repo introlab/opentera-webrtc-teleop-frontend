@@ -20,9 +20,11 @@
               </router-link>
             </li>
           </ul>
-          <battery-indicator class="navbar-item margin-left-extend" />
-          <signal-strength-indicator class="navbar-item"/>
-          <device-settings class="navbar-item navbar-button margin-left-extend" />
+          <signal-strength-indicator class="navbar-item margin-left-extend" />
+          <battery-indicator class="navbar-item" />
+          <device-settings
+            class="navbar-item navbar-button device-settings-menu"
+          />
         </div>
       </div>
     </nav>

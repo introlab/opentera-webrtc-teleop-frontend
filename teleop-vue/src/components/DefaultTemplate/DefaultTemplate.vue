@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 <template>
-  <div>
+  <div class="wrapper">
     <header class="header">
       <navigation-bar
         v-bind:brand="brand"
