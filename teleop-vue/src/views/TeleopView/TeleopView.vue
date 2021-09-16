@@ -6,8 +6,10 @@
       class="user-video mirror-y"
     ></video>
     <div class="fluid pad">
-      <div class="fluid col-flexbox">
-        <!-- v-if="videoConfClientStream !== null || cameraXClientStream !== null" -->
+      <div
+        class="fluid col-flexbox"
+        v-if="videoConfClientStream !== null || cameraXClientStream !== null"
+      >
         <div class="row50 gutter">
           <video-participant
             id="videoconf"
@@ -32,13 +34,13 @@
             height="150"
             class="telepresence-joystick"
             v-bind:absolute-max-x="maxCmdValue"
-            v-bind:absolute-max-y="maxCmdValue"
+            v-bind:absolute-max-z="maxCmdValue"
             v-on:joystickPositionChange="updateCmdVel"
           />
         </div>
         <keyboard-teleop
           v-bind:absolute-max-x="maxCmdValue"
-          v-bind:absolute-max-y="maxCmdValue"
+          v-bind:absolute-max-z="maxCmdValue"
           v-on:keyboadCmdEvent="updateCmdVel"
         />
       </div>
@@ -73,7 +75,7 @@ export default {
   data() {
     return {
       chatTextArea: null,
-      cmd: { x: 0, y: 0 }, // Global velocity command to be sent to the robot
+      cmd: { x: 0, z: 0 }, // Global velocity command to be sent to the robot
       maxCmdValue: 1
     };
   },
