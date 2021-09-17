@@ -22,9 +22,7 @@
           </ul>
           <signal-strength-indicator class="navbar-item margin-left-extend" />
           <battery-indicator class="navbar-item" />
-          <device-settings
-            class="navbar-item navbar-button device-settings-menu"
-          />
+          <device-settings class="navbar-item device-settings" />
         </div>
       </div>
     </nav>

@@ -75,14 +75,13 @@
     color: inherit
 }
 
-.navbar-button {
-    display: flex;
-    align-items: center;
-    padding-left: 0px;
-    margin-left: 0px;
+.device-settings {
+    --menu-left: 0px;
+    --menu-right: auto;
+    --menu-top: 2rem;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 660px) {
     .navbar-toggler {
         display: none;
     }
@@ -99,12 +98,13 @@
         align-items: center;
     }
 
-    .navbar-button {
-        display: flex;
-        align-items: center;
-    }
-
     .margin-left-extend {
         margin-left: auto;
     }
+
+    .device-settings {
+        --menu-left: auto;
+        --menu-right: 0px;
+    }
+
 }

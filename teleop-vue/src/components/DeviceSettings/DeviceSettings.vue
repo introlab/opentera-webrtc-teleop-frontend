@@ -1,8 +1,8 @@
 <template>
-  <div class="menu-parent">
-    <button class="icon-button">
+  <div class="menu-container">
+    <button class="icon-button icon">
       <svg-icon
-        class="navbar-toggler-icon navbar-nav"
+        class=""
         icon="gear"
         v-on:click="toggleShowSettings"
       ></svg-icon>
@@ -218,7 +218,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// FIXME: Should not depend on css from parent component
-@import "../NavigationBar/NavigationBar.scss";
 @import "./DeviceSettings.scss";
 </style>
