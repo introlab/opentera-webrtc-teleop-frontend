@@ -3,11 +3,15 @@
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 import { getBasePath, getOrigin } from "@/config/location";
 
-export function fetchLocalStream() {
+export function fetchLocalStream(constraint?: any) {
     return new Promise<MediaStream | undefined>((resolve, reject) => {
-      openteraWebrtcWebClient.devices.getDefaultStream()
+    if (!constraint)
+        constraint = { video: true, audio: true};
+
+    navigator.mediaDevices.getUserMedia(constraint)
         .then((stream : MediaStream): void => resolve(stream))
         .catch((err: DOMException): void => {
+            console.error(err);
             alert("Can't access default media (Camera nor mic)");
             resolve(undefined);
         });

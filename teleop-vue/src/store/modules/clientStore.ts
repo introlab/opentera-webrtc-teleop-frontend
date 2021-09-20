@@ -39,42 +39,42 @@ const ClientStore = {
       
       context.commit("setClient", {
         id: undefined,
-        name: payload.name,
+        name: payload.name ? payload.name : "Undefined",
         data: payload.data,
         room: undefined
       });
 
       // Create different configuration for different room
       const videoConfSignalingServerConfirguaration: SignalingServerConfirguration = {
-        name: payload.name + "-" + "VideoConf",
+        name: payload.name,
         data: payload.data,
         room: "VideoConf",
         password: payload.password
       };
       
       const cameraXSignalingServerConfirguaration: SignalingServerConfirguration = {
-        name: payload.name + "-" + "CameraX",
+        name: payload.name,
         data: payload.data,
         room: "CameraX",
         password: payload.password
       }
       
       const mapSignalingServerConfirguaration: SignalingServerConfirguration = {
-        name: payload.name + "-" + "Map",
+        name: payload.name,
         data: payload.data,
         room: "Map",
         password: payload.password
       };
       
       const messagingSignalingServerConfirguaration: SignalingServerConfirguration = {
-        name: payload.name + "-" + "Messaging",
+        name: payload.name,
         data: payload.data,
         room: "Messaging",
         password: payload.password
       };
       
       const teleopSignalingServerConfirguaration: SignalingServerConfirguration = {
-        name: payload.name + "-" + "Teleop",
+        name: payload.name,
         data: payload.data,
         room: "Teleop",
         password: payload.password
@@ -94,6 +94,7 @@ const ClientStore = {
       context.dispatch("openteraVideoConf/start", videoConfSignalingServerConfirguaration).then(() => console.log("VIDEO CONF CONNECTED"));
       context.dispatch("openteraCameraX/start", cameraXSignalingServerConfirguaration).then(() => console.log("CAMERA X CONNECTED"));
       context.dispatch("openteraTeleop/start", teleopSignalingServerConfirguaration).then(() => console.log("TELEOP CONNECTED"));
+      // TODO: add Map signaling client and Messaging signaling client
     },
 
     // TODO: Make call functions more consistent
@@ -101,24 +102,71 @@ const ClientStore = {
     // Make it better.
     toggleCall(context: any) {
       return new Promise<void>((resolve, reject) => {
-        
+        context.commit("setCallState", !context.state.isInCall);
+
+        Promise.all([
+          context.dispatch("toggleCallVideoConf").catch((err: any) => { return err; }),
+          context.dispatch("toggleCallCameraX").catch((err: any) => { return err; }),
+          context.dispatch("toggleCallTeleop").catch((err: any) => { return err; })
+        ]).then(errors => {
+          errors.forEach(error => {
+            if (error) {
+              // TODO: Handle error
+              console.warn(error);
+            }
+          });
+          resolve();
+        });
+      })
+    },
+
+    toggleCallVideoConf(context: any) {
+
+      return new Promise<void>((resolve, reject) => {
+
         if (!context.state.openteraVideoConf.client) {
-          reject(new Error("Unable to call, you are not connected."));
-          return;
+          reject(new Error("VideoConf: Unable to call, you are not connected."));
         }
 
         if (context.state.openteraVideoConf.clientsInRoom.length < 2) {
-          reject(new Error("There are no participants to call."));
-          return;
+          reject(new Error("VideoConf: There are no participants to call."));
         }
-        
-        context.commit("setCallState", !context.state.isInCall);
-        
+
         context.state.isInCall ? context.state.openteraVideoConf.client.callAll() : context.state.openteraVideoConf.client.hangUpAll();
+        resolve();
+      });
+    },
+
+    toggleCallCameraX(context: any) {
+      return new Promise<void>((resolve, reject) => {
+
+        if (!context.state.openteraCameraX.client) {
+          reject(new Error("CameraX: Unable to call, you are not connected."));
+        }
+
+        if (context.state.openteraCameraX.clientsInRoom.length < 2) {
+          reject(new Error("CameraX: There are no participants to call."));
+        }
+
         context.state.isInCall ? context.state.openteraCameraX.client.callAll() : context.state.openteraCameraX.client.hangUpAll();
+        resolve();
+      });
+    },
+
+    toggleCallTeleop(context: any) {
+      return new Promise<void>((resolve, reject) => {
+
+        if (!context.state.openteraTeleop.client) {
+          reject(new Error("Teleop: Unable to call, you are not connected."));
+        }
+
+        if (context.state.openteraTeleop.clientsInRoom.length < 2) {
+          reject(new Error("Teleop: There are no participants to call."));
+        }
+
         context.state.isInCall ? context.state.openteraTeleop.client.callAll() : context.state.openteraTeleop.client.hangUpAll();
         resolve();
-      })
+      });
     },
 
     toggleMute(context: any) {
