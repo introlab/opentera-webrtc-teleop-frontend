@@ -41,6 +41,16 @@
     -moz-transform: rotateY(180deg);
 }
 
+.user-video {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  margin: 1.5rem;
+  padding: 5px;
+  width: 20%;
+  z-index: 3;
+}
+
 .participants-enter-active,
 .participants-leave-active {
   transition: all 500ms ease;
@@ -51,7 +61,12 @@
 }
 
 .telepresence-joystick {
-  opacity: 0.75;
+  opacity: 0.5;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  margin: 1.5rem;
+  z-index: 3;
 }
 
 .center-left {
