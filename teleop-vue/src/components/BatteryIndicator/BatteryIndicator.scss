@@ -1,0 +1,54 @@
+.battery-indicator {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10%;
+    height: 1.5rem;
+    width: 2.5rem;
+    box-sizing: border-box;
+    --fill-color: white;
+    --border-color: white;
+    --font-size: 80%;
+    --border-radius: 1px;
+    --border-width: 1px;
+}
+
+.battery {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 75%;
+}
+
+.top {
+  background: var(--fill-color);
+  width: 40%;
+  height: 10%;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  margin-bottom: 0px;
+}
+
+.outer {
+  width: 100%;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+}
+
+.inner {
+  background: var(--fill-color);
+  flex: 1;
+}
+
+.inner.hidden {
+  visibility: hidden;
+}
+
+.percentage {
+  display: inline-flex;
+  font-size: var(--font-size);
+}

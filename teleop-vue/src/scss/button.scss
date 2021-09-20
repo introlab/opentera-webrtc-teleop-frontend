@@ -11,7 +11,7 @@ button:not(:disabled) {
 .icon-button {
     display: inline-block;
     color: inherit;
-    border: 1px solid transparent;
+    border: 0px solid transparent;
     background-color: transparent;
     transition: box-shadow 150ms ease-in-out;
 }
