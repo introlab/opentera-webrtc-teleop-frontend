@@ -11,7 +11,9 @@
         />
       </div>
     </div>
-    <p class="percentage">{{ batteryLevel }}%</p>
+    <div class="percentage-box">
+      <div class="percentage">{{ batteryLevel }}%</div>
+    </div>
   </div>
 </template>
 
