@@ -158,7 +158,7 @@ export default {
       // Send the global velocity command at a constant rate
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify(this.cmd)
+          JSON.stringify({ type: "velCmd", x: this.cmd.x, z: this.cmd.z })
         );
       }
     }
