@@ -62,6 +62,10 @@ export default {
             "localClient/openteraTeleop/changeBatteryLevel",
             parsedMsg.batteryLevel
           );
+          this.$store.commit(
+            "localClient/openteraTeleop/changeSignalStrength",
+            parsedMsg.signalStrength
+          );
         }
       }
     );

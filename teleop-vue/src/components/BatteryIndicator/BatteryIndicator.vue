@@ -23,9 +23,6 @@ export default {
       nbOfChargeBars: 6,
     };
   },
-  created() {
-    this.onBatteryLevelChanged(this.chargePercentage);
-  },
   computed: {
     batteryLevel() {
       return this.$store.state.localClient.openteraTeleop.batteryLevel;
@@ -33,9 +30,7 @@ export default {
   },
   watch: {
     batteryLevel() {
-      this.onBatteryLevelChanged(
-        this.$store.state.localClient.openteraTeleop.batteryLevel
-      );
+      this.onBatteryLevelChanged(this.batteryLevel);
     }
   },
   methods: {
