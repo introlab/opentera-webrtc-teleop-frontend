@@ -1,11 +1,7 @@
 <template>
   <div class="menu-container">
     <button class="icon-button icon">
-      <svg-icon
-        class=""
-        icon="gear"
-        v-on:click="toggleShowSettings"
-      ></svg-icon>
+      <svg-icon class="" icon="gear" v-on:click="toggleShowSettings"></svg-icon>
     </button>
     <div class="menu" v-if="showSettings">
       <!-- TODO: menu should close when clicking outside of it -->
@@ -99,13 +95,13 @@ import { useMicrophones } from "./useMicrophones";
 import { computed } from "@vue/runtime-core";
 import {
   fetchLocalStream,
-  initStreamConfiguration
+  initStreamConfiguration,
 } from "@/store/modules/opentera";
 
 export default {
   components: {
     SvgIcon,
-    Modal
+    Modal,
   },
   data() {
     return {
@@ -113,7 +109,7 @@ export default {
       showAudioSettings: false,
       showVideoSettings: false,
       audioSelected: this.microphone.deviceId,
-      videoSelected: this.camera.deviceId
+      videoSelected: this.camera.deviceId,
     };
   },
   setup() {
@@ -121,11 +117,11 @@ export default {
     const { microphone, microphones } = useMicrophones();
 
     const camerasLabels = computed(() => {
-      cameras.value.map(device => device.label);
+      cameras.value.map((device) => device.label);
     });
 
     const microphonesLabels = computed(() => {
-      microphones.value.map(device => device.label);
+      microphones.value.map((device) => device.label);
     });
 
     return {
@@ -134,7 +130,7 @@ export default {
       camerasLabels,
       microphone,
       microphones,
-      microphonesLabels
+      microphonesLabels,
     };
   },
   methods: {
@@ -153,7 +149,7 @@ export default {
         "localClient/openteraVideoConf/setLocalStream",
         await fetchLocalStream({
           video: { deviceId: { exact: this.camera.deviceId } },
-          audio: { deviceId: { exact: this.audioSelected } }
+          audio: { deviceId: { exact: this.audioSelected } },
         })
       );
 
@@ -167,7 +163,7 @@ export default {
         "localClient/openteraVideoConf/setLocalStream",
         await fetchLocalStream({
           video: { deviceId: { exact: this.videoSelected } },
-          audio: { deviceId: { exact: this.microphone.deviceId } }
+          audio: { deviceId: { exact: this.microphone.deviceId } },
         })
       );
 
@@ -180,7 +176,7 @@ export default {
       // HACK: Invalid
       // Here we access private member of the class. It's bad.
       // Instead we should create a state of those configuration in our StreamClientStore and in the SignalingClientStore.
-      const signalingServerConfirguration = this.$store.state.localClient
+      const signalingServerConfiguration = this.$store.state.localClient
         .openteraVideoConf.client._signalingServerConfiguration;
       const streamConfiguration = initStreamConfiguration(
         this.$store.state.localClient.openteraVideoConf.localStream
@@ -192,7 +188,7 @@ export default {
       this.$store.commit(
         "localClient/openteraVideoConf/setClient",
         new openteraWebrtcWebClient.StreamClient(
-          signalingServerConfirguration,
+          signalingServerConfiguration,
           streamConfiguration,
           rtcConfiguration,
           this.$store.state.localClient.openteraVideoConf.logger
@@ -201,7 +197,7 @@ export default {
 
       this.$store.dispatch("localClient/openteraVideoConf/connectClientEvents");
       await this.$store.state.localClient.openteraVideoConf.client.connect();
-    }
+    },
   },
   watch: {
     async videoSelected() {
@@ -209,11 +205,11 @@ export default {
       testVideoRef.muted = true;
       testVideoRef.srcObject = await fetchLocalStream({
         video: { deviceId: { exact: this.videoSelected } },
-        audio: { deviceId: { exact: this.microphone.deviceId } }
+        audio: { deviceId: { exact: this.microphone.deviceId } },
       });
       testVideoRef.autoplay = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

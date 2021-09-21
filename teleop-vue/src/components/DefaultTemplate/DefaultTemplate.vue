@@ -52,6 +52,19 @@ export default {
   },
   beforeMount() {
     this.$store.dispatch("localClient/start", this.client);
+    this.$store.commit(
+      "localClient/openteraTeleop/setMessageEventHandler",
+      (id, name, clientData, message) => {
+        // TODO
+        const parsedMsg = JSON.parse(message);
+        if (parsedMsg.type === "status") {
+          this.$store.commit(
+            "localClient/openteraTeleop/changeBatteryLevel",
+            parsedMsg.batteryLevel
+          );
+        }
+      }
+    );
   },
   unmounted() {
     this.$store.dispatch("localClient/destroy");

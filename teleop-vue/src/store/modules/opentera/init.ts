@@ -1,9 +1,9 @@
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
-import { IceServer, RtcConfiguration, SignalingServerConfirguration, StreamConfiguration } from "./types";
+import { IceServer, RtcConfiguration, SignalingServerConfiguration, StreamConfiguration } from "./types";
 import { getBasePath, getOrigin } from "@/config/location";
 import { getSignalingServerURL } from "./utils";
 
-export function initSignalingServerConfiguration(payload: SignalingServerConfirguration) : SignalingServerConfirguration {
+export function initSignalingServerConfiguration(payload: SignalingServerConfiguration) : SignalingServerConfiguration {
     return {
         url: getSignalingServerURL() + "/socket.io",
         name: payload.name,

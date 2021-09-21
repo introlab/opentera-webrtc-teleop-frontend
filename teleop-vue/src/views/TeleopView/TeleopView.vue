@@ -162,14 +162,6 @@ export default {
         );
       }
     }
-  },
-  beforeMount() {
-    this.$store.commit(
-      "localClient/openteraTeleop/setMessageEventHandler",
-      (id, name, clientData, message) => {
-        // TODO
-      }
-    );
   }
 };
 </script>
