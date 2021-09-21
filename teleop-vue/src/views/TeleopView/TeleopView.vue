@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
     <video
+      v-show="isCameraOn"
       ref="overlayVideoRef"
       id="overlayVideo"
       class="user-video mirror-y"
@@ -131,6 +132,9 @@ export default {
     },
     showParticipants() {
       return this.$store.state.localClient.openteraVideoConf.showParticipants;
+    },
+    isCameraOn() {
+      return this.$store.state.localClient.isCameraOn;
     }
   },
   activated() {

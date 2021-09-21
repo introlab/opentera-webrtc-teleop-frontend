@@ -98,10 +98,7 @@ const ClientStore = {
         )
         .then(() => console.log("VIDEO CONF CONNECTED"));
       context
-        .dispatch(
-          "openteraCameraX/start",
-          cameraXSignalingServerConfiguration
-        )
+        .dispatch("openteraCameraX/start", cameraXSignalingServerConfiguration)
         .then(() => console.log("CAMERA X CONNECTED"));
       context
         .dispatch("openteraTeleop/start", teleopSignalingServerConfiguration)
