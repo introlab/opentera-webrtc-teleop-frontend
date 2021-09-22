@@ -64,7 +64,6 @@ export default {
   },
   methods: {
     navToggler() {
-      console.log("navToggler");
       this.showNav = !this.showNav;
       if (this.showSettings && !this.showNav) this.showSettings = false;
     }
