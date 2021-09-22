@@ -2,24 +2,25 @@
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: 10%;
+    gap: 5%;
     height: 1.5rem;
-    width: 2.5rem;
+    width: 3.5rem;
     box-sizing: border-box;
     --fill-color: white;
     --border-color: white;
-    --font-size: 80%;
+    --font-size: 85%;
     --border-radius: 1px;
     --border-width: 1px;
 }
 
 .battery {
   display: inline-flex;
+  box-sizing: border-box;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
-  width: 75%;
+  width: 20%;
 }
 
 .top {
@@ -48,7 +49,13 @@
   visibility: hidden;
 }
 
-.percentage {
+.percentage-box {
   display: inline-flex;
+  box-sizing: border-box;
+  width: 70%;
+  height: auto
+}
+
+.percentage {
   font-size: var(--font-size);
 }

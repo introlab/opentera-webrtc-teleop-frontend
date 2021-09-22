@@ -4,7 +4,7 @@ import { getCookie, SESSION_COOKIE, setCookie } from "@/config/cookie";
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 import { BusyException } from ".";
 
-import { Logger, RoomClient, SignalingClientContext, SignalingClientRoom, SignalingServerConfirguration } from "./types";
+import { Logger, RoomClient, SignalingClientContext, SignalingClientRoom, SignalingServerConfiguration } from "./types";
 
 export abstract class SignalingClientStore {
     protected state(): SignalingClientRoom {
@@ -75,10 +75,10 @@ export abstract class SignalingClientStore {
                 self.connectClientEvents(context);
             },
 
-            start(context: any, config: SignalingServerConfirguration) {
+            start(context: any, config: SignalingServerConfiguration) {
                 return new Promise<void>((resolve, reject)=> {
                     SignalingClientStore.cookieHandler(context, config)
-                        .then((config: SignalingServerConfirguration) => {
+                        .then((config: SignalingServerConfiguration) => {
                             context.dispatch("initialize", config).then(() => {
                                 context.dispatch("connectClient").then(() => resolve());
                             });
@@ -89,7 +89,7 @@ export abstract class SignalingClientStore {
                 });
             },
 
-            initialize(context: SignalingClientContext, config: SignalingServerConfirguration) {
+            initialize(context: SignalingClientContext, config: SignalingServerConfiguration) {
                 return new Promise<void>(resolve => {
                     self.initialize(context, config).then(() => resolve());
                 });
@@ -111,8 +111,8 @@ export abstract class SignalingClientStore {
         return {};
     };
 
-    protected static cookieHandler(context: any, config: SignalingServerConfirguration): Promise<SignalingServerConfirguration> {
-        return new Promise<SignalingServerConfirguration>((resolve, reject) => {
+    protected static cookieHandler(context: any, config: SignalingServerConfiguration): Promise<SignalingServerConfiguration> {
+        return new Promise<SignalingServerConfiguration>((resolve, reject) => {
             if (window.sessionStorage.getItem(config.room ? config.room : "chat") !== "busy") {
 
                 window.sessionStorage.setItem(config.room ? config.room : "chat", "busy");
@@ -132,7 +132,7 @@ export abstract class SignalingClientStore {
                     cookie = JSON.parse(cookie);
 
                 if (cookie) { // Check for null
-                    config = cookie as SignalingServerConfirguration;
+                    config = cookie as SignalingServerConfiguration;
                 } else {
                     config = {
                         name: config.name ? config.name : "Undefined",
@@ -207,7 +207,7 @@ export abstract class SignalingClientStore {
         window.removeEventListener("beforeunload", context.state.beforeunloadEventHandler as {():void});
     }
 
-    protected abstract initialize(context: SignalingClientContext, payload: SignalingServerConfirguration): Promise<void>;
+    protected abstract initialize(context: SignalingClientContext, payload: SignalingServerConfiguration): Promise<void>;
 
     public getModule() {
         return {

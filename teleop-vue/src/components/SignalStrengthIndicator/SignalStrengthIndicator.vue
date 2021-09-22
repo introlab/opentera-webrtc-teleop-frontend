@@ -12,14 +12,22 @@
 export default {
   data() {
     return {
-      signalBars: 3,
-      signalStrength: 0
+      signalBars: 0
     };
   },
+  computed: {
+    signalStrength() {
+      return this.$store.state.localClient.openteraTeleop.signalStrength;
+    }
+  },
+  watch: {
+    signalStrength() {
+      this.onSignalStrengthChanged(this.signalStrength);
+    }
+  },
   methods: {
-    onSignalStrengthChanged(newSignalStrength) {
-      this.signalStrength = newSignalStrength;
-      this.signalBars = Math.ceil((this.signalStrength / 100) * 5);
+    onSignalStrengthChanged(strength) {
+      this.signalBars = Math.ceil((strength / 100) * 5);
     }
   }
 };
