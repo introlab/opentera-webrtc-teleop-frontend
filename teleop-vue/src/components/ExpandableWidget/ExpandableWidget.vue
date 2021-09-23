@@ -20,9 +20,13 @@
       v-on:click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
     >
-      <video class="video" autoplay loop muted>
-        <source src="./movie.mp4" type="video/mp4" />
-      </video>
+      <video-participant
+        id="map"
+        name="Map"
+        v-bind:stream="mapClientStream"
+        v-bind:show-name="false"
+      >
+      </video-participant>
     </div>
   </div>
   <div class="mask" v-if="isExpanded"></div>
@@ -30,16 +34,28 @@
 
 <script>
 import { SvgIcon } from "@/components/SvgIcon";
+import { VideoParticipant } from "@/components/VideoParticipant";
 
 export default {
   name: "expandable-widget",
   components: {
-    SvgIcon
+    SvgIcon,
+    VideoParticipant
   },
   data() {
     return {
       isExpanded: false
     };
+  },
+  computed: {
+    mapClientStream() {
+      if (this.$store.state.localClient.openteraMap.clientsInCall.length > 0) {
+        return this.$store.state.localClient.openteraMap.clientsInCall[0]
+          .stream;
+      } else {
+        return null;
+      }
+    }
   },
   methods: {
     toggleExpand() {

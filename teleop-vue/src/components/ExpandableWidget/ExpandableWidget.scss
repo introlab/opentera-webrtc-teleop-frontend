@@ -47,6 +47,8 @@
   vertical-align: middle;
 }
 
+
+// FIXME: body overflows the parent container
 .body {
   display:flex;
   flex: 1;
