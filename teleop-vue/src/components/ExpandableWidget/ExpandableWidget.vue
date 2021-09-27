@@ -25,6 +25,7 @@
         name="Map"
         v-bind:stream="mapClientStream"
         v-bind:show-name="false"
+        v-on:click="onMapClick"
       >
       </video-participant>
     </div>
@@ -65,6 +66,9 @@ export default {
       if (!this.isExpanded) {
         this.isExpanded = true;
       }
+    },
+    onMapClick() {
+      console.log("Map click");
     },
     onClickAway() {
       if (this.isExpanded) {

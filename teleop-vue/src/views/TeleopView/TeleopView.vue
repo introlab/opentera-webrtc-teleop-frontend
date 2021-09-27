@@ -29,16 +29,14 @@
           >
           </video-participant>
         </div>
-        <div class="row50 gutter center-left">
-          <joystick
-            width="150"
-            height="150"
-            class="telepresence-joystick"
-            v-bind:absolute-max-x="maxCmdValue"
-            v-bind:absolute-max-z="maxCmdValue"
-            v-on:joystickPositionChange="updateCmdVel"
-          />
-        </div>
+        <joystick
+          width="150"
+          height="150"
+          class="telepresence-joystick"
+          v-bind:absolute-max-x="maxCmdValue"
+          v-bind:absolute-max-z="maxCmdValue"
+          v-on:joystickPositionChange="updateCmdVel"
+        />
         <keyboard-teleop
           v-bind:absolute-max-x="maxCmdValue"
           v-bind:absolute-max-z="maxCmdValue"
