@@ -183,7 +183,6 @@ export default {
     writeWaypointInfos(wp, index) {
       const wpCoord = wp.coordinate;
       const coord = this.getCanvasCoordinatesFromVideo(wpCoord.x, wpCoord.y);
-      // const radYaw = -wpCoord.yaw / 180 * Math.PI;
 
       const text = `${index + 1}${wp.label ? `. ${wp.label}` : ""}`;
 
@@ -349,7 +348,6 @@ export default {
      */
     onMouseDown(event) {
       if (event.button === 0 && this.isActive && this.isClickable) {
-        console.log("onMouseDown");
         const coord = this.getVideoCoordinatesOfEvent(event);
         if (this.isClickValid(coord)) {
           const wp = coord;
@@ -367,7 +365,6 @@ export default {
      */
     onMouseMove(event) {
       if (this.isMouseDown) {
-        console.log("MouseMoved");
         const mousePosition = this.getVideoCoordinatesOfEvent(event);
         this.currentWaypoint.coordinate.yaw =
           (-Math.atan2(
@@ -386,7 +383,6 @@ export default {
      */
     onMouseUp(event) {
       if (this.isMouseDown) {
-        console.log("MouseUP");
         const mousePosition = this.getVideoCoordinatesOfEvent(event);
 
         this.currentWaypoint.coordinate.yaw =
@@ -415,7 +411,6 @@ export default {
      */
     onMouseOut() {
       if (this.isMouseDown) {
-        console.log("MouseOut");
         this.currentWaypoint.coordinate = {
           x: -1,
           y: -1,

@@ -34,7 +34,7 @@
         :nb-of-waypoint="1"
         wp-color="#00d456"
         :video-element="mapVideoElement"
-        @newWaypoint="sendGoTo"
+        @newWaypoint="sendWaypoint"
       />
     </div>
   </div>
@@ -93,6 +93,13 @@ export default {
     onClickAway() {
       if (this.isExpanded) {
         this.isExpanded = false;
+      }
+    },
+    sendWaypoint(event) {
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({ type: "waypoint", waypoint: event })
+        );
       }
     }
   }
