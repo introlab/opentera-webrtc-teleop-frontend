@@ -20,7 +20,22 @@
       v-on:click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
     >
-      <video ref="video" class="map-video" v-on:click="onMapClick" autoplay />
+      <video ref="video" id="map" class="map-video" autoplay />
+      <waypoint-overlay
+        v-show="isExpanded"
+        class="overlay"
+        :is-active="true"
+        :is-clickable="true"
+        :show="true"
+        :show-grid="false"
+        :list="waypoints"
+        :zoom="1"
+        :map-size="{ width: 1000, height: 1000 }"
+        :nb-of-waypoint="1"
+        wp-color="#00d456"
+        :video-element="mapVideoElement"
+        @newWaypoint="sendGoTo"
+      />
     </div>
   </div>
   <div class="mask" v-if="isExpanded"></div>
@@ -28,16 +43,19 @@
 
 <script>
 import { SvgIcon } from "@/components/SvgIcon";
-import { VideoParticipant } from "@/components/VideoParticipant";
+import WaypointOverlay from "./WaypointOverlay.vue";
 
 export default {
   name: "expandable-widget",
   components: {
-    SvgIcon
+    SvgIcon,
+    WaypointOverlay
   },
   data() {
     return {
-      isExpanded: false
+      isExpanded: false,
+      mapVideoElement: "",
+      waypoints: []
     };
   },
   computed: {
@@ -53,6 +71,7 @@ export default {
   watch: {
     mapClientStream(newStream) {
       this.$refs.video.srcObject = newStream;
+      this.mapVideoElement = document.getElementById("map");
     }
   },
   mounted() {
@@ -69,16 +88,6 @@ export default {
     onClickBody() {
       if (!this.isExpanded) {
         this.isExpanded = true;
-      }
-    },
-    onMapClick(event) {
-      if (this.isExpanded) {
-        console.log("Map click");
-        const target = event.target;
-        const rect = target.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        console.log("Coord: x=" + x + " y=" + y);
       }
     },
     onClickAway() {
