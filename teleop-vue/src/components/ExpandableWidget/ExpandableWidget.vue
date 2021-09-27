@@ -20,14 +20,7 @@
       v-on:click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
     >
-      <video-participant
-        id="map"
-        name="Map"
-        v-bind:stream="mapClientStream"
-        v-bind:show-name="false"
-        v-on:click="onMapClick"
-      >
-      </video-participant>
+      <video ref="video" class="map-video" v-on:click="onMapClick" autoplay />
     </div>
   </div>
   <div class="mask" v-if="isExpanded"></div>
@@ -40,8 +33,7 @@ import { VideoParticipant } from "@/components/VideoParticipant";
 export default {
   name: "expandable-widget",
   components: {
-    SvgIcon,
-    VideoParticipant
+    SvgIcon
   },
   data() {
     return {
@@ -58,6 +50,18 @@ export default {
       }
     }
   },
+  watch: {
+    mapClientStream(newStream) {
+      this.$refs.video.srcObject = newStream;
+    }
+  },
+  mounted() {
+    this.$refs.video.srcObject = this.mapClientStream;
+  },
+  activated() {
+    this.$refs.video.srcObject = this.mapClientStream;
+    this.$refs.video.autoplay = true;
+  },
   methods: {
     toggleExpand() {
       this.isExpanded = !this.isExpanded;
@@ -67,8 +71,15 @@ export default {
         this.isExpanded = true;
       }
     },
-    onMapClick() {
-      console.log("Map click");
+    onMapClick(event) {
+      if (this.isExpanded) {
+        console.log("Map click");
+        const target = event.target;
+        const rect = target.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        console.log("Coord: x=" + x + " y=" + y);
+      }
     },
     onClickAway() {
       if (this.isExpanded) {
