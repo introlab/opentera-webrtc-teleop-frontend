@@ -146,21 +146,13 @@ export default {
     overlayVideo.autoplay = true;
   },
   methods: {
-    init: function() {
-      setInterval(
-        function() {
-          this.sendCmdVel({ x: this.x, y: this.y });
-        }.bind(this),
-        100
-      ); // 100 ms
-    },
     updateCmdVel(newCmd) {
       // Update the global velocity command with the command from the keyboard or joystick
       // TODO: prioritize one of the two sources over the other.
       this.cmd = newCmd;
+      this.sendCmdVel();
     },
     sendCmdVel() {
-      // Send the global velocity command at a constant rate
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "velCmd", x: this.cmd.x, z: this.cmd.z })
