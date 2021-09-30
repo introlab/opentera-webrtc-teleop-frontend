@@ -37,9 +37,13 @@
         @newWaypoint="saveWaypoint"
       />
       <div v-show="isExpanded" class="action-buttons">
+        <reset-button 
+          @resetClicked="clearWaypoints"
+          :disabled="waypointsEmpty"
+        />
         <start-button
-          @startClicked="sendWaypoint"
-          :disabled="startButtonDisabled"
+          @startClicked="sendWaypoints"
+          :disabled="waypointsEmpty"
         />
         <stop-button />
       </div>
@@ -53,6 +57,7 @@ import { SvgIcon } from "@/components/SvgIcon";
 import WaypointOverlay from "./WaypointOverlay.vue";
 import StopButton from "@/components/StopButton/StopButton.vue";
 import StartButton from "@/components/StartButton/StartButton.vue";
+import ResetButton from "@/components/ResetButton/ResetButton.vue"
 
 export default {
   name: "expandable-widget",
@@ -60,14 +65,15 @@ export default {
     SvgIcon,
     WaypointOverlay,
     StopButton,
-    StartButton
+    StartButton,
+    ResetButton
   },
   data() {
     return {
       isExpanded: false,
       mapVideoElement: "",
       waypoints: [],
-      startButtonDisabled: true
+      waypointsEmpty: true
     };
   },
   computed: {
@@ -109,15 +115,22 @@ export default {
     },
     saveWaypoint(event) {
       this.waypoints.push(event);
-      this.startButtonDisabled = false;
-      console.log(this.waypoints);
+      this.waypointsEmpty = false;
     },
-    sendWaypoint() {
-      if (
-        this.waypoints.length > 0 &&
-        this.$store.state.localClient.openteraTeleop.client
-      ) {
-        console.log("sendWaypoint");
+    clearWaypoints() {
+      this.waypoints = [];
+      this.waypointsEmpty = true;
+      this.cancelWaypoints();
+    },
+    cancelWaypoints() {
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({ type: "stop", state: true })
+        );
+      }
+    },
+    sendWaypoints() {
+      if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "waypointArray", array: this.waypoints })
         );
