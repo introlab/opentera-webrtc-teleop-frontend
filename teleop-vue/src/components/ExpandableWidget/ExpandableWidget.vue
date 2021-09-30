@@ -34,9 +34,15 @@
         :nb-of-waypoint="1"
         wp-color="#00d456"
         :video-element="mapVideoElement"
-        @newWaypoint="sendWaypoint"
+        @newWaypoint="saveWaypoint"
       />
-      <stop-button v-show="isExpanded" class="button-over" />
+      <div v-show="isExpanded" class="action-buttons">
+        <start-button
+          @startClicked="sendWaypoint"
+          :disabled="startButtonDisabled"
+        />
+        <stop-button />
+      </div>
     </div>
   </div>
   <div class="mask" v-if="isExpanded"></div>
@@ -45,20 +51,24 @@
 <script>
 import { SvgIcon } from "@/components/SvgIcon";
 import WaypointOverlay from "./WaypointOverlay.vue";
-import StopButton from "@/components/StopButton/StopButton.vue"
+import StopButton from "@/components/StopButton/StopButton.vue";
+import StartButton from "@/components/StartButton/StartButton.vue";
 
 export default {
   name: "expandable-widget",
   components: {
     SvgIcon,
     WaypointOverlay,
-    StopButton
+    StopButton,
+    StartButton
   },
   data() {
     return {
       isExpanded: false,
       mapVideoElement: "",
-      waypoints: []
+      waypoints: [],
+      waypoint: null,
+      startButtonDisabled: true
     };
   },
   computed: {
@@ -98,10 +108,18 @@ export default {
         this.isExpanded = false;
       }
     },
-    sendWaypoint(event) {
-      if (this.$store.state.localClient.openteraTeleop.client) {
+    saveWaypoint(event) {
+      this.waypoint = event;
+      this.startButtonDisabled = false;
+    },
+    sendWaypoint() {
+      if (
+        this.waypoint != null &&
+        this.$store.state.localClient.openteraTeleop.client
+      ) {
+        console.log("sendWaypoint");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify({ type: "waypoint", waypoint: event })
+          JSON.stringify({ type: "waypoint", waypoint: this.waypoint })
         );
       }
     }

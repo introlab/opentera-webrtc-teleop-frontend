@@ -97,8 +97,11 @@
     z-index: 1;
 }
 
-.button-over {
+.action-buttons {
   position: absolute;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   top: 0;
   right: 0;
   margin: 0.5rem;

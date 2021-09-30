@@ -1,0 +1,24 @@
+.start-button {
+    background-color: #00bf00;
+    color: inherit;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: darkgreen;
+    padding: 0.5rem;
+    font-weight: bold;
+}
+
+.start-button:active {
+    transform: scale(0.98);
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
+
+.start-button:hover {
+    background-color: rgb(77, 255, 77);
+}
+
+.start-button:disabled {
+    background-color: gray;
+    border-color: rgb(71, 71, 71);
+}

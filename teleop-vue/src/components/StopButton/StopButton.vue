@@ -8,18 +8,14 @@
 export default {
   name: "stop-button",
   data() {
-    return {
-      showNav: false
-    };
+    return {};
   },
   methods: {
     onStop() {
-      console.log("Clicked stop");
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "stop", state: true })
         );
-        console.log("Sent stop message");
       }
     }
   }
