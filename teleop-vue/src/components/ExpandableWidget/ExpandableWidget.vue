@@ -31,7 +31,7 @@
         :list="waypoints"
         :zoom="1"
         :map-size="{ width: 1000, height: 1000 }"
-        :nb-of-waypoint="1"
+        :nb-of-waypoint="waypoints.length"
         wp-color="#00d456"
         :video-element="mapVideoElement"
         @newWaypoint="saveWaypoint"
@@ -67,7 +67,6 @@ export default {
       isExpanded: false,
       mapVideoElement: "",
       waypoints: [],
-      waypoint: null,
       startButtonDisabled: true
     };
   },
@@ -109,17 +108,18 @@ export default {
       }
     },
     saveWaypoint(event) {
-      this.waypoint = event;
+      this.waypoints.push(event);
       this.startButtonDisabled = false;
+      console.log(this.waypoints);
     },
     sendWaypoint() {
       if (
-        this.waypoint != null &&
+        this.waypoints.length > 0 &&
         this.$store.state.localClient.openteraTeleop.client
       ) {
         console.log("sendWaypoint");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify({ type: "waypoint", waypoint: this.waypoint })
+          JSON.stringify({ type: "waypointArray", array: this.waypoints })
         );
       }
     }
