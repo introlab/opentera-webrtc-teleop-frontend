@@ -101,9 +101,6 @@ export default {
       showToolbar
     };
   },
-  created() {
-    this.init();
-  },
   computed: {
     videoConfClientStream() {
       if (

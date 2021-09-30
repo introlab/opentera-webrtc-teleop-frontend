@@ -1,0 +1,19 @@
+.stop-button {
+    background-color: red;
+    color: inherit;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: darkred;
+    padding: 0.5rem;
+    font-weight: bold;
+}
+
+.stop-button:hover {
+    background-color: rgb(255, 77, 77);
+}
+
+.stop-button:active {
+    transform: scale(0.98);
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}

@@ -36,6 +36,7 @@
         :video-element="mapVideoElement"
         @newWaypoint="sendWaypoint"
       />
+      <stop-button v-show="isExpanded" class="button-over" />
     </div>
   </div>
   <div class="mask" v-if="isExpanded"></div>
@@ -44,12 +45,14 @@
 <script>
 import { SvgIcon } from "@/components/SvgIcon";
 import WaypointOverlay from "./WaypointOverlay.vue";
+import StopButton from "@/components/StopButton/StopButton.vue"
 
 export default {
   name: "expandable-widget",
   components: {
     SvgIcon,
-    WaypointOverlay
+    WaypointOverlay,
+    StopButton
   },
   data() {
     return {

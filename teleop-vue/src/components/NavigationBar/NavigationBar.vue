@@ -23,6 +23,7 @@
           <signal-strength-indicator class="navbar-item margin-left-extend" />
           <battery-indicator class="navbar-item" />
           <device-settings class="navbar-item device-settings" />
+          <stop-button class="navbar-item" />
         </div>
       </div>
     </nav>
@@ -34,6 +35,7 @@ import { SvgIcon } from "@/components/SvgIcon";
 import DeviceSettings from "../DeviceSettings/DeviceSettings.vue";
 import BatteryIndicator from "../BatteryIndicator/BatteryIndicator.vue";
 import SignalStrengthIndicator from "../SignalStrengthIndicator/SignalStrengthIndicator.vue";
+import StopButton from "@/components/StopButton/StopButton.vue";
 
 export default {
   name: "navigation-bar",
@@ -41,7 +43,8 @@ export default {
     SvgIcon,
     DeviceSettings,
     BatteryIndicator,
-    SignalStrengthIndicator
+    SignalStrengthIndicator,
+    StopButton
   },
   data() {
     return {

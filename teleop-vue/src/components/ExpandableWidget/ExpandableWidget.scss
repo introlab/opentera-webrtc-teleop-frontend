@@ -94,5 +94,13 @@
     height: 100%;
     top: 0;
     left: 0;
-    z-index: 6;
+    z-index: 1;
+}
+
+.button-over {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0.5rem;
+  z-index: 2;
 }
