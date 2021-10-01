@@ -23,7 +23,11 @@
           <signal-strength-indicator class="navbar-item margin-left-extend" />
           <battery-indicator class="navbar-item" />
           <device-settings class="navbar-item device-settings" />
-          <stop-button class="navbar-item" />
+          <action-button
+            label="Stop"
+            class="stop-button navbar-item"
+            @clicked="onStop"
+          />
         </div>
       </div>
     </nav>
@@ -35,7 +39,7 @@ import { SvgIcon } from "@/components/SvgIcon";
 import DeviceSettings from "../DeviceSettings/DeviceSettings.vue";
 import BatteryIndicator from "../BatteryIndicator/BatteryIndicator.vue";
 import SignalStrengthIndicator from "../SignalStrengthIndicator/SignalStrengthIndicator.vue";
-import StopButton from "@/components/StopButton/StopButton.vue";
+import ActionButton from "@/components/ActionButton/ActionButton.vue";
 
 export default {
   name: "navigation-bar",
@@ -44,7 +48,7 @@ export default {
     DeviceSettings,
     BatteryIndicator,
     SignalStrengthIndicator,
-    StopButton
+    ActionButton
   },
   data() {
     return {
@@ -69,6 +73,14 @@ export default {
     navToggler() {
       this.showNav = !this.showNav;
       if (this.showSettings && !this.showNav) this.showSettings = false;
+    },
+    onStop() {
+      // TODO: refactor this to be reusable for the stop button in the expandable widget
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({ type: "stop", state: true })
+        );
+      }
     }
   }
 };

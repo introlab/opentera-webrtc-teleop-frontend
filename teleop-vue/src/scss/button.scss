@@ -25,3 +25,9 @@ button:not(:disabled) {
     -webkit-filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
     filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
 }
+
+.stop-button {
+    background-color: red;
+    border-color: darkred;
+    --hover-background-color: rgb(255, 77, 77);
+}

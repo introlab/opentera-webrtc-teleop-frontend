@@ -107,3 +107,9 @@
   margin: 0.5rem;
   z-index: 2;
 }
+
+.reset-button {
+  background-color: blue;
+  border-color: darkblue;
+  --hover-background-color: rgb(77, 77, 255);
+}

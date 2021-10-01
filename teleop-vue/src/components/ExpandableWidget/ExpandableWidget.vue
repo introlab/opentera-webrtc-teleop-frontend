@@ -37,15 +37,22 @@
         @newWaypoint="saveWaypoint"
       />
       <div v-show="isExpanded" class="action-buttons">
-        <reset-button
-          @resetClicked="clearWaypoints"
+        <action-button
+          label="Reset"
+          class="reset-button"
+          @clicked="clearWaypoints"
           :disabled="waypointsEmpty"
         />
-        <start-button
-          @startClicked="sendWaypoints"
+        <action-button
+          label="Start"
+          @clicked="sendWaypoints"
           :disabled="waypointsEmpty"
         />
-        <stop-button @clicked="clearWaypoints" />
+        <action-button
+          label="Stop"
+          class="stop-button"
+          @clicked="clearWaypoints"
+        />
       </div>
     </div>
   </div>
@@ -55,18 +62,14 @@
 <script>
 import { SvgIcon } from "@/components/SvgIcon";
 import WaypointOverlay from "@/components/WaypointOverlay/WaypointOverlay.vue";
-import StopButton from "@/components/StopButton/StopButton.vue";
-import StartButton from "@/components/StartButton/StartButton.vue";
-import ResetButton from "@/components/ResetButton/ResetButton.vue";
+import ActionButton from "@/components/ActionButton/ActionButton.vue";
 
 export default {
   name: "expandable-widget",
   components: {
     SvgIcon,
     WaypointOverlay,
-    StopButton,
-    StartButton,
-    ResetButton
+    ActionButton
   },
   data() {
     return {
