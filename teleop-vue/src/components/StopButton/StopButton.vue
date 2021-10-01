@@ -1,5 +1,5 @@
 <template>
-  <button class="stop-button" type="button" v-on:click="onStop">
+  <button class="stop-button" type="button" v-on:click="onClick">
     <div>Stop</div>
   </button>
 </template>
@@ -11,6 +11,9 @@ export default {
     return {};
   },
   methods: {
+    onClick() {
+      this.$emit("clicked");
+    },
     onStop() {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(

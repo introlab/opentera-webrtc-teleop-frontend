@@ -31,13 +31,13 @@
         :list="waypoints"
         :zoom="1"
         :map-size="{ width: 1000, height: 1000 }"
-        :nb-of-waypoint="waypoints.length"
+        :nb-of-waypoint="-1"
         wp-color="#00d456"
         :video-element="mapVideoElement"
         @newWaypoint="saveWaypoint"
       />
       <div v-show="isExpanded" class="action-buttons">
-        <reset-button 
+        <reset-button
           @resetClicked="clearWaypoints"
           :disabled="waypointsEmpty"
         />
@@ -45,7 +45,7 @@
           @startClicked="sendWaypoints"
           :disabled="waypointsEmpty"
         />
-        <stop-button />
+        <stop-button @clicked="clearWaypoints" />
       </div>
     </div>
   </div>
@@ -54,10 +54,10 @@
 
 <script>
 import { SvgIcon } from "@/components/SvgIcon";
-import WaypointOverlay from "./WaypointOverlay.vue";
+import WaypointOverlay from "@/components/WaypointOverlay/WaypointOverlay.vue";
 import StopButton from "@/components/StopButton/StopButton.vue";
 import StartButton from "@/components/StartButton/StartButton.vue";
-import ResetButton from "@/components/ResetButton/ResetButton.vue"
+import ResetButton from "@/components/ResetButton/ResetButton.vue";
 
 export default {
   name: "expandable-widget",
@@ -84,12 +84,23 @@ export default {
       } else {
         return null;
       }
+    },
+    waypointReached() {
+      return this.$store.state.localClient.openteraTeleop.waypointReached;
     }
   },
   watch: {
     mapClientStream(newStream) {
       this.$refs.video.srcObject = newStream;
       this.mapVideoElement = document.getElementById("map");
+    },
+    waypointReached() {
+      if (
+        this.waypoints.length > 0 &&
+        this.waypointReached == this.waypoints.length
+      ) {
+        this.clearWaypoints();
+      }
     }
   },
   mounted() {
@@ -118,9 +129,11 @@ export default {
       this.waypointsEmpty = false;
     },
     clearWaypoints() {
+      console.log("Clearing waypoints");
       this.waypoints = [];
       this.waypointsEmpty = true;
       this.cancelWaypoints();
+      this.resetWaypointReached();
     },
     cancelWaypoints() {
       if (this.$store.state.localClient.openteraTeleop.client) {
@@ -135,6 +148,9 @@ export default {
           JSON.stringify({ type: "waypointArray", array: this.waypoints })
         );
       }
+    },
+    resetWaypointReached() {
+      this.$store.commit("localClient/openteraTeleop/changeWaypointReached", 0);
     }
   }
 };
