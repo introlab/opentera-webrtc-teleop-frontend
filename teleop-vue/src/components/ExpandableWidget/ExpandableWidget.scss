@@ -38,7 +38,6 @@
   padding-left: 0.5rem;
   text-align: left;
   background: var(--bg-secondary-dark);
-  z-index: 1;
 }
 
 .title {
@@ -54,6 +53,7 @@
   width: 100%;
   height: 100%;
   background-color: black;
+  overflow: hidden;
 }
 
 .mask {

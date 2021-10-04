@@ -41,6 +41,7 @@
         wp-color="#00d456"
         :video-element="mapVideoElement"
         @newWaypoint="saveWaypoint"
+        @panEvent="onPan"
       />
       <div v-show="isExpanded" class="action-buttons">
         <action-button
@@ -61,16 +62,8 @@
         />
       </div>
       <div v-show="isExpanded" class="zoom-buttons">
-        <action-button
-          label="+"
-          class="zoom-button"
-          @clicked="zoomIn"
-        />
-        <action-button
-          label="-"
-          class="zoom-button"
-          @clicked="zoomOut"
-        />
+        <action-button label="+" class="zoom-button" @clicked="zoomIn" />
+        <action-button label="-" class="zoom-button" @clicked="zoomOut" />
       </div>
     </div>
   </div>
@@ -95,7 +88,8 @@ export default {
       mapVideoElement: "",
       waypoints: [],
       waypointsEmpty: true,
-      zoom: 2
+      zoom: 1,
+      pan: { x: 0, y: 0 }
     };
   },
   computed: {
@@ -112,11 +106,11 @@ export default {
     },
     videoZoomTransform() {
       return {
-        '-moz-transform': `scale(${this.zoom})`,
-        '-webkit-transform': `scale(${this.zoom})`,
-        '-o-transform': `scale(${this.zoom})`,
-        '-ms-transform': `scale(${this.zoom})`,
-        transform: `scale(${this.zoom})`
+        "-moz-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
+        "-webkit-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
+        "-o-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
+        "-ms-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
+        transform: `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`
       };
     }
   },
@@ -187,9 +181,12 @@ export default {
       this.zoom += 1;
     },
     zoomOut() {
-      if(this.zoom > 1) {
+      if (this.zoom > 1) {
         this.zoom -= 1;
       }
+    },
+    onPan(event) {
+      this.pan = event;
     }
   }
 };

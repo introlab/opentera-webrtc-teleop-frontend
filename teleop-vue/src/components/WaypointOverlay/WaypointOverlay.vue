@@ -93,8 +93,25 @@ export default {
         holdTimeS: 0
       },
       isMouseDown: false,
+      isMiddleMouseDown: false,
       loopIntervalId: null,
-      showOverlay: false
+      showOverlay: false,
+      middleMouseStartPosition: {
+        x: 0,
+        y: 0
+      },
+      middleMouseDeltaPosition: {
+        x: 0,
+        y: 0
+      },
+      previousPan: {
+        x: 0,
+        y: 0
+      },
+      pan: {
+        x: 0,
+        y: 0
+      }
     };
   },
   mounted() {
@@ -325,14 +342,15 @@ export default {
           : this.videoElement.offsetHeight / this.videoElement.videoHeight) *
         this.zoom;
 
-      // eslint-disable-next-line max-len
       const offsetY =
         (this.videoElement.offsetHeight -
           this.videoElement.videoHeight * scale) /
-        2;
+          2 +
+        this.pan.y;
       const offsetX =
         (this.videoElement.offsetWidth - this.videoElement.videoWidth * scale) /
-        2;
+          2 +
+        this.pan.x;
 
       return {
         offsetX,
@@ -355,6 +373,9 @@ export default {
           this.addWaypointCoord(wp);
           this.isMouseDown = true;
         }
+      } else if (event.button === 1 && this.isActive && this.isClickable) {
+        this.isMiddleMouseDown = true;
+        this.middleMouseStartPosition = { x: event.clientX, y: event.clientY };
       }
     },
     /**
@@ -373,6 +394,17 @@ export default {
           ) *
             180) /
           Math.PI;
+      } else if (this.isMiddleMouseDown) {
+        const mousePosition = { x: event.clientX, y: event.clientY };
+        this.middleMouseDeltaPosition = {
+          x: mousePosition.x - this.middleMouseStartPosition.x,
+          y: mousePosition.y - this.middleMouseStartPosition.y
+        };
+        this.pan = {
+          x: this.previousPan.x + this.middleMouseDeltaPosition.x,
+          y: this.previousPan.y + this.middleMouseDeltaPosition.y
+        };
+        this.$emit("panEvent", this.pan);
       }
     },
     /**
@@ -402,6 +434,9 @@ export default {
         };
 
         this.drawCanvas();
+      } else if (this.isMiddleMouseDown) {
+        this.previousPan = this.pan;
+        this.isMiddleMouseDown = false;
       }
     },
     /**
@@ -417,6 +452,10 @@ export default {
           yaw: 0
         };
         this.isMouseDown = false;
+      } else if (this.isMiddleMouseDown) {
+        this.pan.x = this.pan.x + this.middleMouseDeltaPosition.x;
+        this.pan.y = this.pan.y + this.middleMouseDeltaPosition.y;
+        this.isMiddleMouseDown = false;
       }
     },
     /**
