@@ -38,6 +38,7 @@
   padding-left: 0.5rem;
   text-align: left;
   background: var(--bg-secondary-dark);
+  z-index: 1;
 }
 
 .title {
@@ -108,8 +109,26 @@
   z-index: 2;
 }
 
+.zoom-buttons {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  bottom: 0;
+  right: 0;
+  margin: 0.5rem;
+  z-index: 2;
+}
+
 .reset-button {
   background-color: blue;
   border-color: darkblue;
   --hover-background-color: rgb(77, 77, 255);
+}
+
+.zoom-button {
+  background-color: rgb(149, 131, 90);
+  border-color: rgb(88, 78, 53);
+  --hover-background-color: rgb(209, 184, 125);
+  font-size: larger;
 }

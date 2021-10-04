@@ -20,7 +20,13 @@
       v-on:click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
     >
-      <video ref="video" id="map" class="map-video" autoplay />
+      <video
+        ref="video"
+        id="map"
+        class="map-video"
+        autoplay
+        :style="videoZoomTransform"
+      />
       <waypoint-overlay
         v-show="isExpanded"
         class="overlay"
@@ -29,7 +35,7 @@
         :show="true"
         :show-grid="false"
         :list="waypoints"
-        :zoom="1"
+        :zoom="zoom"
         :map-size="{ width: 1000, height: 1000 }"
         :nb-of-waypoint="-1"
         wp-color="#00d456"
@@ -54,6 +60,18 @@
           @clicked="clearWaypoints"
         />
       </div>
+      <div v-show="isExpanded" class="zoom-buttons">
+        <action-button
+          label="+"
+          class="zoom-button"
+          @clicked="zoomIn"
+        />
+        <action-button
+          label="-"
+          class="zoom-button"
+          @clicked="zoomOut"
+        />
+      </div>
     </div>
   </div>
   <div class="mask" v-if="isExpanded"></div>
@@ -76,7 +94,8 @@ export default {
       isExpanded: false,
       mapVideoElement: "",
       waypoints: [],
-      waypointsEmpty: true
+      waypointsEmpty: true,
+      zoom: 2
     };
   },
   computed: {
@@ -90,6 +109,15 @@ export default {
     },
     waypointReached() {
       return this.$store.state.localClient.openteraTeleop.waypointReached;
+    },
+    videoZoomTransform() {
+      return {
+        '-moz-transform': `scale(${this.zoom})`,
+        '-webkit-transform': `scale(${this.zoom})`,
+        '-o-transform': `scale(${this.zoom})`,
+        '-ms-transform': `scale(${this.zoom})`,
+        transform: `scale(${this.zoom})`
+      };
     }
   },
   watch: {
@@ -154,6 +182,14 @@ export default {
     },
     resetWaypointReached() {
       this.$store.commit("localClient/openteraTeleop/changeWaypointReached", 0);
+    },
+    zoomIn() {
+      this.zoom += 1;
+    },
+    zoomOut() {
+      if(this.zoom > 1) {
+        this.zoom -= 1;
+      }
     }
   }
 };
