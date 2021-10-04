@@ -7,11 +7,13 @@
           v-for="n in nbOfChargeBars"
           v-bind:key="n"
           class="inner"
-          v-bind:class="{ hidden: n <= 5 - chargeBars }"
+          v-bind:class="{ hidden: n <= nbOfChargeBars - chargeBars }"
         />
       </div>
     </div>
-    <p class="percentage">{{ chargePercentage }}%</p>
+    <div class="percentage-box">
+      <div class="percentage">{{ batteryLevel }}%</div>
+    </div>
   </div>
 </template>
 
@@ -20,19 +22,22 @@ export default {
   data() {
     return {
       chargeBars: 0,
-      nbOfChargeBars: 5,
-      chargePercentage: 20
+      nbOfChargeBars: 6,
     };
   },
-  created() {
-    this.onChargePercentageChanged(this.chargePercentage);
+  computed: {
+    batteryLevel() {
+      return this.$store.state.localClient.openteraTeleop.batteryLevel;
+    }
+  },
+  watch: {
+    batteryLevel() {
+      this.onBatteryLevelChanged(this.batteryLevel);
+    }
   },
   methods: {
-    onChargePercentageChanged(newPercentage) {
-      this.chargePercentage = newPercentage;
-      this.chargeBars = Math.ceil(
-        (this.chargePercentage / 100) * this.nbOfChargeBars
-      );
+    onBatteryLevelChanged(level) {
+      this.chargeBars = Math.round((level / 100) * this.nbOfChargeBars);
     }
   }
 };

@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
     <video
+      v-show="isCameraOn"
       ref="overlayVideoRef"
       id="overlayVideo"
       class="user-video mirror-y"
@@ -131,6 +132,9 @@ export default {
     },
     showParticipants() {
       return this.$store.state.localClient.openteraVideoConf.showParticipants;
+    },
+    isCameraOn() {
+      return this.$store.state.localClient.isCameraOn;
     }
   },
   activated() {
@@ -158,18 +162,10 @@ export default {
       // Send the global velocity command at a constant rate
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify(this.cmd)
+          JSON.stringify({ type: "velCmd", x: this.cmd.x, z: this.cmd.z })
         );
       }
     }
-  },
-  beforeMount() {
-    this.$store.commit(
-      "localClient/openteraTeleop/setMessageEventHandler",
-      (id, name, clientData, message) => {
-        // TODO
-      }
-    );
   }
 };
 </script>

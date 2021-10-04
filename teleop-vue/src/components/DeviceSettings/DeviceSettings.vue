@@ -1,14 +1,9 @@
 <template>
   <div class="menu-container">
     <button class="icon-button icon">
-      <svg-icon
-        class=""
-        icon="gear"
-        v-on:click="toggleShowSettings"
-      ></svg-icon>
+      <svg-icon class="" icon="gear" v-on:click="toggleShowSettings"></svg-icon>
     </button>
-    <div class="menu" v-if="showSettings">
-      <!-- TODO: menu should close when clicking outside of it -->
+    <div class="menu" v-if="showSettings" v-click-away="onClickAway">
       <div class="menu-item" v-on:click="toggleAudioSettings">
         Select audio source
       </div>
@@ -143,9 +138,11 @@ export default {
     },
     toggleAudioSettings() {
       this.showAudioSettings = !this.showAudioSettings;
+      this.showSettings = false;
     },
     toggleVideoSettings() {
       this.showVideoSettings = !this.showVideoSettings;
+      this.showSettings = false;
     },
     async onNewAudio() {
       this.microphone = this.audioSelected;
@@ -180,7 +177,7 @@ export default {
       // HACK: Invalid
       // Here we access private member of the class. It's bad.
       // Instead we should create a state of those configuration in our StreamClientStore and in the SignalingClientStore.
-      const signalingServerConfirguration = this.$store.state.localClient
+      const signalingServerConfiguration = this.$store.state.localClient
         .openteraVideoConf.client._signalingServerConfiguration;
       const streamConfiguration = initStreamConfiguration(
         this.$store.state.localClient.openteraVideoConf.localStream
@@ -192,7 +189,7 @@ export default {
       this.$store.commit(
         "localClient/openteraVideoConf/setClient",
         new openteraWebrtcWebClient.StreamClient(
-          signalingServerConfirguration,
+          signalingServerConfiguration,
           streamConfiguration,
           rtcConfiguration,
           this.$store.state.localClient.openteraVideoConf.logger
@@ -201,6 +198,9 @@ export default {
 
       this.$store.dispatch("localClient/openteraVideoConf/connectClientEvents");
       await this.$store.state.localClient.openteraVideoConf.client.connect();
+    },
+    onClickAway() {
+      this.showSettings = false;
     }
   },
   watch: {
