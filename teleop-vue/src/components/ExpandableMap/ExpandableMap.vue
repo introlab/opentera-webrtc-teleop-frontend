@@ -76,7 +76,7 @@ import WaypointOverlay from "@/components/WaypointOverlay/WaypointOverlay.vue";
 import ActionButton from "@/components/ActionButton/ActionButton.vue";
 
 export default {
-  name: "expandable-widget",
+  name: "expandable-map",
   components: {
     SvgIcon,
     WaypointOverlay,
@@ -198,5 +198,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "./ExpandableWidget.scss";
+@import "./ExpandableMap.scss";
 </style>

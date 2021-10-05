@@ -42,7 +42,7 @@
           v-bind:absolute-max-z="maxCmdValue"
           v-on:keyboadCmdEvent="updateCmdVel"
         />
-        <expandable-widget></expandable-widget>
+        <expandable-map></expandable-map>
       </div>
     </div>
 
@@ -69,7 +69,7 @@ import { ButtonConference } from "@/components/ButtonConference";
 import { ParticipantsList } from "@/components/ParticipantsList";
 import { Joystick } from "@/components/Joystick";
 import KeyboardTeleop from "@/components/KeyboardTeleop/KeyboardTeleop.vue";
-import ExpandableWidget from "@/components/ExpandableWidget/ExpandableWidget.vue";
+import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
 
 export default {
   name: "teleop-view",
@@ -86,7 +86,7 @@ export default {
     ParticipantsList,
     Joystick,
     KeyboardTeleop,
-    ExpandableWidget
+    ExpandableMap
   },
   setup() {
     const toolbarRef = ref(null);
