@@ -128,12 +128,10 @@ export default {
       }
     }
   },
-  mounted() {
-    this.$refs.video.srcObject = this.mapClientStream;
-  },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
     this.$refs.video.autoplay = true;
+    this.mapVideoElement = document.getElementById("map");
   },
   methods: {
     toggleExpand() {
