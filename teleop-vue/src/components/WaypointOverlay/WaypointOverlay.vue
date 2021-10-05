@@ -203,7 +203,7 @@ export default {
 
       const text = `${index + 1}${wp.label ? `. ${wp.label}` : ""}`;
 
-      this.context.font = "20px serif";
+      this.context.font = "15px serif";
       this.context.fillStyle = "#000000";
       this.context.fillText(text, coord.x + 8, coord.y + 8);
     },
@@ -219,7 +219,7 @@ export default {
       const { wpColor } = this;
       const coord = this.getCanvasCoordinatesFromVideo(wpCoord.x, wpCoord.y);
 
-      const wpRadius = 7;
+      const wpRadius = Math.min(this.canvas.width, this.canvas.height) / 75;
       this.context.beginPath();
       this.context.arc(coord.x, coord.y, wpRadius, 0, 2 * Math.PI);
       this.context.fillStyle = wpColor;
@@ -373,7 +373,7 @@ export default {
           this.addWaypointCoord(wp);
           this.isMouseDown = true;
         }
-      } else if (event.button === 1 && this.isActive && this.isClickable) {
+      } else if (event.button === 1 && this.isActive) {
         this.isMiddleMouseDown = true;
         this.middleMouseStartPosition = { x: event.clientX, y: event.clientY };
       }
@@ -453,8 +453,7 @@ export default {
         };
         this.isMouseDown = false;
       } else if (this.isMiddleMouseDown) {
-        this.pan.x = this.pan.x + this.middleMouseDeltaPosition.x;
-        this.pan.y = this.pan.y + this.middleMouseDeltaPosition.y;
+        this.previousPan = this.pan;
         this.isMiddleMouseDown = false;
       }
     },

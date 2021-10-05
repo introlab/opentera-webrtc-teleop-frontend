@@ -19,6 +19,7 @@
       class="body"
       v-on:click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
+      @wheel="onWheel"
     >
       <video
         ref="video"
@@ -28,10 +29,9 @@
         :style="videoZoomTransform"
       />
       <waypoint-overlay
-        v-show="isExpanded"
         class="overlay"
         :is-active="true"
-        :is-clickable="true"
+        :is-clickable="isExpanded"
         :show="true"
         :show-grid="false"
         :list="waypoints"
@@ -176,15 +176,22 @@ export default {
       this.$store.commit("localClient/openteraTeleop/changeWaypointReached", 0);
     },
     zoomIn() {
-      this.zoom += 1;
+      this.zoom += 0.5;
     },
     zoomOut() {
       if (this.zoom > 1) {
-        this.zoom -= 1;
+        this.zoom -= 0.5;
       }
     },
     onPan(event) {
       this.pan = event;
+    },
+    onWheel(event) {
+      if (event.deltaY > 0){
+        this.zoomOut();
+      } else if (event.deltaY < 0) {
+        this.zoomIn();
+      }
     }
   }
 };
