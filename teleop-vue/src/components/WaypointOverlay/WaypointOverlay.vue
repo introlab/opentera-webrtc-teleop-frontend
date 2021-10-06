@@ -37,6 +37,10 @@ export default {
       type: Boolean,
       default: true
     },
+    isNavigating: {
+      type: Boolean,
+      deault: false
+    },
     wpColor: {
       type: String,
       default: "#00FF00"
@@ -366,12 +370,16 @@ export default {
      * @public
      */
     onMouseDown(event) {
-      if (event.button === 0 && this.isActive && this.isClickable) {
+      if (
+        event.button === 0 &&
+        this.isActive &&
+        this.isClickable &&
+        !this.isNavigating
+      ) {
         const coord = this.getVideoCoordinatesOfEvent(event);
         if (this.isClickValid(coord)) {
-          const res = this.isClickExistingWaypoint(coord);
-          console.log("Result: " + res);
-          if (!res) {
+          // eslint-disable-next-line prettier/prettier
+          if (!this.isClickExistingWaypoint(coord)) {
             const wp = coord;
             wp.yaw = 0;
             this.addWaypointCoord(wp);
@@ -515,11 +523,9 @@ export default {
         const dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
         if (dist <= this.wpRadius * 1.2) {
           this.$emit("removeWaypoint", i);
-          console.log("Clicked on a waypoint");
           return true;
         }
       }
-      console.log("No waypoint no click");
       return false;
     }
   }

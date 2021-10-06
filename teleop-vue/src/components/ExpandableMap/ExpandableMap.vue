@@ -32,6 +32,7 @@
         class="overlay"
         :is-active="true"
         :is-clickable="isExpanded"
+        :is-navigating="isRobotNavigating"
         :show="true"
         :show-grid="false"
         :list="waypoints"
@@ -85,12 +86,15 @@ export default {
   },
   data() {
     return {
+      loopIntervalId: null,
       isExpanded: false,
+      isRobotNavigating: false,
       mapVideoElement: "",
       waypoints: [],
       waypointsEmpty: true,
       zoom: 1,
-      pan: { x: 0, y: 0 }
+      pan: { x: 0, y: 0 },
+      videoOffset: { x: 0, y: 0 }
     };
   },
   computed: {
@@ -130,12 +134,26 @@ export default {
       }
     }
   },
+  mounted() {
+    this.$refs.video.srcObject = this.mapClientStream;
+    // this.init();
+  },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
     this.$refs.video.autoplay = true;
     this.mapVideoElement = document.getElementById("map");
   },
+  unmounted() {
+    clearInterval(this.loopIntervalId);
+  },
   methods: {
+    init() {
+      this.loopIntervalId = setInterval(() => {
+        this.videoOffset.x = this.mapVideoElement.offsetWidth;
+        this.videoOffset.y = this.mapVideoElement.offsetHeight;
+        console.log("offsetWidth: " + this.videoOffset.x + "  offsetHeight: " + this.videoOffset.y);
+      }, 1000 / 30);
+    },
     toggleExpand() {
       this.isExpanded = !this.isExpanded;
     },
@@ -161,6 +179,7 @@ export default {
       this.resetWaypointReached();
     },
     cancelWaypoints() {
+      this.isRobotNavigating = false;
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "stop", state: true })
@@ -168,6 +187,7 @@ export default {
       }
     },
     sendWaypoints() {
+      this.isRobotNavigating = true;
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "waypointArray", array: this.waypoints })
