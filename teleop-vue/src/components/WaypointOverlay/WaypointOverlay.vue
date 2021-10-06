@@ -378,7 +378,6 @@ export default {
       ) {
         const coord = this.getVideoCoordinatesOfEvent(event);
         if (this.isClickValid(coord)) {
-          // eslint-disable-next-line prettier/prettier
           if (!this.isClickExistingWaypoint(coord)) {
             const wp = coord;
             wp.yaw = 0;

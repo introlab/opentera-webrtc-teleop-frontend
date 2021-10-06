@@ -29,28 +29,34 @@ export default {
       activeTouchID: null
     };
   },
-  props: ["width", "height", "absoluteMaxX", "absoluteMaxZ"],
+  props: {
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
+    },
+    absoluteMaxX: {
+      type: Number,
+      required: true
+    },
+    absoluteMaxZ: {
+      type: Number,
+      required: true
+    },
+    publishingRate: {
+      type: Number,
+      required: false,
+      default: 10 // Hz
+    }
+  },
   emits: ["joystickPositionChange"],
   methods: {
     init() {
-      this.loopIntervalId = setInterval(
-        function() {
-          this.initVariables();
-          this.drawFrame();
-        }.bind(this),
-        1000 / 60
-      ); // 60 Hz
-
-      this.positionChangeIntervalId = setInterval(
-        function() {
-          // Only emit the joystick signal when the mouse is pressed to avoid constantly
-          // sending zeros when the joystick is not in use.
-          if (this.isMouseDown) {
-            this.emitJoystickPosition();
-          }
-        }.bind(this),
-        100
-      ); // 100 ms
+      this.initVariables();
+      this.drawFrame();
     },
     initVariables() {
       if (this.c === null || this.y === null || !this.isMouseDown) {
@@ -58,10 +64,22 @@ export default {
         this.y = this.getCenterY();
       }
     },
+    emitLoop() {
+      this.loopIntervalId = setInterval(
+        function() {
+          this.emitJoystickPosition();
+          if (!this.isMouseDown) {
+            clearInterval(this.loopIntervalId);
+          }
+        }.bind(this),
+        1 / this.publishingRate
+      );
+    },
     onMouseDown(event) {
       if (event.button === 0) {
         this.updateJoystickPositionFromMouseEvent(event);
         this.isMouseDown = true;
+        this.emitLoop();
       }
     },
     onMouseUp(event) {
@@ -74,19 +92,21 @@ export default {
       this.y = this.getCenterY();
       this.isMouseDown = false;
       this.emitJoystickPosition();
+      this.drawFrame();
     },
     onMouseMove(event) {
       if (this.isMouseDown) {
         this.updateJoystickPositionFromMouseEvent(event);
       }
     },
-    onMouseOut(event) {
+    onMouseOut() {
       // TODO: Change behaviour so that the joystick doesn't reset when the mouse
       // is out of it's bounds.
       this.x = this.getCenterX();
       this.y = this.getCenterY();
       this.isMouseDown = false;
       this.emitJoystickPosition();
+      this.drawFrame();
     },
     onTouchMove(event) {
       this.updateJoystickPositionFromMouseEvent(event.touches[0]); // Only use the first touch
@@ -96,6 +116,7 @@ export default {
       this.isMouseDown = true;
       this.activeTouchID = event.touches[0].identifier;
       this.updateJoystickPositionFromMouseEvent(event.touches[0]); // Only use the first touch
+      this.emitLoop();
     },
     onTouchEnd(event) {
       // Make sure the joystick interaction is only stopped if the touchend event was triggered
@@ -124,6 +145,7 @@ export default {
         this.y = deltaY * ratio + centerY;
       }
       this.emitJoystickPosition();
+      this.drawFrame();
     },
     drawFrame() {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
