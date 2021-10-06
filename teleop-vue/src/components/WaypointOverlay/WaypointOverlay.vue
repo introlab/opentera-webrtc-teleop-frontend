@@ -96,6 +96,7 @@ export default {
       isMiddleMouseDown: false,
       loopIntervalId: null,
       showOverlay: false,
+      wpRadius: 0,
       middleMouseStartPosition: {
         x: 0,
         y: 0
@@ -219,9 +220,9 @@ export default {
       const { wpColor } = this;
       const coord = this.getCanvasCoordinatesFromVideo(wpCoord.x, wpCoord.y);
 
-      const wpRadius = Math.min(this.canvas.width, this.canvas.height) / 75;
+      this.wpRadius = Math.min(this.canvas.width, this.canvas.height) / 75;
       this.context.beginPath();
-      this.context.arc(coord.x, coord.y, wpRadius, 0, 2 * Math.PI);
+      this.context.arc(coord.x, coord.y, this.wpRadius, 0, 2 * Math.PI);
       this.context.fillStyle = wpColor;
       this.context.fill();
     },
@@ -368,10 +369,14 @@ export default {
       if (event.button === 0 && this.isActive && this.isClickable) {
         const coord = this.getVideoCoordinatesOfEvent(event);
         if (this.isClickValid(coord)) {
-          const wp = coord;
-          wp.yaw = 0;
-          this.addWaypointCoord(wp);
-          this.isMouseDown = true;
+          const res = this.isClickExistingWaypoint(coord);
+          console.log("Result: " + res);
+          if (!res) {
+            const wp = coord;
+            wp.yaw = 0;
+            this.addWaypointCoord(wp);
+            this.isMouseDown = true;
+          }
         }
       } else if (event.button === 1 && this.isActive) {
         this.isMiddleMouseDown = true;
@@ -495,6 +500,27 @@ export default {
         coord.y >= 0 &&
         coord.y < this.mapSize.height
       );
+    },
+    /**
+     * Verifies the user clicked on an existing waypoint and if so emits an event.
+     * Returns true if the click was on an existing waypoint and false if not.
+     *
+     * @param {Object} coord An object containing the x and y coordinate of the click.
+     * @public
+     */
+    isClickExistingWaypoint(coord) {
+      for (let i = 0; i < this.list.length; i++) {
+        const dx = coord.x - this.list[i].coordinate.x;
+        const dy = coord.y - this.list[i].coordinate.y;
+        const dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        if (dist <= this.wpRadius * 1.2) {
+          this.$emit("removeWaypoint", i);
+          console.log("Clicked on a waypoint");
+          return true;
+        }
+      }
+      console.log("No waypoint no click");
+      return false;
     }
   }
 };

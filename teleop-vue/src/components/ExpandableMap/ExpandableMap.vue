@@ -42,6 +42,7 @@
         :video-element="mapVideoElement"
         @newWaypoint="saveWaypoint"
         @panEvent="onPan"
+        @removeWaypoint="removeWaypoint"
       />
       <div v-show="isExpanded" class="action-buttons">
         <action-button
@@ -105,12 +106,13 @@ export default {
       return this.$store.state.localClient.openteraTeleop.waypointReached;
     },
     videoZoomTransform() {
+      const transformation = `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`;
       return {
-        "-moz-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
-        "-webkit-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
-        "-o-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
-        "-ms-transform": `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`,
-        transform: `translate(${this.pan.x}px, ${this.pan.y}px) scale(${this.zoom})`
+        "-moz-transform": transformation,
+        "-webkit-transform": transformation,
+        "-o-transform": transformation,
+        "-ms-transform": transformation,
+        transform: transformation
       };
     }
   },
@@ -192,6 +194,9 @@ export default {
       } else if (event.deltaY < 0) {
         this.zoomIn();
       }
+    },
+    removeWaypoint(event) {
+      this.waypoints.splice(event, 1);
     }
   }
 };
