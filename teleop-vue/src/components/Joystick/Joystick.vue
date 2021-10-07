@@ -72,7 +72,7 @@ export default {
             clearInterval(this.loopIntervalId);
           }
         }.bind(this),
-        1 / this.publishingRate
+        1000 / this.publishingRate
       );
     },
     onMouseDown(event) {

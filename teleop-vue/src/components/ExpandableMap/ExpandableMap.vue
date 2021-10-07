@@ -17,6 +17,7 @@
     </div>
     <div
       class="body"
+      id="mapBody"
       v-on:click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
       @wheel="onWheel"
@@ -136,35 +137,24 @@ export default {
   },
   mounted() {
     this.$refs.video.srcObject = this.mapClientStream;
-    // this.init();
   },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
     this.$refs.video.autoplay = true;
     this.mapVideoElement = document.getElementById("map");
   },
-  unmounted() {
-    clearInterval(this.loopIntervalId);
-  },
   methods: {
-    init() {
-      this.loopIntervalId = setInterval(() => {
-        this.videoOffset.x = this.mapVideoElement.offsetWidth;
-        this.videoOffset.y = this.mapVideoElement.offsetHeight;
-        console.log("offsetWidth: " + this.videoOffset.x + "  offsetHeight: " + this.videoOffset.y);
-      }, 1000 / 30);
-    },
     toggleExpand() {
-      this.isExpanded = !this.isExpanded;
+      this.setIsExpanded(!this.isExpanded);
     },
     onClickBody() {
       if (!this.isExpanded) {
-        this.isExpanded = true;
+        this.setIsExpanded(true);
       }
     },
     onClickAway() {
       if (this.isExpanded) {
-        this.isExpanded = false;
+        this.setIsExpanded(false);
       }
     },
     saveWaypoint(event) {
@@ -217,6 +207,23 @@ export default {
     },
     removeWaypoint(event) {
       this.waypoints.splice(event, 1);
+    },
+    setIsExpanded(value) {
+      // Get map size before toggling the expansion.
+      const mapBodyElement = document.getElementById("mapBody");
+      const prevMapWidth = mapBodyElement.offsetWidth;
+      const prevMapHeight = mapBodyElement.offsetHeight;
+      this.isExpanded = value;
+      this.recalculatePan(mapBodyElement, prevMapWidth, prevMapHeight);
+    },
+    recalculatePan(mapBodyElement, prevMapWidth, prevMapHeight) {
+      // Wait until the map expansion has been toggle in the DOM before recalculating the pan
+      this.$nextTick(() => {
+        const currMapWidth = mapBodyElement.offsetWidth;
+        const currMapHeight = mapBodyElement.offsetHeight;
+        this.pan.x = (this.pan.x * currMapWidth) / prevMapWidth;
+        this.pan.y = (this.pan.y * currMapHeight) / prevMapHeight;
+      });
     }
   }
 };
