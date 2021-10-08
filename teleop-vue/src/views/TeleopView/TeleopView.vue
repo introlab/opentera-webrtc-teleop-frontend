@@ -6,6 +6,9 @@
     @mouseup="onMouseUp"
     @mousemove="onMouseMove"
     @mouseout="onMouseOut"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchEnd="onTouchEnd"
   >
     <video
       v-show="isCameraOn"
@@ -206,6 +209,36 @@ export default {
     //     this.onMouseUp();
     //   }
     // },
+    onTouchStart(event) {
+      if (
+        event.touches[0].target.id == "map-header" &&
+        event.touches.length == 1 &&
+        !this.isMapExpanded
+      ) {
+        console.log("Touch start detected");
+        event.preventDefault(); // Prevents scrolling
+        this.clickPosition.x = event.touches[0].clientX;
+        this.clickPosition.y = event.touches[0].clientY;
+        this.mouseDown = true;
+      }
+    },
+    onTouchMove(event) {
+      if (this.mouseDown) {
+        event.preventDefault();
+        console.log("mouse move");
+        this.mapTranslation.x =
+          this.prevMapTranslation.x +
+          event.touches[0].clientX -
+          this.clickPosition.x;
+        this.mapTranslation.y =
+          this.prevMapTranslation.y +
+          event.touches[0].clientY -
+          this.clickPosition.y;
+      }
+    },
+    onTouchEnd() {
+      this.onMouseUp();
+    },
     onExpansionToggle(event) {
       this.isMapExpanded = event;
     }
