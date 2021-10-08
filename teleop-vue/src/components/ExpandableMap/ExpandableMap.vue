@@ -2,7 +2,6 @@
   <div
     class="widget"
     v-bind:class="{ big: isExpanded, small: !isExpanded }"
-    v-click-away="onClickAway"
     :style="mapTranslate"
   >
     <div class="header" id="map-header">
@@ -10,7 +9,7 @@
       <button
         class="icon-button left expand-button-icon"
         type="button"
-        v-on:click="toggleExpand"
+        @click="toggleExpand"
       >
         <svg-icon v-show="isExpanded" icon="minimize"></svg-icon>
         <svg-icon v-show="!isExpanded" icon="expand"></svg-icon>
@@ -19,7 +18,7 @@
     <div
       class="body"
       id="mapBody"
-      v-on:click="onClickBody"
+      @click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
       @wheel="onWheel"
     >
@@ -71,7 +70,7 @@
       </div>
     </div>
   </div>
-  <div class="mask" v-if="isExpanded"></div>
+  <div class="mask" v-if="isExpanded" @click="onClickMask"></div>
 </template>
 
 <script>
@@ -106,7 +105,8 @@ export default {
       waypoints: [],
       waypointsEmpty: true,
       zoom: 1,
-      pan: { x: 0, y: 0 }
+      pan: { x: 0, y: 0 },
+      isBodyTouchStart: false
     };
   },
   computed: {
@@ -134,7 +134,6 @@ export default {
     mapTranslate() {
       if (!this.isExpanded) {
         const transformation = `translate(${this.translation.x}px, ${this.translation.y}px)`;
-        console.log(transformation);
         return {
           "-moz-transform": transformation,
           "-webkit-transform": transformation,
@@ -175,10 +174,11 @@ export default {
     },
     onClickBody() {
       if (!this.isExpanded) {
+        console.log("Click");
         this.setIsExpanded(true);
       }
     },
-    onClickAway() {
+    onClickMask() {
       if (this.isExpanded) {
         this.setIsExpanded(false);
       }

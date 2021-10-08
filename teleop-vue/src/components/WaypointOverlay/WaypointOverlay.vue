@@ -6,6 +6,9 @@
     @mouseup="onMouseUp"
     @mouseout="onMouseOut"
     @mouseover="showOverlay = true"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchend="onTouchEnd"
   />
 </template>
 
@@ -116,7 +119,8 @@ export default {
       pan: {
         x: 0,
         y: 0
-      }
+      },
+      lastTouch: null
     };
   },
   mounted() {
@@ -469,6 +473,34 @@ export default {
         this.previousPan = this.pan;
         this.isMiddleMouseDown = false;
       }
+    },
+    onTouchStart(event) {
+      if (
+        event.touches.length == 1 &&
+        this.isActive &&
+        this.isClickable &&
+        !this.isNavigating
+      ) {
+        event.preventDefault();
+        const coord = this.getVideoCoordinatesOfEvent(event.touches[0]);
+        if (this.isClickValid(coord)) {
+          if (!this.isClickExistingWaypoint(coord)) {
+            const wp = coord;
+            wp.yaw = 0;
+            this.addWaypointCoord(wp);
+            this.isMouseDown = true;
+          }
+        }
+        this.lastTouch = event.touches[0];
+      }
+    },
+    onTouchMove(event) {
+      event.preventDefault();
+      this.onMouseMove(event.touches[0]);
+      this.lastTouch = event.touches[0];
+    },
+    onTouchEnd() {
+      this.onMouseUp(this.lastTouch);
     },
     /**
      * Adds a waypoint to the list.

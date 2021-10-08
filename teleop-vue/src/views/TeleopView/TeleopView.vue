@@ -177,26 +177,21 @@ export default {
     onMouseDown(event) {
       if (event.target.id == "map-header" && event.button === 0 && !this.isMapExpanded) {
         event.preventDefault();
-        console.log("mouse down");
         this.clickPosition.x = event.clientX;
         this.clickPosition.y = event.clientY;
         this.mouseDown = true;
-        console.log("click Position: x=" + this.clickPosition.x + " y=" + this.clickPosition.y);
       }
     },
     onMouseUp() {
       if (this.mouseDown) {
-        console.log("mouse up");
         this.prevMapTranslation.x = this.mapTranslation.x;
         this.prevMapTranslation.y = this.mapTranslation.y;
-        console.log("prevMapTranslation: x=" + this.prevMapTranslation.x + " y=" + this.prevMapTranslation.y);
         this.mouseDown = false;
       }
     },
     onMouseMove(event) {
       if (this.mouseDown) {
         event.preventDefault();
-        console.log("mouse move");
         this.mapTranslation.x =
           this.prevMapTranslation.x + event.clientX - this.clickPosition.x;
         this.mapTranslation.y =
@@ -205,7 +200,6 @@ export default {
     },
     // onMouseOut() {
     //   if (this.mouseDown) {
-    //     console.log("mouse out");
     //     this.onMouseUp();
     //   }
     // },
@@ -215,7 +209,6 @@ export default {
         event.touches.length == 1 &&
         !this.isMapExpanded
       ) {
-        console.log("Touch start detected");
         event.preventDefault(); // Prevents scrolling
         this.clickPosition.x = event.touches[0].clientX;
         this.clickPosition.y = event.touches[0].clientY;
@@ -225,7 +218,6 @@ export default {
     onTouchMove(event) {
       if (this.mouseDown) {
         event.preventDefault();
-        console.log("mouse move");
         this.mapTranslation.x =
           this.prevMapTranslation.x +
           event.touches[0].clientX -
