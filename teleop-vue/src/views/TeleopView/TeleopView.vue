@@ -1,16 +1,23 @@
 <template>
-  <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
+  <div
+    class="container-fluid bg-primary-dark"
+    v-on:mousemove="showToolbar"
+    @mousedown="onMouseDown"
+    @mouseup="onMouseUp"
+    @mousemove="onMouseMove"
+    @mouseout="onMouseOut"
+  >
     <video
       v-show="isCameraOn"
       ref="overlayVideoRef"
       id="overlayVideo"
       class="user-video mirror-y"
     ></video>
-    <div class="fluid pad">
-      <div
-        class="fluid col-flexbox"
-        v-if="videoConfClientStream !== null || cameraXClientStream !== null"
-      >
+    <div
+      class="fluid pad"
+      v-if="videoConfClientStream !== null || cameraXClientStream !== null"
+    >
+      <div class="fluid col-flexbox">
         <div class="row50 gutter">
           <video-participant
             id="videoconf"
@@ -42,7 +49,10 @@
           v-bind:absolute-max-z="maxCmdValue"
           v-on:keyboadCmdEvent="updateCmdVel"
         />
-        <expandable-map></expandable-map>
+        <expandable-map
+          :translation="mapTranslation"
+          @expansionToggle="onExpansionToggle"
+        />
       </div>
     </div>
 
@@ -77,7 +87,12 @@ export default {
     return {
       chatTextArea: null,
       cmd: { x: 0, z: 0 }, // Global velocity command to be sent to the robot
-      maxCmdValue: 1
+      maxCmdValue: 1,
+      mouseDown: false,
+      clickPosition: { x: 0, y: 0 },
+      prevMapTranslation: { x: 0, y: 0 },
+      mapTranslation: { x: 0, y: 0 },
+      isMapExpanded: false
     };
   },
   components: {
@@ -155,6 +170,44 @@ export default {
           JSON.stringify({ type: "velCmd", x: this.cmd.x, z: this.cmd.z })
         );
       }
+    },
+    onMouseDown(event) {
+      if (event.target.id == "map-header" && event.button === 0 && !this.isMapExpanded) {
+        event.preventDefault();
+        console.log("mouse down");
+        this.clickPosition.x = event.clientX;
+        this.clickPosition.y = event.clientY;
+        this.mouseDown = true;
+        console.log("click Position: x=" + this.clickPosition.x + " y=" + this.clickPosition.y);
+      }
+    },
+    onMouseUp() {
+      if (this.mouseDown) {
+        console.log("mouse up");
+        this.prevMapTranslation.x = this.mapTranslation.x;
+        this.prevMapTranslation.y = this.mapTranslation.y;
+        console.log("prevMapTranslation: x=" + this.prevMapTranslation.x + " y=" + this.prevMapTranslation.y);
+        this.mouseDown = false;
+      }
+    },
+    onMouseMove(event) {
+      if (this.mouseDown) {
+        event.preventDefault();
+        console.log("mouse move");
+        this.mapTranslation.x =
+          this.prevMapTranslation.x + event.clientX - this.clickPosition.x;
+        this.mapTranslation.y =
+          this.prevMapTranslation.y + event.clientY - this.clickPosition.y;
+      }
+    },
+    // onMouseOut() {
+    //   if (this.mouseDown) {
+    //     console.log("mouse out");
+    //     this.onMouseUp();
+    //   }
+    // },
+    onExpansionToggle(event) {
+      this.isMapExpanded = event;
     }
   }
 };

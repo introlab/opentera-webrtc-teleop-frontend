@@ -3,8 +3,9 @@
     class="widget"
     v-bind:class="{ big: isExpanded, small: !isExpanded }"
     v-click-away="onClickAway"
+    :style="mapTranslate"
   >
-    <div class="header">
+    <div class="header" id="map-header">
       <div class="title">Map</div>
       <button
         class="icon-button left expand-button-icon"
@@ -85,6 +86,17 @@ export default {
     WaypointOverlay,
     ActionButton
   },
+  props: {
+    translation: {
+      type: Object,
+      default() {
+        return {
+          x: 0,
+          y: 0
+        };
+      }
+    }
+  },
   data() {
     return {
       loopIntervalId: null,
@@ -94,8 +106,7 @@ export default {
       waypoints: [],
       waypointsEmpty: true,
       zoom: 1,
-      pan: { x: 0, y: 0 },
-      videoOffset: { x: 0, y: 0 }
+      pan: { x: 0, y: 0 }
     };
   },
   computed: {
@@ -119,6 +130,20 @@ export default {
         "-ms-transform": transformation,
         transform: transformation
       };
+    },
+    mapTranslate() {
+      if (!this.isExpanded) {
+        const transformation = `translate(${this.translation.x}px, ${this.translation.y}px)`;
+        console.log(transformation);
+        return {
+          "-moz-transform": transformation,
+          "-webkit-transform": transformation,
+          "-o-transform": transformation,
+          "-ms-transform": transformation,
+          transform: transformation
+        };
+      }
+      return {};
     }
   },
   watch: {
@@ -137,6 +162,7 @@ export default {
   },
   mounted() {
     this.$refs.video.srcObject = this.mapClientStream;
+    this.setIsExpanded(false);
   },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
@@ -162,7 +188,6 @@ export default {
       this.waypointsEmpty = false;
     },
     clearWaypoints() {
-      console.log("Clearing waypoints");
       this.waypoints = [];
       this.waypointsEmpty = true;
       this.cancelWaypoints();
@@ -214,6 +239,7 @@ export default {
       const prevMapWidth = mapBodyElement.offsetWidth;
       const prevMapHeight = mapBodyElement.offsetHeight;
       this.isExpanded = value;
+      this.$emit("expansionToggle", this.isExpanded);
       this.recalculatePan(mapBodyElement, prevMapWidth, prevMapHeight);
     },
     recalculatePan(mapBodyElement, prevMapWidth, prevMapHeight) {

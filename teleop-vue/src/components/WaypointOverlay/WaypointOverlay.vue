@@ -447,7 +447,8 @@ export default {
 
         this.drawCanvas();
       } else if (this.isMiddleMouseDown) {
-        this.previousPan = this.pan;
+        this.previousPan.x = this.pan.x;
+        this.previousPan.y = this.pan.y;
         this.isMiddleMouseDown = false;
       }
     },
