@@ -133,7 +133,7 @@ export default {
     },
     mapTranslate() {
       if (!this.isExpanded) {
-        const transformation = `translate(${this.translation.x}px, ${this.translation.y}px)`;
+        const transformation = `translate(${this.translation.x}vw, ${this.translation.y}vh)`;
         return {
           "-moz-transform": transformation,
           "-webkit-transform": transformation,
@@ -243,7 +243,7 @@ export default {
       this.recalculatePan(mapBodyElement, prevMapWidth, prevMapHeight);
     },
     recalculatePan(mapBodyElement, prevMapWidth, prevMapHeight) {
-      // Wait until the map expansion has been toggle in the DOM before recalculating the pan
+      // Wait until the map expansion has been toggled in the DOM before recalculating the pan
       this.$nextTick(() => {
         const currMapWidth = mapBodyElement.offsetWidth;
         const currMapHeight = mapBodyElement.offsetHeight;

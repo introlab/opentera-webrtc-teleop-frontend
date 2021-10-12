@@ -175,10 +175,14 @@ export default {
       }
     },
     onMouseDown(event) {
-      if (event.target.id == "map-header" && event.button === 0 && !this.isMapExpanded) {
+      if (
+        event.target.id == "map-header" &&
+        event.button === 0 &&
+        !this.isMapExpanded
+      ) {
         event.preventDefault();
-        this.clickPosition.x = event.clientX;
-        this.clickPosition.y = event.clientY;
+        this.clickPosition.x = (event.clientX / window.innerWidth) * 100;
+        this.clickPosition.y = (event.clientY / window.innerHeight) * 100;
         this.mouseDown = true;
       }
     },
@@ -192,10 +196,15 @@ export default {
     onMouseMove(event) {
       if (this.mouseDown) {
         event.preventDefault();
+        console.log("x=" + event.clientX + " y=" + event.clientY);
         this.mapTranslation.x =
-          this.prevMapTranslation.x + event.clientX - this.clickPosition.x;
+          this.prevMapTranslation.x +
+          (event.clientX / window.innerWidth) * 100 -
+          this.clickPosition.x;
         this.mapTranslation.y =
-          this.prevMapTranslation.y + event.clientY - this.clickPosition.y;
+          this.prevMapTranslation.y +
+          (event.clientY / window.innerHeight) * 100 -
+          this.clickPosition.y;
       }
     },
     // onMouseOut() {
@@ -212,6 +221,8 @@ export default {
         event.preventDefault(); // Prevents scrolling
         this.clickPosition.x = event.touches[0].clientX;
         this.clickPosition.y = event.touches[0].clientY;
+        this.clickPosition.x = (event.touches[0].clientX / window.innerWidth) * 100;
+        this.clickPosition.y = (event.touches[0].clientY / window.innerHeight) * 100;
         this.mouseDown = true;
       }
     },
@@ -220,11 +231,11 @@ export default {
         event.preventDefault();
         this.mapTranslation.x =
           this.prevMapTranslation.x +
-          event.touches[0].clientX -
+          (event.touches[0].clientX / window.innerWidth) * 100 -
           this.clickPosition.x;
         this.mapTranslation.y =
           this.prevMapTranslation.y +
-          event.touches[0].clientY -
+          (event.touches[0].clientY / window.innerHeight) * 100 -
           this.clickPosition.y;
       }
     },
