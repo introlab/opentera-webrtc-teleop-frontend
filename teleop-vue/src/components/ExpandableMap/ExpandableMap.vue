@@ -331,6 +331,8 @@ export default {
         const currMapHeight = mapBodyElement.offsetHeight;
         this.pan.x = (this.pan.x * currMapWidth) / prevMapWidth;
         this.pan.y = (this.pan.y * currMapHeight) / prevMapHeight;
+        this.previousPan.x = this.pan.x;
+        this.previousPan.y = this.pan.y;
       });
     }
   }
