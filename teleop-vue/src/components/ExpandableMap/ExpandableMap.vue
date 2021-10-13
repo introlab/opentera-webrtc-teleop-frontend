@@ -21,6 +21,9 @@
       @click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
       @wheel="onWheel"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd"
     >
       <video
         ref="video"
@@ -106,7 +109,10 @@ export default {
       waypointsEmpty: true,
       zoom: 1,
       pan: { x: 0, y: 0 },
-      isBodyTouchStart: false
+      pinchGesture: false,
+      pinchDiff: 0,
+      initialPinchDiff: 0,
+      prevZoom: 1
     };
   },
   computed: {
@@ -181,6 +187,32 @@ export default {
     onClickMask() {
       if (this.isExpanded) {
         this.setIsExpanded(false);
+      }
+    },
+    onTouchStart(event) {
+      if (event.touches.length == 2) {
+        // Pinch zoom and pan
+        this.pinchGesture = true;
+        const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+        const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+        this.initialPinchDiff = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        event.preventDefault();
+      }
+    },
+    onTouchMove(event) {
+      if (this.pinchGesture) {
+        const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+        const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+        this.pinchDiff =
+          Math.hypot(p2.x - p1.x, p2.y - p1.y) - this.initialPinchDiff;
+        this.zoom =
+          this.pinchDiff / this.mapVideoElement.videoWidth + this.prevZoom;
+      }
+    },
+    onTouchEnd() {
+      if (this.pinchGesture) {
+        this.pinchGesture = false;
+        this.prevZoom = this.zoom;
       }
     },
     saveWaypoint(event) {
