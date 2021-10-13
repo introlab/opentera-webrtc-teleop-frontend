@@ -110,9 +110,8 @@ export default {
       zoom: 1,
       pan: { x: 0, y: 0 },
       pinchGesture: false,
-      pinchDiff: 0,
       initialPinchDiff: 0,
-      prevZoom: 1
+      prevZoom: null
     };
   },
   computed: {
@@ -168,6 +167,7 @@ export default {
   mounted() {
     this.$refs.video.srcObject = this.mapClientStream;
     this.setIsExpanded(false);
+    this.prevZoom = this.zoom;
   },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
@@ -180,7 +180,6 @@ export default {
     },
     onClickBody() {
       if (!this.isExpanded) {
-        console.log("Click");
         this.setIsExpanded(true);
       }
     },
@@ -203,10 +202,14 @@ export default {
       if (this.pinchGesture) {
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
-        this.pinchDiff =
-          Math.hypot(p2.x - p1.x, p2.y - p1.y) - this.initialPinchDiff;
-        this.zoom =
-          this.pinchDiff / this.mapVideoElement.videoWidth + this.prevZoom;
+        const scale =
+          Math.hypot(p2.x - p1.x, p2.y - p1.y) / this.initialPinchDiff;
+        const deltaZoom = scale * this.prevZoom;
+        if (deltaZoom >= 1) {
+          this.zoom = deltaZoom;
+        } else {
+          this.zoom = 1;
+        }
       }
     },
     onTouchEnd() {
