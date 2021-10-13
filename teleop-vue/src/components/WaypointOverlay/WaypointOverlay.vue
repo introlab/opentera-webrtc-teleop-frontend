@@ -72,8 +72,8 @@ export default {
       type: Object,
       default() {
         return {
-          width: 1000,
-          height: 1000
+          width: 500,
+          height: 500
         };
       }
     },
@@ -204,7 +204,7 @@ export default {
       const text = `${index + 1}${wp.label ? `. ${wp.label}` : ""}`;
 
       this.context.font = "15px serif";
-      this.context.fillStyle = "#000000";
+      this.context.fillStyle = "#ffffff";
       this.context.fillText(text, coord.x + 8, coord.y + 8);
     },
     /**
@@ -523,7 +523,7 @@ export default {
         const dx = coord.x - this.list[i].coordinate.x;
         const dy = coord.y - this.list[i].coordinate.y;
         const dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        if (dist <= this.wpRadius * 1.2) {
+        if (dist <= this.wpRadius * 2) {
           this.$emit("removeWaypoint", i);
           return true;
         }
