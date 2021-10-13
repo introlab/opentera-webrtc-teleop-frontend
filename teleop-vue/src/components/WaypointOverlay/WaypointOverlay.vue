@@ -5,7 +5,6 @@
     @mousemove="onMouseMove"
     @mouseup="onMouseUp"
     @mouseout="onMouseOut"
-    @mouseover="showOverlay = true"
     @touchstart="onTouchStart"
     @touchmove="onTouchMove"
     @touchend="onTouchEnd"
@@ -60,6 +59,15 @@ export default {
       type: Number,
       default: 1
     },
+    pan: {
+      type: Object,
+      default() {
+        return {
+           x: 0,
+           y: 0
+        }
+      }
+    },
     mapSize: {
       type: Object,
       default() {
@@ -102,24 +110,7 @@ export default {
       isMouseDown: false,
       isMiddleMouseDown: false,
       loopIntervalId: null,
-      showOverlay: false,
       wpRadius: 0,
-      middleMouseStartPosition: {
-        x: 0,
-        y: 0
-      },
-      middleMouseDeltaPosition: {
-        x: 0,
-        y: 0
-      },
-      previousPan: {
-        x: 0,
-        y: 0
-      },
-      pan: {
-        x: 0,
-        y: 0
-      },
       lastTouch: null
     };
   },
@@ -389,9 +380,6 @@ export default {
             this.isMouseDown = true;
           }
         }
-      } else if (event.button === 1 && this.isActive) {
-        this.isMiddleMouseDown = true;
-        this.middleMouseStartPosition = { x: event.clientX, y: event.clientY };
       }
     },
     /**
@@ -410,18 +398,7 @@ export default {
           ) *
             180) /
           Math.PI;
-      } else if (this.isMiddleMouseDown) {
-        const mousePosition = { x: event.clientX, y: event.clientY };
-        this.middleMouseDeltaPosition = {
-          x: mousePosition.x - this.middleMouseStartPosition.x,
-          y: mousePosition.y - this.middleMouseStartPosition.y
-        };
-        this.pan = {
-          x: this.previousPan.x + this.middleMouseDeltaPosition.x,
-          y: this.previousPan.y + this.middleMouseDeltaPosition.y
-        };
-        this.$emit("panEvent", this.pan);
-      }
+      } 
     },
     /**
      * Gets called when the operator release the mouse button.
@@ -450,10 +427,6 @@ export default {
         };
 
         this.drawCanvas();
-      } else if (this.isMiddleMouseDown) {
-        this.previousPan.x = this.pan.x;
-        this.previousPan.y = this.pan.y;
-        this.isMiddleMouseDown = false;
       }
     },
     /**
@@ -469,9 +442,6 @@ export default {
           yaw: 0
         };
         this.isMouseDown = false;
-      } else if (this.isMiddleMouseDown) {
-        this.previousPan = this.pan;
-        this.isMiddleMouseDown = false;
       }
     },
     onTouchStart(event) {

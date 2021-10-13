@@ -18,9 +18,13 @@
     <div
       class="body"
       id="mapBody"
-      @click="onClickBody"
       v-bind:class="{ pointer: isExpanded }"
       @wheel="onWheel"
+      @click="onClickBody"
+      @mousedown="onMouseDown"
+      @mousemove="onMouseMove"
+      @mouseup="onMouseUp"
+      @mouseout="onMouseOut"
       @touchstart="onTouchStart"
       @touchmove="onTouchMove"
       @touchend="onTouchEnd"
@@ -41,12 +45,12 @@
         :show-grid="false"
         :list="waypoints"
         :zoom="zoom"
+        :pan="pan"
         :map-size="{ width: 1000, height: 1000 }"
         :nb-of-waypoint="-1"
         wp-color="#00d456"
         :video-element="mapVideoElement"
         @newWaypoint="saveWaypoint"
-        @panEvent="onPan"
         @removeWaypoint="removeWaypoint"
       />
       <div v-show="isExpanded" class="action-buttons">
@@ -108,10 +112,13 @@ export default {
       waypoints: [],
       waypointsEmpty: true,
       zoom: 1,
-      pan: { x: 0, y: 0 },
-      pinchGesture: false,
+      isPinchGesture: false,
       initialPinchDiff: 0,
-      prevZoom: null
+      prevZoom: null,
+      isMiddleMouseDown: false,
+      panStartPosition: { x: 0, y: 0 },
+      previousPan: { x: 0, y: 0 },
+      pan: { x: 0, y: 0 }
     };
   },
   computed: {
@@ -188,18 +195,44 @@ export default {
         this.setIsExpanded(false);
       }
     },
+    onMouseDown(event) {
+      if (event.button === 1) {
+        this.isMiddleMouseDown = true;
+        this.panStartPosition = { x: event.clientX, y: event.clientY };
+      }
+    },
+    onMouseMove(event) {
+      if (this.isMiddleMouseDown) {
+        const mousePosition = { x: event.clientX, y: event.clientY };
+        this.doPan(mousePosition);
+      }
+    },
+    onMouseUp() {
+      if (this.isMiddleMouseDown) {
+        this.previousPan.x = this.pan.x;
+        this.previousPan.y = this.pan.y;
+        this.isMiddleMouseDown = false;
+      }
+    },
+    onMouseOut() {
+      if (this.isMiddleMouseDown) {
+        this.previousPan = this.pan;
+        this.isMiddleMouseDown = false;
+      }
+    },
     onTouchStart(event) {
       if (event.touches.length == 2) {
         // Pinch zoom and pan
-        this.pinchGesture = true;
+        this.isPinchGesture = true;
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
         this.initialPinchDiff = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        this.panStartPosition = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
         event.preventDefault();
       }
     },
     onTouchMove(event) {
-      if (this.pinchGesture) {
+      if (this.isPinchGesture) {
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
         const scale =
@@ -210,13 +243,27 @@ export default {
         } else {
           this.zoom = 1;
         }
+        const centerPoint = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+        this.doPan(centerPoint);
       }
     },
     onTouchEnd() {
-      if (this.pinchGesture) {
-        this.pinchGesture = false;
+      if (this.isPinchGesture) {
         this.prevZoom = this.zoom;
+        this.previousPan.x = this.pan.x;
+        this.previousPan.y = this.pan.y;
+        this.isPinchGesture = false;
       }
+    },
+    doPan(position) {
+      const deltaPosition = {
+        x: position.x - this.panStartPosition.x,
+        y: position.y - this.panStartPosition.y
+      };
+      this.pan = {
+        x: this.previousPan.x + deltaPosition.x,
+        y: this.previousPan.y + deltaPosition.y
+      };
     },
     saveWaypoint(event) {
       this.waypoints.push(event);
