@@ -1,0 +1,136 @@
+.widget {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-color: rgb(26, 25, 25);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 5px;
+  overflow: hidden;
+  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.4));
+}
+
+.small {
+  position: absolute;
+  display: flex;
+  right: 0px;
+  margin: 1.5rem;
+  top: 4rem;
+  width: 200px;
+  height: 200px;  
+  z-index: 3;
+}
+
+.big {
+  display: flex;
+  position: fixed;
+  width: 90%;
+  height: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  height: 1.78rem;
+  padding: 0.25rem;
+  padding-left: 0.5rem;
+  text-align: left;
+  background: var(--bg-secondary-dark);
+}
+
+.title {
+  display: flex;
+  color: var(--text-primary-dark);
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.body {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  overflow: hidden;
+}
+
+.mask {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  background-color: black;
+  opacity: 0.7;
+  z-index: 4;
+}
+
+.left {
+  margin-left: auto;
+}
+
+.expand-button-icon {
+  stroke: var(--text-primary-dark); 
+  stroke-width: 3px;
+  width: 1.5rem;
+}
+
+.pointer {
+  cursor: default;
+}
+
+.map-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.action-buttons {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  top: 0;
+  right: 0;
+  margin: 0.5rem;
+  z-index: 2;
+}
+
+.zoom-buttons {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  bottom: 0;
+  right: 0;
+  margin: 0.5rem;
+  z-index: 2;
+}
+
+.reset-button {
+  background-color: blue;
+  border-color: darkblue;
+  --hover-background-color: rgb(77, 77, 255);
+}
+
+.zoom-button {
+  background-color: rgb(149, 131, 90);
+  border-color: rgb(88, 78, 53);
+  --hover-background-color: rgb(209, 184, 125);
+  font-size: larger;
+}

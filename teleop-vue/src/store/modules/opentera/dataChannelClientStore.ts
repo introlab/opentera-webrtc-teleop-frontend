@@ -20,7 +20,8 @@ export class DataChannelClientStore extends SignalingClientStore {
       client: null,
       onMessageEventHandler: null,
       batteryLevel: 0,
-      signalStrength: 0
+      signalStrength: 0,
+      waypointReached: 0
     };
   }
 
@@ -36,6 +37,10 @@ export class DataChannelClientStore extends SignalingClientStore {
       },
       changeSignalStrength(state: DataChannelClientState, payload: number) {
         state.signalStrength = payload;
+      },
+      changeWaypointReached(state: DataChannelClientState, payload: number) {
+        state.waypointReached = payload;
+        console.log("Waypoint reached: " + state.waypointReached);
       }
     };
   }

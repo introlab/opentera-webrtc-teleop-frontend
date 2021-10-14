@@ -19,10 +19,11 @@
 
 <script>
 export default {
+  name: "battery-indicator",
   data() {
     return {
       chargeBars: 0,
-      nbOfChargeBars: 6,
+      nbOfChargeBars: 6
     };
   },
   computed: {

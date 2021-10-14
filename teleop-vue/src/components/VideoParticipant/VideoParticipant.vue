@@ -34,7 +34,7 @@ export default {
     }
   },
   watch: {
-    stream(newStream, oldStream) {
+    stream(newStream) {
       this.$refs.video.srcObject = newStream;
     }
   },

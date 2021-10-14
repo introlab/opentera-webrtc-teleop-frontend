@@ -67,6 +67,7 @@ export interface DataChannelClientState extends SignalingClientRoom {
   onMessageEventHandler: Function | null;
   batteryLevel: number;
   signalStrength: number;
+  waypointReached: number;
 }
 
 export interface RoomClient {

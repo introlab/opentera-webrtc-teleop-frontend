@@ -1,16 +1,26 @@
 <template>
-  <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
+  <div
+    class="container-fluid bg-primary-dark"
+    v-on:mousemove="showToolbar"
+    @mousedown="onMouseDown"
+    @mouseup="onMouseUp"
+    @mousemove="onMouseMove"
+    @mouseout="onMouseOut"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchEnd="onTouchEnd"
+  >
     <video
       v-show="isCameraOn"
       ref="overlayVideoRef"
       id="overlayVideo"
       class="user-video mirror-y"
     ></video>
-    <div class="fluid pad">
-      <div
-        class="fluid col-flexbox"
-        v-if="videoConfClientStream !== null || cameraXClientStream !== null"
-      >
+    <div
+      class="fluid pad"
+      v-if="videoConfClientStream !== null || cameraXClientStream !== null"
+    >
+      <div class="fluid col-flexbox">
         <div class="row50 gutter">
           <video-participant
             id="videoconf"
@@ -29,20 +39,22 @@
           >
           </video-participant>
         </div>
-        <div class="row50 gutter center-left">
-          <joystick
-            width="150"
-            height="150"
-            class="telepresence-joystick"
-            v-bind:absolute-max-x="maxCmdValue"
-            v-bind:absolute-max-z="maxCmdValue"
-            v-on:joystickPositionChange="updateCmdVel"
-          />
-        </div>
+        <joystick
+          width="150"
+          height="150"
+          class="telepresence-joystick"
+          v-bind:absolute-max-x="maxCmdValue"
+          v-bind:absolute-max-z="maxCmdValue"
+          v-on:joystickPositionChange="updateCmdVel"
+        />
         <keyboard-teleop
           v-bind:absolute-max-x="maxCmdValue"
           v-bind:absolute-max-z="maxCmdValue"
           v-on:keyboadCmdEvent="updateCmdVel"
+        />
+        <expandable-map
+          :translation="mapTranslation"
+          @expansionToggle="onExpansionToggle"
         />
       </div>
     </div>
@@ -69,7 +81,8 @@ import { VideoParticipant } from "@/components/VideoParticipant";
 import { ButtonConference } from "@/components/ButtonConference";
 import { ParticipantsList } from "@/components/ParticipantsList";
 import { Joystick } from "@/components/Joystick";
-import KeyboardTeleop from "../../components/KeyboardTeleop/KeyboardTeleop.vue";
+import KeyboardTeleop from "@/components/KeyboardTeleop/KeyboardTeleop.vue";
+import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
 
 export default {
   name: "teleop-view",
@@ -77,7 +90,12 @@ export default {
     return {
       chatTextArea: null,
       cmd: { x: 0, z: 0 }, // Global velocity command to be sent to the robot
-      maxCmdValue: 1
+      maxCmdValue: 1,
+      mouseDown: false,
+      clickPosition: { x: 0, y: 0 },
+      prevMapTranslation: { x: 0, y: 0 },
+      mapTranslation: { x: 0, y: 0 },
+      isMapExpanded: false
     };
   },
   components: {
@@ -85,7 +103,8 @@ export default {
     ButtonConference,
     ParticipantsList,
     Joystick,
-    KeyboardTeleop
+    KeyboardTeleop,
+    ExpandableMap
   },
   setup() {
     const toolbarRef = ref(null);
@@ -99,9 +118,6 @@ export default {
       overlayVideoRef,
       showToolbar
     };
-  },
-  created() {
-    this.init();
   },
   computed: {
     videoConfClientStream() {
@@ -145,26 +161,89 @@ export default {
     overlayVideo.autoplay = true;
   },
   methods: {
-    init: function() {
-      setInterval(
-        function() {
-          this.sendCmdVel({ x: this.x, y: this.y });
-        }.bind(this),
-        100
-      ); // 100 ms
-    },
     updateCmdVel(newCmd) {
       // Update the global velocity command with the command from the keyboard or joystick
       // TODO: prioritize one of the two sources over the other.
       this.cmd = newCmd;
+      this.sendCmdVel();
     },
     sendCmdVel() {
-      // Send the global velocity command at a constant rate
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "velCmd", x: this.cmd.x, z: this.cmd.z })
         );
       }
+    },
+    onMouseDown(event) {
+      if (
+        event.target.id == "map-header" &&
+        event.button === 0 &&
+        !this.isMapExpanded
+      ) {
+        event.preventDefault();
+        this.clickPosition.x = (event.clientX / window.innerWidth) * 100;
+        this.clickPosition.y = (event.clientY / window.innerHeight) * 100;
+        this.mouseDown = true;
+      }
+    },
+    onMouseUp() {
+      if (this.mouseDown) {
+        this.prevMapTranslation.x = this.mapTranslation.x;
+        this.prevMapTranslation.y = this.mapTranslation.y;
+        this.mouseDown = false;
+      }
+    },
+    onMouseMove(event) {
+      if (this.mouseDown) {
+        event.preventDefault();
+        console.log("x=" + event.clientX + " y=" + event.clientY);
+        this.mapTranslation.x =
+          this.prevMapTranslation.x +
+          (event.clientX / window.innerWidth) * 100 -
+          this.clickPosition.x;
+        this.mapTranslation.y =
+          this.prevMapTranslation.y +
+          (event.clientY / window.innerHeight) * 100 -
+          this.clickPosition.y;
+      }
+    },
+    // onMouseOut() {
+    //   if (this.mouseDown) {
+    //     this.onMouseUp();
+    //   }
+    // },
+    onTouchStart(event) {
+      if (
+        event.touches[0].target.id == "map-header" &&
+        event.touches.length == 1 &&
+        !this.isMapExpanded
+      ) {
+        event.preventDefault(); // Prevents scrolling
+        this.clickPosition.x = event.touches[0].clientX;
+        this.clickPosition.y = event.touches[0].clientY;
+        this.clickPosition.x = (event.touches[0].clientX / window.innerWidth) * 100;
+        this.clickPosition.y = (event.touches[0].clientY / window.innerHeight) * 100;
+        this.mouseDown = true;
+      }
+    },
+    onTouchMove(event) {
+      if (this.mouseDown) {
+        event.preventDefault();
+        this.mapTranslation.x =
+          this.prevMapTranslation.x +
+          (event.touches[0].clientX / window.innerWidth) * 100 -
+          this.clickPosition.x;
+        this.mapTranslation.y =
+          this.prevMapTranslation.y +
+          (event.touches[0].clientY / window.innerHeight) * 100 -
+          this.clickPosition.y;
+      }
+    },
+    onTouchEnd() {
+      this.onMouseUp();
+    },
+    onExpansionToggle(event) {
+      this.isMapExpanded = event;
     }
   }
 };
