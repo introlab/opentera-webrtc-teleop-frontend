@@ -201,11 +201,19 @@ export default {
       }
     },
     onMouseDown(event) {
-      if (event.button === 0 && this.isExpanded && !this.isRobotNavigating) {
+      if (
+        event.button === 0 &&
+        this.isExpanded &&
+        !this.isRobotNavigating &&
+        !this.ctrlPressed
+      ) {
         if (this.$refs.wpOverlay.setWaypointPosition(event)) {
           this.isMouseDown = true;
         }
-      } else if (event.button === 1 || (this.ctrlPressed && event.button === 0)) {
+      } else if (
+        event.button === 1 ||
+        (this.ctrlPressed && event.button === 0)
+      ) {
         this.isMiddleMouseDown = true;
         this.panStartPosition = { x: event.clientX, y: event.clientY };
       }
@@ -263,8 +271,8 @@ export default {
         event.preventDefault();
         this.$refs.wpOverlay.setWaypointYaw(event);
         this.lastTouch = event.touches[0];
-      } else if (this.isPinchGesture) {
-        alert("Pinch move detected");
+      }
+      if (this.isPinchGesture) {
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
         const scale =
@@ -282,7 +290,8 @@ export default {
     onTouchEnd() {
       if (this.isMouseDown) {
         this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
-      } else if (this.isPinchGesture) {
+      }
+      if (this.isPinchGesture) {
         this.prevZoom = this.zoom;
         this.previousPan.x = this.pan.x;
         this.previousPan.y = this.pan.y;
