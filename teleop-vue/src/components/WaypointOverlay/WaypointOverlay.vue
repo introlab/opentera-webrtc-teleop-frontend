@@ -362,9 +362,6 @@ export default {
           this.isCreatingNewWp = true;
           return true;
         }
-        if (event.type === "touchstart") {
-          this.lastTouch = event.touches[0];
-        }
       }
       return false;
     },
@@ -388,9 +385,6 @@ export default {
         ) *
           180) /
         Math.PI;
-      if (event.type === "touchmove") {
-        this.lastTouch = event.touches[0];
-      }
     },
     /**
      * Gets called when the operator release the mouse button.
@@ -409,14 +403,7 @@ export default {
           180) /
         Math.PI;
       this.emitWaypoint();
-      this.isCreatingNewWp = false;
-
-      this.currentWaypoint.coordinate = {
-        x: -1,
-        y: -1,
-        yaw: 0
-      };
-
+      this.cancelNewWaypoint();
       this.drawCanvas();
     },
     /**
@@ -425,12 +412,12 @@ export default {
      * @public
      */
     cancelNewWaypoint() {
+      this.isCreatingNewWp = false;
       this.currentWaypoint.coordinate = {
         x: -1,
         y: -1,
         yaw: 0
       };
-      this.isCreatingNewWp = false;
     },
     /**
      * Adds a waypoint to the list.
@@ -448,14 +435,11 @@ export default {
      * @public
      */
     emitWaypoint() {
-      /**
-       * The new waypoint event.
-       *
-       * @type {Object} The valid internal waypoint.
-       */
-      const temp = {};
-      Object.assign(temp, this.currentWaypoint);
-      this.$emit("newWaypoint", temp);
+      if (!(this.currentWaypoint.x === -1 || this.currentWaypoint.y === -1)) {
+        const temp = {};
+        Object.assign(temp, this.currentWaypoint);
+        this.$emit("newWaypoint", temp);
+      }
     },
     /**
      * Verifies if the operator click was valid.

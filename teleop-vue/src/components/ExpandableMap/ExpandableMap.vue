@@ -117,7 +117,10 @@ export default {
       previousPan: { x: 0, y: 0 },
       pan: { x: 0, y: 0 },
       ctrlPressed: false,
-      lastTouch: null
+      lastTouch: null,
+      touchTimeout: null,
+      preMouseDown: false,
+      prematureTouchEnd: false
     };
   },
   computed: {
@@ -246,24 +249,38 @@ export default {
       }
     },
     onTouchStart(event) {
-      // TODO: set timeout to check if one or two fingers
       if (
         event.touches.length === 1 &&
         this.isExpanded &&
         !this.isRobotNavigating
       ) {
         event.preventDefault();
-        if (this.$refs.wpOverlay.setWaypointPosition(event)) {
-          this.isMouseDown = true;
-        }
+        this.preMouseDown = true;
         this.lastTouch = event.touches[0];
-      } else if (event.touches.length === 2) {
-        this.isPinchGesture = true;
-        const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-        const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
-        this.initialPinchDiff = Math.hypot(p2.x - p1.x, p2.y - p1.y);
-        this.panStartPosition = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+        this.touchTimeout = setTimeout(
+          function() {
+            this.handleSingleTouch(event);
+            this.touchTimeout = null;
+            if (this.prematureTouchEnd && this.isMouseDown) {
+              // If the toucheend event has been triggered before the end of the timeout
+              this.prematureTouchEnd = false;
+              this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
+              this.isMouseDown = false;
+              console.log("premature reset and confirm");
+            } else if (this.prematureTouchEnd && !this.isMouseDown) {
+              this.prematureTouchEnd = false;
+              console.log("premature reset only");
+            }
+            console.log("nothing");
+          }.bind(this),
+          50
+        );
+      } else if (event.touches.length === 2 && !this.isMouseDown) {
         event.preventDefault();
+        this.preMouseDown = false;
+        clearTimeout(this.touchTimeout);
+        this.touchTimeout = null;
+        this.handlePinch(event);
       }
     },
     onTouchMove(event) {
@@ -271,8 +288,8 @@ export default {
         event.preventDefault();
         this.$refs.wpOverlay.setWaypointYaw(event);
         this.lastTouch = event.touches[0];
-      }
-      if (this.isPinchGesture) {
+      } else if (this.isPinchGesture) {
+        event.preventDefault();
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
         const scale =
@@ -287,16 +304,39 @@ export default {
         this.doPan(centerPoint);
       }
     },
-    onTouchEnd() {
-      if (this.isMouseDown) {
-        this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
+    onTouchEnd(event) {
+      if (this.isExpanded && this.preMouseDown && !this.isMouseDown) {
+        // If the toucheend event has been triggered before the end of the timeout
+        this.preMouseDown = false;
+        this.prematureTouchEnd = true;
+        console.log("Premature touch end");
       }
-      if (this.isPinchGesture) {
+      if (this.isMouseDown) {
+        this.preMouseDown = false;
+        console.log("Confirming");
+        event.preventDefault();
+        this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
+        this.isMouseDown = false;
+      } else if (this.isPinchGesture) {
+        event.preventDefault();
         this.prevZoom = this.zoom;
         this.previousPan.x = this.pan.x;
         this.previousPan.y = this.pan.y;
         this.isPinchGesture = false;
       }
+    },
+    handleSingleTouch(event) {
+      if (this.$refs.wpOverlay.setWaypointPosition(event)) {
+        this.isMouseDown = true;
+        console.log("isMouseDown");
+      }
+    },
+    handlePinch(event) {
+      this.isPinchGesture = true;
+      const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+      const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+      this.initialPinchDiff = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      this.panStartPosition = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
     },
     onKeyDown(event) {
       if (event.key === "Control") {
@@ -359,7 +399,7 @@ export default {
       this.pan = event;
     },
     onWheel(event) {
-      if (event.deltaY > 0){
+      if (event.deltaY > 0) {
         this.zoomOut();
       } else if (event.deltaY < 0) {
         this.zoomIn();
