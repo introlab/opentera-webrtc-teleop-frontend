@@ -15,20 +15,7 @@
         <svg-icon v-show="!isExpanded" icon="expand"></svg-icon>
       </button>
     </div>
-    <div
-      class="body"
-      id="mapBody"
-      v-bind:class="{ pointer: isExpanded }"
-      @wheel="onWheel"
-      @click="onClickBody"
-      @mousedown="onMouseDown"
-      @mousemove="onMouseMove"
-      @mouseup="onMouseUp"
-      @mouseout="onMouseOut"
-      @touchstart="onTouchStart"
-      @touchmove="onTouchMove"
-      @touchend="onTouchEnd"
-    >
+    <div class="body" id="mapBody" v-bind:class="{ pointer: isExpanded }">
       <video
         ref="video"
         id="map"
@@ -37,10 +24,9 @@
         :style="videoZoomTransform"
       />
       <waypoint-overlay
+        ref="wpOverlay"
         class="overlay"
         :is-active="true"
-        :is-clickable="isExpanded"
-        :is-navigating="isRobotNavigating"
         :show="true"
         :show-grid="false"
         :list="waypoints"
@@ -52,6 +38,16 @@
         :video-element="mapVideoElement"
         @newWaypoint="saveWaypoint"
         @removeWaypoint="removeWaypoint"
+        @wheel="onWheel"
+        @click="onClickBody"
+        @mousedown="onMouseDown"
+        @mousemove="onMouseMove"
+        @mouseup="onMouseUp"
+        @mouseout="onMouseOut"
+        @touchstart="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend="onTouchEnd"
+        @keyup="onCtrlKeyDown"
       />
       <div v-show="isExpanded" class="action-buttons">
         <action-button
@@ -115,10 +111,13 @@ export default {
       isPinchGesture: false,
       initialPinchDiff: 0,
       prevZoom: null,
+      isMouseDown: false,
       isMiddleMouseDown: false,
       panStartPosition: { x: 0, y: 0 },
       previousPan: { x: 0, y: 0 },
-      pan: { x: 0, y: 0 }
+      pan: { x: 0, y: 0 },
+      ctrlPressed: false,
+      lastTouch: null
     };
   },
   computed: {
@@ -172,9 +171,15 @@ export default {
     }
   },
   mounted() {
+    window.addEventListener("keydown", this.onKeyDown);
+    window.addEventListener("keyup", this.onKeyUp);
     this.$refs.video.srcObject = this.mapClientStream;
     this.setIsExpanded(false);
     this.prevZoom = this.zoom;
+  },
+  unmounted() {
+    window.removeEventListener("keydown", this.onKeyDown);
+    window.addEventListener("keyup", this.onKeyUp);
   },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
@@ -196,33 +201,55 @@ export default {
       }
     },
     onMouseDown(event) {
-      if (event.button === 1) {
+      if (event.button === 0 && this.isExpanded && !this.isRobotNavigating) {
+        if (this.$refs.wpOverlay.setWaypointPosition(event)) {
+          this.isMouseDown = true;
+        }
+      } else if (event.button === 1 || (this.ctrlPressed && event.button === 0)) {
         this.isMiddleMouseDown = true;
         this.panStartPosition = { x: event.clientX, y: event.clientY };
       }
     },
     onMouseMove(event) {
-      if (this.isMiddleMouseDown) {
+      if (this.isMouseDown) {
+        this.$refs.wpOverlay.setWaypointYaw(event);
+      } else if (this.isMiddleMouseDown) {
         const mousePosition = { x: event.clientX, y: event.clientY };
         this.doPan(mousePosition);
       }
     },
-    onMouseUp() {
-      if (this.isMiddleMouseDown) {
+    onMouseUp(event) {
+      if (this.isMouseDown) {
+        this.$refs.wpOverlay.confirmNewWaypoint(event);
+        this.isMouseDown = false;
+      } else if (this.isMiddleMouseDown) {
         this.previousPan.x = this.pan.x;
         this.previousPan.y = this.pan.y;
         this.isMiddleMouseDown = false;
       }
     },
     onMouseOut() {
-      if (this.isMiddleMouseDown) {
+      if (this.isMouseDown) {
+        this.$refs.wpOverlay.cancelNewWaypoint();
+        this.isMouseDown = false;
+      } else if (this.isMiddleMouseDown) {
         this.previousPan = this.pan;
         this.isMiddleMouseDown = false;
       }
     },
     onTouchStart(event) {
-      if (event.touches.length == 2) {
-        // Pinch zoom and pan
+      // TODO: set timeout to check if one or two fingers
+      if (
+        event.touches.length === 1 &&
+        this.isExpanded &&
+        !this.isRobotNavigating
+      ) {
+        event.preventDefault();
+        if (this.$refs.wpOverlay.setWaypointPosition(event)) {
+          this.isMouseDown = true;
+        }
+        this.lastTouch = event.touches[0];
+      } else if (event.touches.length === 2) {
         this.isPinchGesture = true;
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
@@ -232,7 +259,12 @@ export default {
       }
     },
     onTouchMove(event) {
-      if (this.isPinchGesture) {
+      if (this.isMouseDown) {
+        event.preventDefault();
+        this.$refs.wpOverlay.setWaypointYaw(event);
+        this.lastTouch = event.touches[0];
+      } else if (this.isPinchGesture) {
+        alert("Pinch move detected");
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
         const scale =
@@ -248,11 +280,23 @@ export default {
       }
     },
     onTouchEnd() {
-      if (this.isPinchGesture) {
+      if (this.isMouseDown) {
+        this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
+      } else if (this.isPinchGesture) {
         this.prevZoom = this.zoom;
         this.previousPan.x = this.pan.x;
         this.previousPan.y = this.pan.y;
         this.isPinchGesture = false;
+      }
+    },
+    onKeyDown(event) {
+      if (event.key === "Control") {
+        this.ctrlPressed = true;
+      }
+    },
+    onKeyUp(event) {
+      if (event.key === "Control") {
+        this.ctrlPressed = false;
       }
     },
     doPan(position) {
