@@ -259,6 +259,7 @@ export default {
         this.lastTouch = event.touches[0];
         this.touchTimeout = setTimeout(
           function() {
+            console.log("async start");
             this.handleSingleTouch(event);
             this.touchTimeout = null;
             if (this.prematureTouchEnd && this.isMouseDown) {
@@ -266,12 +267,12 @@ export default {
               this.prematureTouchEnd = false;
               this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
               this.isMouseDown = false;
-              console.log("premature reset and confirm");
             } else if (this.prematureTouchEnd && !this.isMouseDown) {
               this.prematureTouchEnd = false;
-              console.log("premature reset only");
+            } else {
+              this.preMouseDown = false;
             }
-            console.log("nothing");
+            console.log("async end");
           }.bind(this),
           50
         );
@@ -305,15 +306,14 @@ export default {
       }
     },
     onTouchEnd(event) {
+      console.log("touch end start");
       if (this.isExpanded && this.preMouseDown && !this.isMouseDown) {
         // If the toucheend event has been triggered before the end of the timeout
         this.preMouseDown = false;
         this.prematureTouchEnd = true;
-        console.log("Premature touch end");
       }
       if (this.isMouseDown) {
         this.preMouseDown = false;
-        console.log("Confirming");
         event.preventDefault();
         this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
         this.isMouseDown = false;
@@ -324,11 +324,11 @@ export default {
         this.previousPan.y = this.pan.y;
         this.isPinchGesture = false;
       }
+      console.log("touch end end");
     },
     handleSingleTouch(event) {
       if (this.$refs.wpOverlay.setWaypointPosition(event)) {
         this.isMouseDown = true;
-        console.log("isMouseDown");
       }
     },
     handlePinch(event) {
