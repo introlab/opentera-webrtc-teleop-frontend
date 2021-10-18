@@ -31,6 +31,7 @@ export class StreamClientStore extends SignalingClientStore {
       client: null,
       localStream: null,
       showParticipants: false,
+      showBothCameras: false,
       clientsInCall: []
     };
   }
@@ -55,6 +56,12 @@ export class StreamClientStore extends SignalingClientStore {
 
       toggleParticipantsList(state: StreamClientState) {
         state.showParticipants = !state.showParticipants;
+      },
+
+      toggleBothCameras(state: StreamClientState) {
+        console.log("State before: " + state.showBothCameras);
+        state.showBothCameras = !state.showBothCameras;
+        console.log("State after: " + state.showBothCameras);
       }
     };
   }

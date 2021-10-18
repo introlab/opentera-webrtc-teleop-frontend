@@ -96,8 +96,7 @@ export default {
       clickPosition: { x: 0, y: 0 },
       prevMapTranslation: { x: 0, y: 0 },
       mapTranslation: { x: 0, y: 0 },
-      isMapExpanded: false,
-      showBothCameras: true
+      isMapExpanded: false
     };
   },
   components: {
@@ -153,6 +152,9 @@ export default {
     },
     isCameraOn() {
       return this.$store.state.localClient.isCameraOn;
+    },
+    showBothCameras() {
+      return this.$store.state.localClient.openteraVideoConf.showBothCameras;
     }
   },
   activated() {

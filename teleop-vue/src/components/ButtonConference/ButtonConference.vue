@@ -24,6 +24,14 @@
       <button
         type="button"
         class="btn btn-primary-dark"
+        v-on:click="toggleBothCameras"
+      >
+        <div v-if="showBothCameras">1</div>
+        <div v-else>2</div>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
         v-on:click="toggleCall"
       >
         <svg-icon icon="telephone-outbound-fill" v-if="isInCall" />
@@ -58,11 +66,13 @@ export default {
       isMuted,
       isCameraOn,
       showParticipants,
+      showBothCameras,
 
       toggleCall,
       toggleMute,
       toggleCamera,
-      toggleParticipantsList
+      toggleParticipantsList,
+      toggleBothCameras
     } = useButtons();
 
     return {
@@ -70,11 +80,13 @@ export default {
       isMuted,
       isCameraOn,
       showParticipants,
+      showBothCameras,
 
       toggleCall,
       toggleMute,
       toggleCamera,
-      toggleParticipantsList
+      toggleParticipantsList,
+      toggleBothCameras
     };
   }
 };

@@ -14,6 +14,9 @@ export default function() {
   const showParticipants = computed(
     () => store.state.localClient.openteraVideoConf.showParticipants
   );
+  const showBothCameras = computed(
+    () => store.state.localClient.openteraVideoConf.showBothCameras
+  );
 
   const toggleCall = () =>
     store.dispatch(namespace + "toggleCall").catch(error => {
@@ -36,15 +39,20 @@ export default function() {
   const toggleParticipantsList = () =>
     store.commit("localClient/openteraVideoConf/toggleParticipantsList");
 
+  const toggleBothCameras = () =>
+    store.commit("localClient/openteraVideoConf/toggleBothCameras");
+
   return {
     isInCall,
     isMuted,
     isCameraOn,
     showParticipants,
+    showBothCameras,
 
     toggleCall,
     toggleMute,
     toggleCamera,
-    toggleParticipantsList
+    toggleParticipantsList,
+    toggleBothCameras
   };
 }
