@@ -3,7 +3,13 @@
     <div class="name-layout" v-show="showName">
       <span class="name-text">{{ name }}</span>
     </div>
-    <video ref="video" v-bind:id="videoId" class="video-layout" autoplay />
+    <video
+      ref="video"
+      v-bind:id="videoId"
+      class="video-layout"
+      autoplay
+      disablePictureInPicture
+    />
   </div>
 </template>
 
@@ -34,7 +40,7 @@ export default {
     }
   },
   watch: {
-    stream(newStream, oldStream) {
+    stream(newStream) {
       this.$refs.video.srcObject = newStream;
     }
   },

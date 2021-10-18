@@ -66,6 +66,11 @@ export default {
             "localClient/openteraTeleop/changeSignalStrength",
             parsedMsg.strength
           );
+        } else if (parsedMsg.type === "waypointReached") {
+          this.$store.commit(
+            "localClient/openteraTeleop/changeWaypointReached",
+            parsedMsg.waypointNumber
+          );
         }
       }
     );

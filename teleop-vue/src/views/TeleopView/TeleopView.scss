@@ -32,7 +32,7 @@
     padding: 5px;
     width: 20%;
     transition: bottom var(--transition-speed) ease-in-out;
-    z-index: 3;
+    z-index: 2;
 }
 
 .mirror-y {
@@ -66,7 +66,7 @@
   right: 0px;
   bottom: 0px;
   margin: 1.5rem;
-  z-index: 3;
+  z-index: 4;
 }
 
 .center-left {

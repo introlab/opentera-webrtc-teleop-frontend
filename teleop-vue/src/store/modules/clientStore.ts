@@ -45,7 +45,6 @@ const ClientStore = {
 
       // Create different configuration for different room
       const videoConfSignalingServerConfiguration: SignalingServerConfiguration = {
-        //TODO: fix typo
         name: payload.name,
         data: payload.data,
         room: "VideoConf",
@@ -80,7 +79,7 @@ const ClientStore = {
         password: payload.password
       };
 
-      // Temporary name persitence on refreshing the page
+      // Temporary name persistence on refreshing the page
       let cookie = getCookie(SESSION_COOKIE);
       if (cookie) {
         cookie = JSON.parse(cookie);
@@ -101,9 +100,12 @@ const ClientStore = {
         .dispatch("openteraCameraX/start", cameraXSignalingServerConfiguration)
         .then(() => console.log("CAMERA X CONNECTED"));
       context
+        .dispatch("openteraMap/start", mapSignalingServerConfiguration)
+        .then(() => console.log("MAP CONNECTED"));
+      context
         .dispatch("openteraTeleop/start", teleopSignalingServerConfiguration)
         .then(() => console.log("TELEOP CONNECTED"));
-      // TODO: add Map signaling client and Messaging signaling client
+      // TODO: Messaging signaling client
     },
 
     // TODO: Make call functions more consistent
@@ -118,6 +120,9 @@ const ClientStore = {
             return err;
           }),
           context.dispatch("toggleCallCameraX").catch((err: any) => {
+            return err;
+          }),
+          context.dispatch("toggleCallMap").catch((err: any) => {
             return err;
           }),
           context.dispatch("toggleCallTeleop").catch((err: any) => {
@@ -167,6 +172,23 @@ const ClientStore = {
         context.state.isInCall
           ? context.state.openteraCameraX.client.callAll()
           : context.state.openteraCameraX.client.hangUpAll();
+        resolve();
+      });
+    },
+
+    toggleCallMap(context: any) {
+      return new Promise<void>((resolve, reject) => {
+        if (!context.state.openteraMap.client) {
+          reject(new Error("Map: Unable to call, you are not connected."));
+        }
+
+        if (context.state.openteraMap.clientsInRoom.length < 2) {
+          reject(new Error("Map: There are no participants to call."));
+        }
+
+        context.state.isInCall
+          ? context.state.openteraMap.client.callAll()
+          : context.state.openteraMap.client.hangUpAll();
         resolve();
       });
     },
@@ -233,6 +255,7 @@ const ClientStore = {
   modules: {
     openteraVideoConf: new StreamClientStore(true).getModule(),
     openteraCameraX: new StreamClientStore(false).getModule(),
+    openteraMap: new StreamClientStore(false).getModule(),
     openteraTeleop: new DataChannelClientStore().getModule()
   }
 };
