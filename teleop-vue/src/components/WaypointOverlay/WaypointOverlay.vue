@@ -1,13 +1,6 @@
 <template>
   <canvas
     ref="canvas"
-    @mousedown="onMouseDown"
-    @mousemove="onMouseMove"
-    @mouseup="onMouseUp"
-    @mouseout="onMouseOut"
-    @touchstart="onTouchStart"
-    @touchmove="onTouchMove"
-    @touchend="onTouchEnd"
   />
 </template>
 
@@ -35,14 +28,6 @@ export default {
       type: Boolean,
       default: true
     },
-    isClickable: {
-      type: Boolean,
-      default: true
-    },
-    isNavigating: {
-      type: Boolean,
-      deault: false
-    },
     wpColor: {
       type: String,
       default: "#00FF00"
@@ -63,9 +48,9 @@ export default {
       type: Object,
       default() {
         return {
-           x: 0,
-           y: 0
-        }
+          x: 0,
+          y: 0
+        };
       }
     },
     mapSize: {
@@ -107,11 +92,9 @@ export default {
         label: "",
         holdTimeS: 0
       },
-      isMouseDown: false,
-      isMiddleMouseDown: false,
+      isCreatingNewWp: false,
       loopIntervalId: null,
       wpRadius: 0,
-      lastTouch: null
     };
   },
   mounted() {
@@ -192,7 +175,7 @@ export default {
           this.writeWaypointInfos(wp, index);
         }
       }
-      if (this.isMouseDown) {
+      if (this.isCreatingNewWp) {
         this.drawWaypoint(this.currentWaypoint);
         this.drawYawArrow(this.currentWaypoint);
       }
@@ -359,28 +342,28 @@ export default {
       };
     },
     /**
-     * Gets called when the operator clicks the canvas.
+     * Sets the waypoint position.
      *
-     * @param {Event} event The click event.
+     * @param {Event} position The click event.
      * @public
      */
-    onMouseDown(event) {
-      if (
-        event.button === 0 &&
-        this.isActive &&
-        this.isClickable &&
-        !this.isNavigating
-      ) {
-        const coord = this.getVideoCoordinatesOfEvent(event);
-        if (this.isClickValid(coord)) {
-          if (!this.isClickExistingWaypoint(coord)) {
-            const wp = coord;
-            wp.yaw = 0;
-            this.addWaypointCoord(wp);
-            this.isMouseDown = true;
-          }
+    setWaypointPosition(event) {
+      let coord;
+      if (event.type == "touchstart") {
+        coord = this.getVideoCoordinatesOfEvent(event.touches[0]);
+      } else {
+        coord = this.getVideoCoordinatesOfEvent(event);
+      }
+      if (this.isClickValid(coord)) {
+        if (!this.isClickExistingWaypoint(coord)) {
+          const wp = coord;
+          wp.yaw = 0;
+          this.addWaypointCoord(wp);
+          this.isCreatingNewWp = true;
+          return true;
         }
       }
+      return false;
     },
     /**
      * Gets called when the operator moves its mouse after clicking..
@@ -388,17 +371,20 @@ export default {
      * @param {Event} event The move event.
      * @public
      */
-    onMouseMove(event) {
-      if (this.isMouseDown) {
-        const mousePosition = this.getVideoCoordinatesOfEvent(event);
-        this.currentWaypoint.coordinate.yaw =
-          (-Math.atan2(
-            mousePosition.y - this.currentWaypoint.coordinate.y,
-            mousePosition.x - this.currentWaypoint.coordinate.x
-          ) *
-            180) /
-          Math.PI;
-      } 
+    setWaypointYaw(event) {
+      let mousePosition;
+      if (event.type == "touchmove") {
+        mousePosition = this.getVideoCoordinatesOfEvent(event.touches[0]);
+      } else {
+        mousePosition = this.getVideoCoordinatesOfEvent(event);
+      }
+      this.currentWaypoint.coordinate.yaw =
+        (-Math.atan2(
+          mousePosition.y - this.currentWaypoint.coordinate.y,
+          mousePosition.x - this.currentWaypoint.coordinate.x
+        ) *
+          180) /
+        Math.PI;
     },
     /**
      * Gets called when the operator release the mouse button.
@@ -406,71 +392,32 @@ export default {
      * @param {Event} event The release event.
      * @public
      */
-    onMouseUp(event) {
-      if (this.isMouseDown) {
-        const mousePosition = this.getVideoCoordinatesOfEvent(event);
+    confirmNewWaypoint(event) {
+      const mousePosition = this.getVideoCoordinatesOfEvent(event);
 
-        this.currentWaypoint.coordinate.yaw =
-          (-Math.atan2(
-            mousePosition.y - this.currentWaypoint.coordinate.y,
-            mousePosition.x - this.currentWaypoint.coordinate.x
-          ) *
-            180) /
-          Math.PI;
-        this.emitWaypoint();
-        this.isMouseDown = false;
-
-        this.currentWaypoint.coordinate = {
-          x: -1,
-          y: -1,
-          yaw: 0
-        };
-
-        this.drawCanvas();
-      }
+      this.currentWaypoint.coordinate.yaw =
+        (-Math.atan2(
+          mousePosition.y - this.currentWaypoint.coordinate.y,
+          mousePosition.x - this.currentWaypoint.coordinate.x
+        ) *
+          180) /
+        Math.PI;
+      this.emitWaypoint();
+      this.cancelNewWaypoint();
+      this.drawCanvas();
     },
     /**
      * Gets called when the operator mouse exit the canvas.
      *
      * @public
      */
-    onMouseOut() {
-      if (this.isMouseDown) {
-        this.currentWaypoint.coordinate = {
-          x: -1,
-          y: -1,
-          yaw: 0
-        };
-        this.isMouseDown = false;
-      }
-    },
-    onTouchStart(event) {
-      if (
-        event.touches.length == 1 &&
-        this.isActive &&
-        this.isClickable &&
-        !this.isNavigating
-      ) {
-        event.preventDefault();
-        const coord = this.getVideoCoordinatesOfEvent(event.touches[0]);
-        if (this.isClickValid(coord)) {
-          if (!this.isClickExistingWaypoint(coord)) {
-            const wp = coord;
-            wp.yaw = 0;
-            this.addWaypointCoord(wp);
-            this.isMouseDown = true;
-          }
-        }
-        this.lastTouch = event.touches[0];
-      }
-    },
-    onTouchMove(event) {
-      event.preventDefault();
-      this.onMouseMove(event.touches[0]);
-      this.lastTouch = event.touches[0];
-    },
-    onTouchEnd() {
-      this.onMouseUp(this.lastTouch);
+    cancelNewWaypoint() {
+      this.isCreatingNewWp = false;
+      this.currentWaypoint.coordinate = {
+        x: -1,
+        y: -1,
+        yaw: 0
+      };
     },
     /**
      * Adds a waypoint to the list.
@@ -488,14 +435,11 @@ export default {
      * @public
      */
     emitWaypoint() {
-      /**
-       * The new waypoint event.
-       *
-       * @type {Object} The valid internal waypoint.
-       */
-      const temp = {};
-      Object.assign(temp, this.currentWaypoint);
-      this.$emit("newWaypoint", temp);
+      if (!(this.currentWaypoint.x === -1 || this.currentWaypoint.y === -1)) {
+        const temp = {};
+        Object.assign(temp, this.currentWaypoint);
+        this.$emit("newWaypoint", temp);
+      }
     },
     /**
      * Verifies if the operator click was valid.

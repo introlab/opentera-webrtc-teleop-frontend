@@ -15,32 +15,19 @@
         <svg-icon v-show="!isExpanded" icon="expand"></svg-icon>
       </button>
     </div>
-    <div
-      class="body"
-      id="mapBody"
-      v-bind:class="{ pointer: isExpanded }"
-      @wheel="onWheel"
-      @click="onClickBody"
-      @mousedown="onMouseDown"
-      @mousemove="onMouseMove"
-      @mouseup="onMouseUp"
-      @mouseout="onMouseOut"
-      @touchstart="onTouchStart"
-      @touchmove="onTouchMove"
-      @touchend="onTouchEnd"
-    >
+    <div class="body" id="mapBody" v-bind:class="{ pointer: isExpanded }">
       <video
         ref="video"
         id="map"
         class="map-video"
         autoplay
+        disablePictureInPicture
         :style="videoZoomTransform"
       />
       <waypoint-overlay
+        ref="wpOverlay"
         class="overlay"
         :is-active="true"
-        :is-clickable="isExpanded"
-        :is-navigating="isRobotNavigating"
         :show="true"
         :show-grid="false"
         :list="waypoints"
@@ -52,6 +39,16 @@
         :video-element="mapVideoElement"
         @newWaypoint="saveWaypoint"
         @removeWaypoint="removeWaypoint"
+        @wheel="onWheel"
+        @click="onClickBody"
+        @mousedown="onMouseDown"
+        @mousemove="onMouseMove"
+        @mouseup="onMouseUp"
+        @mouseout="onMouseOut"
+        @touchstart="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend="onTouchEnd"
+        @keyup="onCtrlKeyDown"
       />
       <div v-show="isExpanded" class="action-buttons">
         <action-button
@@ -115,10 +112,16 @@ export default {
       isPinchGesture: false,
       initialPinchDiff: 0,
       prevZoom: null,
+      isMouseDown: false,
       isMiddleMouseDown: false,
       panStartPosition: { x: 0, y: 0 },
       previousPan: { x: 0, y: 0 },
-      pan: { x: 0, y: 0 }
+      pan: { x: 0, y: 0 },
+      ctrlPressed: false,
+      lastTouch: null,
+      touchTimeout: null,
+      preMouseDown: false,
+      prematureTouchEnd: false
     };
   },
   computed: {
@@ -172,9 +175,15 @@ export default {
     }
   },
   mounted() {
+    window.addEventListener("keydown", this.onKeyDown);
+    window.addEventListener("keyup", this.onKeyUp);
     this.$refs.video.srcObject = this.mapClientStream;
     this.setIsExpanded(false);
     this.prevZoom = this.zoom;
+  },
+  unmounted() {
+    window.removeEventListener("keydown", this.onKeyDown);
+    window.addEventListener("keyup", this.onKeyUp);
   },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
@@ -196,43 +205,93 @@ export default {
       }
     },
     onMouseDown(event) {
-      if (event.button === 1) {
+      if (
+        event.button === 0 &&
+        this.isExpanded &&
+        !this.isRobotNavigating &&
+        !this.ctrlPressed
+      ) {
+        if (this.$refs.wpOverlay.setWaypointPosition(event)) {
+          this.isMouseDown = true;
+        }
+      } else if (
+        event.button === 1 ||
+        (this.ctrlPressed && event.button === 0)
+      ) {
         this.isMiddleMouseDown = true;
         this.panStartPosition = { x: event.clientX, y: event.clientY };
       }
     },
     onMouseMove(event) {
-      if (this.isMiddleMouseDown) {
+      if (this.isMouseDown) {
+        this.$refs.wpOverlay.setWaypointYaw(event);
+      } else if (this.isMiddleMouseDown) {
         const mousePosition = { x: event.clientX, y: event.clientY };
         this.doPan(mousePosition);
       }
     },
-    onMouseUp() {
-      if (this.isMiddleMouseDown) {
+    onMouseUp(event) {
+      if (this.isMouseDown) {
+        this.$refs.wpOverlay.confirmNewWaypoint(event);
+        this.isMouseDown = false;
+      } else if (this.isMiddleMouseDown) {
         this.previousPan.x = this.pan.x;
         this.previousPan.y = this.pan.y;
         this.isMiddleMouseDown = false;
       }
     },
     onMouseOut() {
-      if (this.isMiddleMouseDown) {
+      if (this.isMouseDown) {
+        this.$refs.wpOverlay.cancelNewWaypoint();
+        this.isMouseDown = false;
+      } else if (this.isMiddleMouseDown) {
         this.previousPan = this.pan;
         this.isMiddleMouseDown = false;
       }
     },
     onTouchStart(event) {
-      if (event.touches.length == 2) {
-        // Pinch zoom and pan
-        this.isPinchGesture = true;
-        const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-        const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
-        this.initialPinchDiff = Math.hypot(p2.x - p1.x, p2.y - p1.y);
-        this.panStartPosition = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+      if (
+        event.touches.length === 1 &&
+        this.isExpanded &&
+        !this.isRobotNavigating
+      ) {
         event.preventDefault();
+        this.preMouseDown = true;
+        this.lastTouch = event.touches[0];
+        this.touchTimeout = setTimeout(
+          function() {
+            console.log("async start");
+            this.handleSingleTouch(event);
+            this.touchTimeout = null;
+            if (this.prematureTouchEnd && this.isMouseDown) {
+              // If the toucheend event has been triggered before the end of the timeout
+              this.prematureTouchEnd = false;
+              this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
+              this.isMouseDown = false;
+            } else if (this.prematureTouchEnd && !this.isMouseDown) {
+              this.prematureTouchEnd = false;
+            } else {
+              this.preMouseDown = false;
+            }
+            console.log("async end");
+          }.bind(this),
+          50
+        );
+      } else if (event.touches.length === 2 && !this.isMouseDown) {
+        event.preventDefault();
+        this.preMouseDown = false;
+        clearTimeout(this.touchTimeout);
+        this.touchTimeout = null;
+        this.handlePinch(event);
       }
     },
     onTouchMove(event) {
-      if (this.isPinchGesture) {
+      if (this.isMouseDown) {
+        event.preventDefault();
+        this.$refs.wpOverlay.setWaypointYaw(event);
+        this.lastTouch = event.touches[0];
+      } else if (this.isPinchGesture) {
+        event.preventDefault();
         const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
         const scale =
@@ -247,12 +306,47 @@ export default {
         this.doPan(centerPoint);
       }
     },
-    onTouchEnd() {
-      if (this.isPinchGesture) {
+    onTouchEnd(event) {
+      console.log("touch end start");
+      if (this.isExpanded && this.preMouseDown && !this.isMouseDown) {
+        // If the toucheend event has been triggered before the end of the timeout
+        this.preMouseDown = false;
+        this.prematureTouchEnd = true;
+      }
+      if (this.isMouseDown) {
+        this.preMouseDown = false;
+        event.preventDefault();
+        this.$refs.wpOverlay.confirmNewWaypoint(this.lastTouch);
+        this.isMouseDown = false;
+      } else if (this.isPinchGesture) {
+        event.preventDefault();
         this.prevZoom = this.zoom;
         this.previousPan.x = this.pan.x;
         this.previousPan.y = this.pan.y;
         this.isPinchGesture = false;
+      }
+      console.log("touch end end");
+    },
+    handleSingleTouch(event) {
+      if (this.$refs.wpOverlay.setWaypointPosition(event)) {
+        this.isMouseDown = true;
+      }
+    },
+    handlePinch(event) {
+      this.isPinchGesture = true;
+      const p1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+      const p2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+      this.initialPinchDiff = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      this.panStartPosition = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+    },
+    onKeyDown(event) {
+      if (event.key === "Control") {
+        this.ctrlPressed = true;
+      }
+    },
+    onKeyUp(event) {
+      if (event.key === "Control") {
+        this.ctrlPressed = false;
       }
     },
     doPan(position) {
@@ -306,7 +400,7 @@ export default {
       this.pan = event;
     },
     onWheel(event) {
-      if (event.deltaY > 0){
+      if (event.deltaY > 0) {
         this.zoomOut();
       } else if (event.deltaY < 0) {
         this.zoomIn();
