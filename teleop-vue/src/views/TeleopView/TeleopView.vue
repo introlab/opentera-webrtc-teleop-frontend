@@ -19,7 +19,10 @@
     ></video>
     <div class="fluid pad">
       <div class="fluid col-flexbox">
-        <div class="row50 gutter">
+        <div
+          class="gutter"
+          :class="{ row100: !showBothCameras, row50: showBothCameras }"
+        >
           <video-participant
             id="videoconf"
             name="Front Camera"
@@ -28,7 +31,7 @@
           >
           </video-participant>
         </div>
-        <div class="row50 gutter">
+        <div class="row50 gutter" v-if="showBothCameras">
           <video-participant
             id="camerax"
             name="Bottom camera"
@@ -93,7 +96,8 @@ export default {
       clickPosition: { x: 0, y: 0 },
       prevMapTranslation: { x: 0, y: 0 },
       mapTranslation: { x: 0, y: 0 },
-      isMapExpanded: false
+      isMapExpanded: false,
+      showBothCameras: true
     };
   },
   components: {
