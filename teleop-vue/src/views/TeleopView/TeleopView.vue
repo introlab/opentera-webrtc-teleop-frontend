@@ -15,11 +15,9 @@
       ref="overlayVideoRef"
       id="overlayVideo"
       class="user-video mirror-y"
+      disablePictureInPicture
     ></video>
-    <div
-      class="fluid pad"
-      v-if="videoConfClientStream !== null || cameraXClientStream !== null"
-    >
+    <div class="fluid pad">
       <div class="fluid col-flexbox">
         <div class="row50 gutter">
           <video-participant

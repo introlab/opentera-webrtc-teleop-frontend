@@ -21,6 +21,7 @@
         id="map"
         class="map-video"
         autoplay
+        disablePictureInPicture
         :style="videoZoomTransform"
       />
       <waypoint-overlay

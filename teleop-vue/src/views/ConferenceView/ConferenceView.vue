@@ -5,6 +5,7 @@
       ref="overlayVideoRef"
       id="overlayVideo"
       class="overlay-video mirror-y"
+      disablePictureInPicture
     ></video>
     <div class="container-fluid">
       <video-conference v-bind:clients-list="clientsInCall"> </video-conference>
