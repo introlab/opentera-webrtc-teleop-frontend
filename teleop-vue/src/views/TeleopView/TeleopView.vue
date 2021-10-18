@@ -194,7 +194,6 @@ export default {
     onMouseMove(event) {
       if (this.mouseDown) {
         event.preventDefault();
-        console.log("x=" + event.clientX + " y=" + event.clientY);
         this.mapTranslation.x =
           this.prevMapTranslation.x +
           (event.clientX / window.innerWidth) * 100 -

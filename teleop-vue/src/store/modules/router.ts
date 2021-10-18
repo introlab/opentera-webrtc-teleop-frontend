@@ -3,12 +3,12 @@
 import router from "@/router";
 
 export interface RouteRawConfig {
-  [index: string] : any;
+  [index: string]: any;
   path: string;
   name?: string;
   defaultPath?: string;
   childrens?: Record<string, RouteRawConfig>;
-  meta?: any
+  meta?: any;
 }
 
 export type RouterState = Record<string, RouteRawConfig>;
@@ -38,12 +38,6 @@ const Router = {
           meta: {
             name: "Conference"
           }
-        },
-        map: {
-          path: "map",
-          meta: {
-            name: "Map"
-          }
         }
       }
     },
@@ -62,12 +56,6 @@ const Router = {
           path: "teleop",
           meta: {
             name: "Teleoperation"
-          }
-        },
-        map: {
-          path: "map",
-          meta: {
-            name: "Map"
           }
         }
       }
@@ -88,27 +76,31 @@ const Router = {
 
   getters: {
     getRoute: (state: RouterState) => (path: string) => {
-      const splitPath = path.split('.');
-      for (let i = 0; i < splitPath.length; i++)
-        state = state[splitPath[i]];
-        
+      const splitPath = path.split(".");
+      for (let i = 0; i < splitPath.length; i++) state = state[splitPath[i]];
+
       return state;
     },
 
-    getSubRoutes: (state: RouterState, getters?: any) => (route: string, recursive?: boolean) => {
-      const obj : RouterState = getters.getRoute(route);
+    getSubRoutes: (state: RouterState, getters?: any) => (
+      route: string,
+      recursive?: boolean
+    ) => {
+      const obj: RouterState = getters.getRoute(route);
 
       if (obj && obj.childrens) {
         return Object.keys(obj.childrens).map(key => {
           return {
             path: obj.path + "/" + obj.childrens[key].path,
-            childrens: recursive ? getters.getSubRoutes(route + '.childrens.' + key, true) : undefined,
+            childrens: recursive
+              ? getters.getSubRoutes(route + ".childrens." + key, true)
+              : undefined,
             meta: obj.childrens[key].meta,
             params: {}
-          }
+          };
         });
       }
-      
+
       return undefined;
     }
   }

@@ -195,7 +195,7 @@ export default {
       this.setIsExpanded(!this.isExpanded);
     },
     onClickBody() {
-      if (!this.isExpanded) {
+      if (!this.isExpanded && !this.ctrlPressed) {
         this.setIsExpanded(true);
       }
     },
@@ -260,7 +260,6 @@ export default {
         this.lastTouch = event.touches[0];
         this.touchTimeout = setTimeout(
           function() {
-            console.log("async start");
             this.handleSingleTouch(event);
             this.touchTimeout = null;
             if (this.prematureTouchEnd && this.isMouseDown) {
@@ -273,7 +272,6 @@ export default {
             } else {
               this.preMouseDown = false;
             }
-            console.log("async end");
           }.bind(this),
           50
         );
@@ -307,7 +305,6 @@ export default {
       }
     },
     onTouchEnd(event) {
-      console.log("touch end start");
       if (this.isExpanded && this.preMouseDown && !this.isMouseDown) {
         // If the toucheend event has been triggered before the end of the timeout
         this.preMouseDown = false;
@@ -325,7 +322,6 @@ export default {
         this.previousPan.y = this.pan.y;
         this.isPinchGesture = false;
       }
-      console.log("touch end end");
     },
     handleSingleTouch(event) {
       if (this.$refs.wpOverlay.setWaypointPosition(event)) {
@@ -340,12 +336,12 @@ export default {
       this.panStartPosition = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
     },
     onKeyDown(event) {
-      if (event.key === "Control") {
+      if (event.key === "Control" || event.key === "Meta") {
         this.ctrlPressed = true;
       }
     },
     onKeyUp(event) {
-      if (event.key === "Control") {
+      if (event.key === "Control" || event.key === "Meta") {
         this.ctrlPressed = false;
       }
     },

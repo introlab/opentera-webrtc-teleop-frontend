@@ -40,7 +40,6 @@ export class DataChannelClientStore extends SignalingClientStore {
       },
       changeWaypointReached(state: DataChannelClientState, payload: number) {
         state.waypointReached = payload;
-        console.log("Waypoint reached: " + state.waypointReached);
       }
     };
   }
