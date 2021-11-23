@@ -2,6 +2,18 @@
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 
+export interface RobotStatus {
+  isCharging: boolean;
+  batteryVoltage: number;
+  batteryCurrent: number;
+  cpuUsage: number;
+  memUsage: number;
+  diskUsage: number;
+  wifiNetwork: string;
+  wifiStrength: number;
+  localIp: string;
+}
+
 export interface SignalingServerConfiguration {
   url?: string;
   name?: string;
@@ -66,8 +78,7 @@ export interface StreamClientState extends SignalingClientRoom {
 export interface DataChannelClientState extends SignalingClientRoom {
   client: openteraWebrtcWebClient.DataChannelClient;
   onMessageEventHandler: Function | null;
-  batteryLevel: number;
-  signalStrength: number;
+  status: RobotStatus;
   waypointReached: number;
 }
 

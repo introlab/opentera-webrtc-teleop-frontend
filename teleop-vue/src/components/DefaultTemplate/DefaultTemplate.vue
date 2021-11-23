@@ -56,15 +56,10 @@ export default {
       "localClient/openteraTeleop/setMessageEventHandler",
       (id, name, clientData, message) => {
         const parsedMsg = JSON.parse(message);
-        if (parsedMsg.type === "batteryStatus") {
+        if (parsedMsg.type === "robotStatus") {
           this.$store.commit(
-            "localClient/openteraTeleop/changeBatteryLevel",
-            parsedMsg.level
-          );
-        } else if (parsedMsg.type === "signalStatus") {
-          this.$store.commit(
-            "localClient/openteraTeleop/changeSignalStrength",
-            parsedMsg.strength
+            "localClient/openteraTeleop/changeRobotStatus",
+            parsedMsg.status
           );
         } else if (parsedMsg.type === "waypointReached") {
           this.$store.commit(

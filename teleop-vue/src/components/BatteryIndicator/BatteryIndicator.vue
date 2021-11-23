@@ -28,7 +28,8 @@ export default {
   },
   computed: {
     batteryLevel() {
-      return this.$store.state.localClient.openteraTeleop.batteryLevel;
+      // TODO: Convert battery voltage to battery percentage
+      return this.$store.state.localClient.openteraTeleop.status.batteryVoltage;
     }
   },
   watch: {
