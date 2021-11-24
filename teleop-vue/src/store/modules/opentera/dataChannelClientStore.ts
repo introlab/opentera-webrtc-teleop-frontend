@@ -54,7 +54,6 @@ export class DataChannelClientStore extends SignalingClientStore {
         state.status.wifiNetwork = payload.wifiNetwork;
         state.status.wifiStrength = payload.wifiStrength;
         state.status.localIp = payload.localIp;
-        console.log(state.status);
       },
       changeWaypointReached(state: DataChannelClientState, payload: number) {
         state.waypointReached = payload;
