@@ -11,7 +11,7 @@
           class="inner"
           v-bind:class="{
             hidden: n <= nbOfChargeBars - chargeBars,
-            charging: isCharging
+            low: lowBattery
           }"
         />
       </div>
@@ -33,7 +33,8 @@ export default {
   data() {
     return {
       chargeBars: 0,
-      nbOfChargeBars: 6
+      nbOfChargeBars: 6,
+      lowBattery: true
     };
   },
   computed: {
@@ -54,6 +55,11 @@ export default {
   methods: {
     onBatteryLevelChanged(level) {
       this.chargeBars = Math.round((level / 100) * this.nbOfChargeBars);
+      if (this.chargeBars <= 1) {
+        this.lowBattery = true;
+      } else {
+        this.lowBattery = false;
+      }
     }
   }
 };
