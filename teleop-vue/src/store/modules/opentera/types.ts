@@ -6,6 +6,7 @@ export interface RobotStatus {
   isCharging: boolean;
   batteryVoltage: number;
   batteryCurrent: number;
+  batteryLevel: number;
   cpuUsage: number;
   memUsage: number;
   diskUsage: number;

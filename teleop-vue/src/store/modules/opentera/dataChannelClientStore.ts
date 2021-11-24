@@ -24,6 +24,7 @@ export class DataChannelClientStore extends SignalingClientStore {
         isCharging: false,
         batteryVoltage: 0,
         batteryCurrent: 0,
+        batteryLevel: 0,
         cpuUsage: 0,
         memUsage: 0,
         diskUsage: 0,
@@ -46,12 +47,14 @@ export class DataChannelClientStore extends SignalingClientStore {
         state.status.isCharging = payload.isCharging;
         state.status.batteryVoltage = payload.batteryVoltage;
         state.status.batteryCurrent = payload.batteryCurrent;
+        state.status.batteryLevel = payload.batteryLevel;
         state.status.cpuUsage = payload.cpuUsage;
         state.status.memUsage = payload.memUsage;
         state.status.diskUsage = payload.diskUsage;
         state.status.wifiNetwork = payload.wifiNetwork;
         state.status.wifiStrength = payload.wifiStrength;
         state.status.localIp = payload.localIp;
+        console.log(state.status);
       },
       changeWaypointReached(state: DataChannelClientState, payload: number) {
         state.waypointReached = payload;
