@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 <template>
   <div class="wrapper">
+    <FlashMessage style="z-index: 5;" :position="'left top'" />
     <header class="header">
       <navigation-bar
         v-bind:brand="brand"
@@ -48,6 +49,19 @@ export default {
 
     defaultPath() {
       return this.$store.state.router[this.route].defaultPath;
+    },
+
+    dockingStatus() {
+      return this.$store.state.localClient.openteraTeleop.dockingStatus;
+    }
+  },
+  watch: {
+    dockingStatus() {
+      this.$flashMessage.show({
+        status: "info",
+        title: this.dockingStatus,
+        message: ""
+      });
     }
   },
   beforeMount() {
@@ -65,6 +79,11 @@ export default {
           this.$store.commit(
             "localClient/openteraTeleop/changeWaypointReached",
             parsedMsg.waypointNumber
+          );
+        } else if (parsedMsg.type === "docking_status") {
+          this.$store.commit(
+            "localClient/openteraTeleop/updateDockingStatus",
+            parsedMsg.status
           );
         }
       }

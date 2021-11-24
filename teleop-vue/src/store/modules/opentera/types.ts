@@ -81,6 +81,7 @@ export interface DataChannelClientState extends SignalingClientRoom {
   onMessageEventHandler: Function | null;
   status: RobotStatus;
   waypointReached: number;
+  dockingStatus: string;
 }
 
 export interface RoomClient {

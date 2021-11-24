@@ -32,7 +32,8 @@ export class DataChannelClientStore extends SignalingClientStore {
         wifiStrength: 0,
         localIp: ""
       },
-      waypointReached: 0
+      waypointReached: 0,
+      dockingStatus: ""
     };
   }
 
@@ -57,6 +58,10 @@ export class DataChannelClientStore extends SignalingClientStore {
       },
       changeWaypointReached(state: DataChannelClientState, payload: number) {
         state.waypointReached = payload;
+      },
+      updateDockingStatus(state: DataChannelClientState, payload: string) {
+        state.dockingStatus = payload;
+        console.log(state.dockingStatus);
       }
     };
   }

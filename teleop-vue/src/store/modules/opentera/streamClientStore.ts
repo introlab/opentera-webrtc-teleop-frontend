@@ -59,9 +59,7 @@ export class StreamClientStore extends SignalingClientStore {
       },
 
       toggleBothCameras(state: StreamClientState) {
-        console.log("State before: " + state.showBothCameras);
         state.showBothCameras = !state.showBothCameras;
-        console.log("State after: " + state.showBothCameras);
       }
     };
   }
@@ -73,7 +71,8 @@ export class StreamClientStore extends SignalingClientStore {
     context.commit("setInitPendingState", true);
 
     if (this.canSendStream) {
-      context.commit("setLocalStream", await fetchLocalStream());
+      // Commented to allow videoconf to connect without a local feed
+      // context.commit("setLocalStream", await fetchLocalStream());
     }
 
     const signalingServerConfiguration = initSignalingServerConfiguration(
