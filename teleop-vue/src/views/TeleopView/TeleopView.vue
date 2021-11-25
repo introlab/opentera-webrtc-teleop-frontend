@@ -56,13 +56,13 @@
           width="150"
           height="150"
           class="telepresence-joystick"
-          v-bind:absolute-max-x="maxCmdValue"
-          v-bind:absolute-max-z="maxCmdValue"
+          v-bind:absolute-max-x="scaledMaxX"
+          v-bind:absolute-max-yaw="scaledMaxYaw"
           v-on:joystickPositionChange="updateCmdVel"
         />
         <keyboard-teleop
-          v-bind:absolute-max-x="maxCmdValue"
-          v-bind:absolute-max-z="maxCmdValue"
+          v-bind:absolute-max-x="scaledMaxX"
+          v-bind:absolute-max-yaw="scaledMaxYaw"
           v-on:keyboardCmdEvent="updateCmdVel"
         />
         <expandable-map
@@ -103,8 +103,11 @@ export default {
   data() {
     return {
       chatTextArea: null,
-      cmd: { x: 0, z: 0 }, // Global velocity command to be sent to the robot
-      maxCmdValue: 1,
+      cmd: { x: 0, yaw: 0 }, // Global velocity command to be sent to the robot (x: m/s, y: rad/s)
+      maxX: 0.3,
+      maxYaw: 0.55,
+      scaledMaxX: 0.3,
+      scaledMaxYaw: 0.55,
       mouseDown: false,
       clickPosition: { x: 0, y: 0 },
       prevMapTranslation: { x: 0, y: 0 },
@@ -187,8 +190,9 @@ export default {
     },
     sendCmdVel() {
       if (this.$store.state.localClient.openteraTeleop.client) {
+        console.log(this.cmd);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify({ type: "velCmd", x: this.cmd.x, z: this.cmd.z })
+          JSON.stringify({ type: "velCmd", x: this.cmd.x, yaw: this.cmd.yaw })
         );
       }
     },
@@ -263,7 +267,8 @@ export default {
       this.isMapExpanded = event;
     },
     onMaxSpeedChanged(event) {
-      this.maxCmdValue = event;
+      this.scaledMaxX = this.maxX * event;
+      this.scaledMaxYaw = this.maxYaw * event;
     }
   }
 };

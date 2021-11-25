@@ -2,10 +2,12 @@
 export default {
   props: {
     absoluteMaxX: {
+      // Maximum linear velocity in m/s
       type: Number,
       required: true
     },
-    absoluteMaxZ: {
+    absoluteMaxYaw: {
+      // Maximum angular velocity in rad/s
       type: Number,
       required: true
     },
@@ -17,7 +19,7 @@ export default {
   },
   data() {
     return {
-      cmd: { x: 0, z: 0 },
+      cmd: { x: 0, yaw: 0 },
       loopIntervalId: false
     };
   },
@@ -37,9 +39,9 @@ export default {
       } else if (event.key === "ArrowDown") {
         this.cmd.x = -this.absoluteMaxX;
       } else if (event.key === "ArrowRight") {
-        this.cmd.z = -this.absoluteMaxZ;
+        this.cmd.yaw = -this.absoluteMaxYaw;
       } else if (event.key === "ArrowLeft") {
-        this.cmd.z = this.absoluteMaxZ;
+        this.cmd.yaw = this.absoluteMaxYaw;
       }
       if (!this.loopIntervalId) {
         this.emitLoop();
@@ -51,9 +53,9 @@ export default {
       } else if (event.key === "ArrowDown") {
         this.cmd.x = 0;
       } else if (event.key === "ArrowRight") {
-        this.cmd.z = 0;
+        this.cmd.yaw = 0;
       } else if (event.key === "ArrowLeft") {
-        this.cmd.z = 0;
+        this.cmd.yaw = 0;
       }
       this.emitKeyboardCmd();
     },
@@ -64,7 +66,7 @@ export default {
       this.loopIntervalId = setInterval(
         function() {
           this.emitKeyboardCmd();
-          if (this.cmd.x == 0 && this.cmd.z == 0) {
+          if (this.cmd.x == 0 && this.cmd.yaw == 0) {
             clearInterval(this.loopIntervalId);
             this.loopIntervalId = false;
           }

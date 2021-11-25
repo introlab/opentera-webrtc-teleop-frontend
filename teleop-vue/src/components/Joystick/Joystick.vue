@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       x: 0,
-      z: 0,
+      yaw: 0,
       loopIntervalId: null,
       positionChangeIntervalId: null,
       canvas: null,
@@ -39,10 +39,12 @@ export default {
       required: true
     },
     absoluteMaxX: {
+      // Maximum linear velocity in m/s
       type: Number,
       required: true
     },
-    absoluteMaxZ: {
+    absoluteMaxYaw: {
+      // Maximum angular velocity in rad/s
       type: Number,
       required: true
     },
@@ -260,12 +262,12 @@ export default {
     },
     emitJoystickPosition() {
       // Emit joystick position as a velocity command with x corresponding the robots
-      //  forward linear axis and z corresponding to the yaw.
+      //  forward linear axis and yaw corresponding to the angular axis.
       const event = {
         x:
-          -((this.y - this.getCenterY()) * this.absoluteMaxZ) /
+          -((this.y - this.getCenterY()) * this.absoluteMaxYaw) /
           (this.getCanvasRadius() - this.getJoystickRadius()),
-        z:
+        yaw:
           -((this.x - this.getCenterX()) * this.absoluteMaxX) /
           (this.getCanvasRadius() - this.getJoystickRadius())
       };
