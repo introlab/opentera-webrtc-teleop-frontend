@@ -41,7 +41,8 @@
           :class="{
             row50: cameraDisplayMode == 0,
             row100: cameraDisplayMode == 2
-          }">
+          }"
+        >
           <video-participant
             id="camerax"
             name="Bottom camera"
@@ -50,6 +51,7 @@
           >
           </video-participant>
         </div>
+        <slider v-on:maxSpeedChangedEvent="onMaxSpeedChanged" />
         <joystick
           width="150"
           height="150"
@@ -61,7 +63,7 @@
         <keyboard-teleop
           v-bind:absolute-max-x="maxCmdValue"
           v-bind:absolute-max-z="maxCmdValue"
-          v-on:keyboadCmdEvent="updateCmdVel"
+          v-on:keyboardCmdEvent="updateCmdVel"
         />
         <expandable-map
           :translation="mapTranslation"
@@ -94,6 +96,7 @@ import { ParticipantsList } from "@/components/ParticipantsList";
 import { Joystick } from "@/components/Joystick";
 import KeyboardTeleop from "@/components/KeyboardTeleop/KeyboardTeleop.vue";
 import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
+import Slider from "@/components/Slider/Slider.vue";
 
 export default {
   name: "teleop-view",
@@ -115,7 +118,8 @@ export default {
     ParticipantsList,
     Joystick,
     KeyboardTeleop,
-    ExpandableMap
+    ExpandableMap,
+    Slider
   },
   setup() {
     const toolbarRef = ref(null);
@@ -257,6 +261,9 @@ export default {
     },
     onExpansionToggle(event) {
       this.isMapExpanded = event;
+    },
+    onMaxSpeedChanged(event) {
+      this.maxCmdValue = event;
     }
   }
 };

@@ -58,8 +58,7 @@ export default {
       this.emitKeyboardCmd();
     },
     emitKeyboardCmd() {
-      console.log(this.cmd);
-      this.$emit("keyboadCmdEvent", this.cmd);
+      this.$emit("keyboardCmdEvent", this.cmd);
     },
     emitLoop() {
       this.loopIntervalId = setInterval(
