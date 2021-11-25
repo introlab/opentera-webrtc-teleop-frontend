@@ -24,10 +24,11 @@
       <button
         type="button"
         class="btn btn-primary-dark"
-        v-on:click="toggleBothCameras"
+        v-on:click="toggleCameraDisplayMode"
       >
-        <div v-if="showBothCameras">1</div>
-        <div v-else>2</div>
+        <svg-icon icon="both_cameras" v-if="cameraDisplayMode == 0" />
+        <svg-icon icon="top_camera_only" v-if="cameraDisplayMode == 1" />
+        <svg-icon icon="bottom_camera_only" v-if="cameraDisplayMode == 2" />
       </button>
       <button
         type="button"
@@ -66,13 +67,13 @@ export default {
       isMuted,
       isCameraOn,
       showParticipants,
-      showBothCameras,
+      cameraDisplayMode,
 
       toggleCall,
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
-      toggleBothCameras
+      toggleCameraDisplayMode
     } = useButtons();
 
     return {
@@ -80,13 +81,13 @@ export default {
       isMuted,
       isCameraOn,
       showParticipants,
-      showBothCameras,
+      cameraDisplayMode,
 
       toggleCall,
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
-      toggleBothCameras
+      toggleCameraDisplayMode
     };
   }
 };

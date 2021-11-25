@@ -20,8 +20,12 @@
     <div class="fluid pad">
       <div class="fluid col-flexbox">
         <div
+          v-if="cameraDisplayMode != 2"
           class="gutter"
-          :class="{ row100: !showBothCameras, row50: showBothCameras }"
+          :class="{
+            row50: cameraDisplayMode == 0,
+            row100: cameraDisplayMode == 1
+          }"
         >
           <video-participant
             id="videoconf"
@@ -31,7 +35,13 @@
           >
           </video-participant>
         </div>
-        <div class="row50 gutter" v-if="showBothCameras">
+        <div
+          class="row50 gutter"
+          v-if="cameraDisplayMode != 1"
+          :class="{
+            row50: cameraDisplayMode == 0,
+            row100: cameraDisplayMode == 2
+          }">
           <video-participant
             id="camerax"
             name="Bottom camera"
@@ -153,8 +163,8 @@ export default {
     isCameraOn() {
       return this.$store.state.localClient.isCameraOn;
     },
-    showBothCameras() {
-      return this.$store.state.localClient.openteraVideoConf.showBothCameras;
+    cameraDisplayMode() {
+      return this.$store.state.localClient.openteraVideoConf.cameraDisplayMode;
     }
   },
   activated() {

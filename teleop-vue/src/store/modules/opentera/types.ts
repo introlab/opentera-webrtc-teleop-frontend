@@ -73,7 +73,7 @@ export interface StreamClientState extends SignalingClientRoom {
   client: openteraWebrtcWebClient.StreamClient;
   clientsInCall: Array<Client>;
   showParticipants: boolean;
-  showBothCameras: boolean;
+  cameraDisplayMode: number;
 }
 
 export interface DataChannelClientState extends SignalingClientRoom {
