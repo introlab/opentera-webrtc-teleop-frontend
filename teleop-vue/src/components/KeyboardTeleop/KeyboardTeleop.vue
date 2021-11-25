@@ -1,9 +1,24 @@
 <script>
 export default {
-  props: ["absoluteMaxX", "absoluteMaxZ"],
+  props: {
+    absoluteMaxX: {
+      type: Number,
+      required: true
+    },
+    absoluteMaxZ: {
+      type: Number,
+      required: true
+    },
+    publishingRate: {
+      type: Number,
+      required: false,
+      default: 10 // Hz
+    }
+  },
   data() {
     return {
-      cmd: { x: 0, z: 0 }
+      cmd: { x: 0, z: 0 },
+      loopIntervalId: false
     };
   },
   emits: ["keyboardTeleopEvent"],
@@ -26,7 +41,9 @@ export default {
       } else if (event.key === "ArrowLeft") {
         this.cmd.z = this.absoluteMaxZ;
       }
-      this.emitKeyboardCmd();
+      if (!this.loopIntervalId) {
+        this.emitLoop();
+      }
     },
     onKeyUp(event) {
       if (event.key === "ArrowUp") {
@@ -41,7 +58,20 @@ export default {
       this.emitKeyboardCmd();
     },
     emitKeyboardCmd() {
+      console.log(this.cmd);
       this.$emit("keyboadCmdEvent", this.cmd);
+    },
+    emitLoop() {
+      this.loopIntervalId = setInterval(
+        function() {
+          this.emitKeyboardCmd();
+          if (this.cmd.x == 0 && this.cmd.z == 0) {
+            clearInterval(this.loopIntervalId);
+            this.loopIntervalId = false;
+          }
+        }.bind(this),
+        1000 / this.publishingRate
+      );
     }
   }
 };
