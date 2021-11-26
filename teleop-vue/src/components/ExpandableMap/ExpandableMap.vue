@@ -62,11 +62,6 @@
           @clicked="sendWaypoints"
           :disabled="waypointsEmpty"
         />
-        <action-button
-          label="Stop"
-          class="stop-button"
-          @clicked="clearWaypoints"
-        />
       </div>
       <div v-show="isExpanded" class="zoom-buttons">
         <action-button label="+" class="zoom-button" @clicked="zoomIn" />
@@ -74,7 +69,6 @@
       </div>
     </div>
   </div>
-  <div class="mask" v-if="isExpanded" @click="onClickMask"></div>
 </template>
 
 <script>

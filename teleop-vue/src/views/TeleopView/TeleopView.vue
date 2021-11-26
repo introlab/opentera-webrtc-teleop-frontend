@@ -17,8 +17,11 @@
       class="user-video mirror-y"
       disablePictureInPicture
     ></video>
-    <div class="fluid pad">
-      <div class="fluid col-flexbox">
+    <div class="fluid pad row-flexbox">
+      <div
+        class="col-flexbox"
+        :class="{ col33: isMapExpanded, col100: !isMapExpanded }"
+      >
         <div
           v-if="cameraDisplayMode != 2"
           class="gutter"
@@ -51,26 +54,28 @@
           >
           </video-participant>
         </div>
-        <slider v-on:maxSpeedChangedEvent="onMaxSpeedChanged" />
-        <joystick
-          width="150"
-          height="150"
-          class="telepresence-joystick"
-          v-bind:absolute-max-x="scaledMaxX"
-          v-bind:absolute-max-yaw="scaledMaxYaw"
-          v-on:joystickPositionChange="updateCmdVel"
-        />
-        <keyboard-teleop
-          v-bind:absolute-max-x="scaledMaxX"
-          v-bind:absolute-max-yaw="scaledMaxYaw"
-          v-on:keyboardCmdEvent="updateCmdVel"
-        />
+      </div>
+      <div class="col-flexbox" :class="{ col66: isMapExpanded }">
         <expandable-map
           :translation="mapTranslation"
           @expansionToggle="onExpansionToggle"
         />
       </div>
     </div>
+    <slider v-on:maxSpeedChangedEvent="onMaxSpeedChanged" />
+    <joystick
+      width="150"
+      height="150"
+      class="telepresence-joystick"
+      v-bind:absolute-max-x="scaledMaxX"
+      v-bind:absolute-max-yaw="scaledMaxYaw"
+      v-on:joystickPositionChange="updateCmdVel"
+    />
+    <keyboard-teleop
+      v-bind:absolute-max-x="scaledMaxX"
+      v-bind:absolute-max-yaw="scaledMaxYaw"
+      v-on:keyboardCmdEvent="updateCmdVel"
+    />
 
     <div ref="toolbarRef" class="toolbar">
       <button-conference />
