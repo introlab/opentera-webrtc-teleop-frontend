@@ -24,6 +24,15 @@
       <button
         type="button"
         class="btn btn-primary-dark"
+        v-on:click="toggleCameraDisplayMode"
+      >
+        <svg-icon icon="both_cameras" v-if="cameraDisplayMode == 0" />
+        <svg-icon icon="top_camera_only" v-if="cameraDisplayMode == 1" />
+        <svg-icon icon="bottom_camera_only" v-if="cameraDisplayMode == 2" />
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
         v-on:click="toggleCall"
       >
         <svg-icon icon="telephone-outbound-fill" v-if="isInCall" />
@@ -58,11 +67,13 @@ export default {
       isMuted,
       isCameraOn,
       showParticipants,
+      cameraDisplayMode,
 
       toggleCall,
       toggleMute,
       toggleCamera,
-      toggleParticipantsList
+      toggleParticipantsList,
+      toggleCameraDisplayMode
     } = useButtons();
 
     return {
@@ -70,11 +81,13 @@ export default {
       isMuted,
       isCameraOn,
       showParticipants,
+      cameraDisplayMode,
 
       toggleCall,
       toggleMute,
       toggleCamera,
-      toggleParticipantsList
+      toggleParticipantsList,
+      toggleCameraDisplayMode
     };
   }
 };

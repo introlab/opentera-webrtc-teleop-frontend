@@ -17,9 +17,19 @@
       class="user-video mirror-y"
       disablePictureInPicture
     ></video>
-    <div class="fluid pad">
-      <div class="fluid col-flexbox">
-        <div class="row50 gutter">
+    <div class="fluid pad row-flexbox">
+      <div
+        class="col-flexbox"
+        :class="{ col33: isMapExpanded, col100: !isMapExpanded }"
+      >
+        <div
+          v-if="cameraDisplayMode != 2"
+          class="gutter"
+          :class="{
+            row50: cameraDisplayMode == 0,
+            row100: cameraDisplayMode == 1
+          }"
+        >
           <video-participant
             id="videoconf"
             name="Front Camera"
@@ -28,7 +38,14 @@
           >
           </video-participant>
         </div>
-        <div class="row50 gutter">
+        <div
+          class="row50 gutter"
+          v-if="cameraDisplayMode != 1"
+          :class="{
+            row50: cameraDisplayMode == 0,
+            row100: cameraDisplayMode == 2
+          }"
+        >
           <video-participant
             id="camerax"
             name="Bottom camera"
@@ -37,25 +54,28 @@
           >
           </video-participant>
         </div>
-        <joystick
-          width="150"
-          height="150"
-          class="telepresence-joystick"
-          v-bind:absolute-max-x="maxCmdValue"
-          v-bind:absolute-max-z="maxCmdValue"
-          v-on:joystickPositionChange="updateCmdVel"
-        />
-        <keyboard-teleop
-          v-bind:absolute-max-x="maxCmdValue"
-          v-bind:absolute-max-z="maxCmdValue"
-          v-on:keyboadCmdEvent="updateCmdVel"
-        />
+      </div>
+      <div class="col-flexbox" :class="{ col66: isMapExpanded }">
         <expandable-map
           :translation="mapTranslation"
           @expansionToggle="onExpansionToggle"
         />
       </div>
     </div>
+    <slider v-on:maxSpeedChangedEvent="onMaxSpeedChanged" />
+    <joystick
+      width="150"
+      height="150"
+      class="telepresence-joystick"
+      v-bind:absolute-max-x="scaledMaxX"
+      v-bind:absolute-max-yaw="scaledMaxYaw"
+      v-on:joystickPositionChange="updateCmdVel"
+    />
+    <keyboard-teleop
+      v-bind:absolute-max-x="scaledMaxX"
+      v-bind:absolute-max-yaw="scaledMaxYaw"
+      v-on:keyboardCmdEvent="updateCmdVel"
+    />
 
     <div ref="toolbarRef" class="toolbar">
       <button-conference />
@@ -81,14 +101,18 @@ import { ParticipantsList } from "@/components/ParticipantsList";
 import { Joystick } from "@/components/Joystick";
 import KeyboardTeleop from "@/components/KeyboardTeleop/KeyboardTeleop.vue";
 import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
+import Slider from "@/components/Slider/Slider.vue";
 
 export default {
   name: "teleop-view",
   data() {
     return {
       chatTextArea: null,
-      cmd: { x: 0, z: 0 }, // Global velocity command to be sent to the robot
-      maxCmdValue: 1,
+      cmd: { x: 0, yaw: 0 }, // Global velocity command to be sent to the robot (x: m/s, y: rad/s)
+      maxX: 0.3,
+      maxYaw: 0.55,
+      scaledMaxX: 0.3,
+      scaledMaxYaw: 0.55,
       mouseDown: false,
       clickPosition: { x: 0, y: 0 },
       prevMapTranslation: { x: 0, y: 0 },
@@ -102,7 +126,8 @@ export default {
     ParticipantsList,
     Joystick,
     KeyboardTeleop,
-    ExpandableMap
+    ExpandableMap,
+    Slider
   },
   setup() {
     const toolbarRef = ref(null);
@@ -149,6 +174,9 @@ export default {
     },
     isCameraOn() {
       return this.$store.state.localClient.isCameraOn;
+    },
+    cameraDisplayMode() {
+      return this.$store.state.localClient.openteraVideoConf.cameraDisplayMode;
     }
   },
   activated() {
@@ -167,8 +195,9 @@ export default {
     },
     sendCmdVel() {
       if (this.$store.state.localClient.openteraTeleop.client) {
+        console.log(this.cmd);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify({ type: "velCmd", x: this.cmd.x, z: this.cmd.z })
+          JSON.stringify({ type: "velCmd", x: this.cmd.x, yaw: this.cmd.yaw })
         );
       }
     },
@@ -194,7 +223,6 @@ export default {
     onMouseMove(event) {
       if (this.mouseDown) {
         event.preventDefault();
-        console.log("x=" + event.clientX + " y=" + event.clientY);
         this.mapTranslation.x =
           this.prevMapTranslation.x +
           (event.clientX / window.innerWidth) * 100 -
@@ -242,6 +270,10 @@ export default {
     },
     onExpansionToggle(event) {
       this.isMapExpanded = event;
+    },
+    onMaxSpeedChanged(event) {
+      this.scaledMaxX = this.maxX * event;
+      this.scaledMaxYaw = this.maxYaw * event;
     }
   }
 };

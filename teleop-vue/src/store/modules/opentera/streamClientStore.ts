@@ -31,6 +31,7 @@ export class StreamClientStore extends SignalingClientStore {
       client: null,
       localStream: null,
       showParticipants: false,
+      cameraDisplayMode: 0,
       clientsInCall: []
     };
   }
@@ -55,6 +56,10 @@ export class StreamClientStore extends SignalingClientStore {
 
       toggleParticipantsList(state: StreamClientState) {
         state.showParticipants = !state.showParticipants;
+      },
+
+      toggleCameraDisplayMode(state: StreamClientState) {
+        state.cameraDisplayMode = (state.cameraDisplayMode + 1) % 3;
       }
     };
   }
@@ -66,7 +71,8 @@ export class StreamClientStore extends SignalingClientStore {
     context.commit("setInitPendingState", true);
 
     if (this.canSendStream) {
-      context.commit("setLocalStream", await fetchLocalStream());
+      // Commented to allow videoconf to connect without a local feed
+      // context.commit("setLocalStream", await fetchLocalStream());
     }
 
     const signalingServerConfiguration = initSignalingServerConfiguration(

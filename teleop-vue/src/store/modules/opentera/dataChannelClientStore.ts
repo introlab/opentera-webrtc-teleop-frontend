@@ -1,6 +1,7 @@
 // src/store/modules/opentera/dataChannelClientStore.ts
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
+import { RobotStatus } from ".";
 import {
   initSignalingServerConfiguration,
   initRtcConfiguration,
@@ -19,9 +20,20 @@ export class DataChannelClientStore extends SignalingClientStore {
       ...super.state(),
       client: null,
       onMessageEventHandler: null,
-      batteryLevel: 0,
-      signalStrength: 0,
-      waypointReached: 0
+      status: {
+        isCharging: false,
+        batteryVoltage: 0,
+        batteryCurrent: 0,
+        batteryLevel: 0,
+        cpuUsage: 0,
+        memUsage: 0,
+        diskUsage: 0,
+        wifiNetwork: "",
+        wifiStrength: 0,
+        localIp: ""
+      },
+      waypointReached: 0,
+      dockingStatus: ""
     };
   }
 
@@ -32,15 +44,24 @@ export class DataChannelClientStore extends SignalingClientStore {
       setMessageEventHandler(state: DataChannelClientState, payload: Function) {
         state.onMessageEventHandler = payload;
       },
-      changeBatteryLevel(state: DataChannelClientState, payload: number) {
-        state.batteryLevel = payload;
-      },
-      changeSignalStrength(state: DataChannelClientState, payload: number) {
-        state.signalStrength = payload;
+      changeRobotStatus(state: DataChannelClientState, payload: RobotStatus) {
+        state.status.isCharging = payload.isCharging;
+        state.status.batteryVoltage = payload.batteryVoltage;
+        state.status.batteryCurrent = payload.batteryCurrent;
+        state.status.batteryLevel = payload.batteryLevel;
+        state.status.cpuUsage = payload.cpuUsage;
+        state.status.memUsage = payload.memUsage;
+        state.status.diskUsage = payload.diskUsage;
+        state.status.wifiNetwork = payload.wifiNetwork;
+        state.status.wifiStrength = payload.wifiStrength;
+        state.status.localIp = payload.localIp;
       },
       changeWaypointReached(state: DataChannelClientState, payload: number) {
         state.waypointReached = payload;
-        console.log("Waypoint reached: " + state.waypointReached);
+      },
+      updateDockingStatus(state: DataChannelClientState, payload: string) {
+        state.dockingStatus = payload;
+        console.log(state.dockingStatus);
       }
     };
   }

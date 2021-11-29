@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     signalStrength() {
-      return this.$store.state.localClient.openteraTeleop.signalStrength;
+      return this.$store.state.localClient.openteraTeleop.status.wifiStrength;
     }
   },
   watch: {

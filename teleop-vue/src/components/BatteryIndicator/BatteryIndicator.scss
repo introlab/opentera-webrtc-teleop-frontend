@@ -49,6 +49,14 @@
   visibility: hidden;
 }
 
+.low {
+  background: red;
+}
+
+.charging {
+  background: green;
+}
+
 .percentage-box {
   display: inline-flex;
   box-sizing: border-box;

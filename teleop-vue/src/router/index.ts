@@ -42,10 +42,6 @@ const routes: Array<any> = [
         path: dev.childrens?.conference.path,
         component: ConferenceView,
         props: true
-      },
-      {
-        path: dev.childrens?.map.path,
-        component: NotFoundView // TODO
       }
     ]
   },
@@ -70,10 +66,6 @@ const routes: Array<any> = [
         path: user.childrens?.conference.path,
         component: ConferenceView,
         props: true
-      },
-      {
-        path: user.childrens?.map.path,
-        component: NotFoundView // TODO
       }
     ]
   },

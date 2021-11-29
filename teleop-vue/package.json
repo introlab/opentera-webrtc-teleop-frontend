@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@smartweb/vue-flash-message": "^1.0.0-alpha.12",
     "opentera-webrtc-web-client": "file:submodules/opentera-webrtc/opentera-webrtc-web-client",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",

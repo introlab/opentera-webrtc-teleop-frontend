@@ -86,8 +86,20 @@
   flex-wrap: wrap;
   flex-direction: column;
   align-content: center;
+  height: 100%;
 }
 
+.row-flexbox {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: center;
+}
+
+.col100 {
+  width: 100%;
+}
 .col66 {
   width: 66%;
 }
@@ -96,6 +108,12 @@
 }
 .row50 {
   height: 50%;
+  width: 100%;
+}
+
+.row100 {
+  height: 100%;
+  width: 100%
 }
 
 .gutter {

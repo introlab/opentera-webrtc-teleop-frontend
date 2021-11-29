@@ -20,7 +20,8 @@
               </router-link>
             </li>
           </ul>
-          <signal-strength-indicator class="navbar-item margin-left-extend" />
+          <actions-menu class="navbar-item margin-right-extend margin-left-extend" />
+          <signal-strength-indicator class="navbar-item" />
           <battery-indicator class="navbar-item" />
           <device-settings class="navbar-item device-settings" />
           <action-button
@@ -40,6 +41,7 @@ import DeviceSettings from "../DeviceSettings/DeviceSettings.vue";
 import BatteryIndicator from "../BatteryIndicator/BatteryIndicator.vue";
 import SignalStrengthIndicator from "../SignalStrengthIndicator/SignalStrengthIndicator.vue";
 import ActionButton from "@/components/ActionButton/ActionButton.vue";
+import ActionsMenu from "@/components/ActionsMenu/ActionsMenu.vue";
 
 export default {
   name: "navigation-bar",
@@ -48,7 +50,8 @@ export default {
     DeviceSettings,
     BatteryIndicator,
     SignalStrengthIndicator,
-    ActionButton
+    ActionButton,
+    ActionsMenu
   },
   data() {
     return {

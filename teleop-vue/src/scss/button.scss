@@ -18,9 +18,6 @@ button:not(:disabled) {
 .icon-button:focus {
     outline: none;
 }
-.icon-button > * {
-    transition: filter 150ms ease-in-out, -webkit-filter 150ms ease-in-out;
-}
 .icon-button:hover > * {
     -webkit-filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
     filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));

@@ -53,6 +53,7 @@ body {
     color: var(--text-primary-dark) !important;
     background-color: var(--btn-primary-dark) !important;
     border-color: var(--btn-primary-dark) !important;
+    margin: 0px;
 }
 .btn-primary-dark:hover {
     background-color: var(--btn-primary-hover-dark) !important;
@@ -89,6 +90,7 @@ body {
 
 .flex-container {
     display: flex;
+    justify-content: center;
 }
 
 @import "./scss/button.scss";

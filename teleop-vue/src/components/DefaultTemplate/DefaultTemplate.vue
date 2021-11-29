@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 <template>
   <div class="wrapper">
+    <FlashMessage style="z-index: 5;" :position="'left top'" />
     <header class="header">
       <navigation-bar
         v-bind:brand="brand"
@@ -48,6 +49,19 @@ export default {
 
     defaultPath() {
       return this.$store.state.router[this.route].defaultPath;
+    },
+
+    dockingStatus() {
+      return this.$store.state.localClient.openteraTeleop.dockingStatus;
+    }
+  },
+  watch: {
+    dockingStatus() {
+      this.$flashMessage.show({
+        status: "info",
+        title: this.dockingStatus,
+        message: ""
+      });
     }
   },
   beforeMount() {
@@ -56,20 +70,20 @@ export default {
       "localClient/openteraTeleop/setMessageEventHandler",
       (id, name, clientData, message) => {
         const parsedMsg = JSON.parse(message);
-        if (parsedMsg.type === "batteryStatus") {
+        if (parsedMsg.type === "robotStatus") {
           this.$store.commit(
-            "localClient/openteraTeleop/changeBatteryLevel",
-            parsedMsg.level
-          );
-        } else if (parsedMsg.type === "signalStatus") {
-          this.$store.commit(
-            "localClient/openteraTeleop/changeSignalStrength",
-            parsedMsg.strength
+            "localClient/openteraTeleop/changeRobotStatus",
+            parsedMsg.status
           );
         } else if (parsedMsg.type === "waypointReached") {
           this.$store.commit(
             "localClient/openteraTeleop/changeWaypointReached",
             parsedMsg.waypointNumber
+          );
+        } else if (parsedMsg.type === "docking_status") {
+          this.$store.commit(
+            "localClient/openteraTeleop/updateDockingStatus",
+            parsedMsg.status
           );
         }
       }
