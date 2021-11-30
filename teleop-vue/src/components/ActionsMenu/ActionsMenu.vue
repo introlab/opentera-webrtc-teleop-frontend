@@ -9,8 +9,15 @@
       <div>Actions</div>
     </button>
     <div class="menu" v-if="showMenu">
-      <div class="menu-item" v-if="docked" @click="onUndock">Undock</div>
-      <div class="menu-item" v-else @click="onDock">Dock</div>
+      <div class="menu-item" @click="onDock">Dock</div>
+      <div
+        class="menu-item"
+        v-if="!localizationMode"
+        @click="onLocalizationMode"
+      >
+        Localization mode
+      </div>
+      <div class="menu-item" v-else @click="onMappingMode">Mapping mode</div>
     </div>
   </div>
 </template>
@@ -21,7 +28,8 @@ export default {
   data() {
     return {
       showMenu: false,
-      docked: false
+      docked: false,
+      localizationMode: false
     };
   },
   methods: {
@@ -32,18 +40,35 @@ export default {
       this.showMenu = false;
     },
     onDock() {
-      console.log("Sending docking action");
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "action", action: "dock", cmd: true })
         );
       }
     },
-    onUndock() {
-      console.log("Sending undocking action");
+    onLocalizationMode() {
       if (this.$store.state.localClient.openteraTeleop.client) {
+        this.localizationMode = true;
+        console.log("Switching to localization mode");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify({ type: "action", action: "undock", cmd: true })
+          JSON.stringify({
+            type: "action",
+            action: "localizationMode",
+            cmd: true
+          })
+        );
+      }
+    },
+    onMappingMode() {
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.localizationMode = false;
+        console.log("Switching to mapping mode");
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({
+            type: "action",
+            action: "mappingMode",
+            cmd: true
+          })
         );
       }
     }

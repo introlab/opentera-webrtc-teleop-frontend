@@ -195,7 +195,6 @@ export default {
     },
     sendCmdVel() {
       if (this.$store.state.localClient.openteraTeleop.client) {
-        console.log(this.cmd);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "velCmd", x: this.cmd.x, yaw: this.cmd.yaw })
         );
