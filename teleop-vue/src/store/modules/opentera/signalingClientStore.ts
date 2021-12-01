@@ -86,22 +86,19 @@ export abstract class SignalingClientStore {
     /* eslint-disable @typescript-eslint/no-this-alias */
     const self = this;
     return {
-      connectClientEvents(context: SignalingClientContext) {
-        self.connectClientEvents(context);
+      async connectClientEvents(context: SignalingClientContext) {
+        await self.connectClientEvents(context);
       },
 
-      start(context: any, config: SignalingServerConfiguration) {
-        return new Promise<void>((resolve, reject) => {
-          SignalingClientStore.cookieHandler(context, config)
-            .then((config: SignalingServerConfiguration) => {
-              context.dispatch("initialize", config).then(() => {
-                context.dispatch("connectClient").then(() => resolve());
-              });
-            })
-            .catch((err: BusyException) => {
-              reject(err);
-            });
-        });
+      async start(context: any, config: SignalingServerConfiguration) {
+        try {
+          config = await SignalingClientStore.cookieHandler(context, config);
+          await context.dispatch("initialize", config);
+          await context.dispatch("connectClient");
+        } catch (err) {
+          console.log(err);
+          throw err;
+        }
       },
 
       initialize(
@@ -129,65 +126,56 @@ export abstract class SignalingClientStore {
     return {};
   }
 
-  protected static cookieHandler(
+  protected static async cookieHandler(
     context: any,
     config: SignalingServerConfiguration
   ): Promise<SignalingServerConfiguration> {
-    return new Promise<SignalingServerConfiguration>((resolve, reject) => {
-      if (
-        window.sessionStorage.getItem(config.room ? config.room : "chat") !==
-        "busy"
-      ) {
-        window.sessionStorage.setItem(
-          config.room ? config.room : "chat",
-          "busy"
+    // TODO: handle errors
+    if (
+      window.sessionStorage.getItem(config.room ? config.room : "chat") !==
+      "busy"
+    ) {
+      window.sessionStorage.setItem(config.room ? config.room : "chat", "busy");
+
+      context.commit("setBeforeunloadEventHandler", () => {
+        setCookie(
+          config.room + "-" + SESSION_COOKIE,
+          JSON.stringify(config),
+          5
         );
+        setCookie(SESSION_COOKIE, JSON.stringify(config), 5);
+        window.sessionStorage.removeItem(config.room ? config.room : "chat");
+      });
 
-        context.commit("setBeforeunloadEventHandler", () => {
-          setCookie(
-            config.room + "-" + SESSION_COOKIE,
-            JSON.stringify(config),
-            5
-          );
-          setCookie(SESSION_COOKIE, JSON.stringify(config), 5);
-          window.sessionStorage.removeItem(config.room ? config.room : "chat");
-        });
+      window.addEventListener(
+        "beforeunload",
+        context.state.beforeunloadEventHandler
+      );
 
-        window.addEventListener(
-          "beforeunload",
-          context.state.beforeunloadEventHandler
-        );
+      // Check if there is a cookie with the login information
+      let cookie = getCookie(config.room + "-" + SESSION_COOKIE);
 
-        // Check if there is a cookie with the login information
-        let cookie = getCookie(config.room + "-" + SESSION_COOKIE);
+      if (cookie)
+        // Check for empty string
+        cookie = JSON.parse(cookie);
 
-        if (cookie)
-          // Check for empty string
-          cookie = JSON.parse(cookie);
-
-        if (cookie) {
-          // Check for null
-          config = cookie as SignalingServerConfiguration;
-        } else {
-          config = {
-            name: config.name ? config.name : "Undefined",
-            data: config.data ? config.data : {},
-            room: config.room ? config.room : "chat",
-            password: config.password
-          };
-        }
-
-        resolve(config);
+      if (cookie) {
+        // Check for null
+        config = cookie as SignalingServerConfiguration;
       } else {
-        reject(
-          new BusyException("Already connect or in process of connecting")
-        );
+        config = {
+          name: config.name ? config.name : "Undefined",
+          data: config.data ? config.data : {},
+          room: config.room ? config.room : "chat",
+          password: config.password
+        };
       }
-    });
+    }
+    return config;
   }
 
-  protected connectClientEvents(context: SignalingClientContext) {
-    context.state.client.onSignalingConnectionOpen = () => {
+  protected async connectClientEvents(context: SignalingClientContext) {
+    context.state.client.onSignalingConnectionOpen = async () => {
       this.onSignalingConnectionOpen(context);
     };
     context.state.client.onSignalingConnectionClose = async () => {

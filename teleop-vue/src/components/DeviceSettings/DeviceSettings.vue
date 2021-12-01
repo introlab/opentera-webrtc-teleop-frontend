@@ -196,7 +196,9 @@ export default {
         )
       );
 
-      this.$store.dispatch("localClient/openteraVideoConf/connectClientEvents");
+      await this.$store.dispatch(
+        "localClient/openteraVideoConf/connectClientEvents"
+      );
       await this.$store.state.localClient.openteraVideoConf.client.connect();
     },
     onClickAway() {

@@ -82,19 +82,20 @@ export default {
     }
   },
   beforeMount() {
-    this.client = {
-      name: this.name,
-      data: this.data,
-      room: "VideoConf",
-      password: this.password
-    };
-    this.$store.commit("localClient/setClient", { name: this.name });
-    this.$store
-      .dispatch("localClient/openteraVideoConf/start", this.client)
-      .then(() => console.log("CONNECTED")) // Do something after ther connection
-      .catch(err => {
-        if (!(err instanceof BusyException)) console.log(err);
-      });
+    // TODO: this doesn't seem to do anything. Remove it?
+    // this.client = {
+    //   name: this.name,
+    //   data: this.data,
+    //   room: "VideoConf",
+    //   password: this.password
+    // };
+    // this.$store.commit("localClient/setClient", { name: this.name });
+    // this.$store
+    //   .dispatch("localClient/openteraVideoConf/start", this.client)
+    //   .then(() => console.log("CONNECTED")) // Do something after the connection
+    //   .catch(err => {
+    //     if (!(err instanceof BusyException)) console.log(err);
+    //   });
   },
   activated() {
     // Reactivate the local video when it's render from cache

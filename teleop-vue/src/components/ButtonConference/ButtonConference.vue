@@ -30,14 +30,6 @@
         <svg-icon icon="top_camera_only" v-if="cameraDisplayMode == 1" />
         <svg-icon icon="bottom_camera_only" v-if="cameraDisplayMode == 2" />
       </button>
-      <button
-        type="button"
-        class="btn btn-primary-dark"
-        v-on:click="toggleCall"
-      >
-        <svg-icon icon="telephone-outbound-fill" v-if="isInCall" />
-        <svg-icon icon="telephone-inbound" v-else />
-      </button>
     </div>
     <div class="btn-group" role="group" aria-label="Group button">
       <button

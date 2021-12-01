@@ -90,21 +90,31 @@ const ClientStore = {
         }
       }
 
-      context
-        .dispatch(
+      try {
+        await context.dispatch(
           "openteraVideoConf/start",
           videoConfSignalingServerConfiguration
-        )
-        .then(() => console.log("VIDEO CONF CONNECTED"));
-      context
-        .dispatch("openteraCameraX/start", cameraXSignalingServerConfiguration)
-        .then(() => console.log("CAMERA X CONNECTED"));
-      context
-        .dispatch("openteraMap/start", mapSignalingServerConfiguration)
-        .then(() => console.log("MAP CONNECTED"));
-      context
-        .dispatch("openteraTeleop/start", teleopSignalingServerConfiguration)
-        .then(() => console.log("TELEOP CONNECTED"));
+        );
+        console.log("VIDEO CONF CONNECTED");
+        await context.dispatch(
+          "openteraCameraX/start",
+          cameraXSignalingServerConfiguration
+        );
+        console.log("CAMERA X CONNECTED");
+        await context.dispatch(
+          "openteraMap/start",
+          mapSignalingServerConfiguration
+        );
+        console.log("MAP CONNECTED");
+        await context.dispatch(
+          "openteraTeleop/start",
+          teleopSignalingServerConfiguration
+        );
+        console.log("TELEOP CONNECTED");
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
       // TODO: Messaging signaling client
     },
 

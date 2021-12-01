@@ -75,7 +75,7 @@ export class DataChannelClientStore extends SignalingClientStore {
   protected async initialize(
     context: DataChannelClientContext,
     payload: SignalingServerConfiguration
-  ): Promise<void> {
+  ) {
     context.commit("setInitPendingState", true);
 
     const signalingServerConfiguration = initSignalingServerConfiguration(
@@ -96,11 +96,11 @@ export class DataChannelClientStore extends SignalingClientStore {
       )
     );
 
-    context.dispatch("connectClientEvents");
+    await context.dispatch("connectClientEvents");
     context.commit("setInitPendingState", false);
   }
 
-  protected connectClientEvents(context: DataChannelClientContext) {
+  protected async connectClientEvents(context: DataChannelClientContext) {
     super.connectClientEvents(context);
     context.state.client.onDataChannelOpen = (
       id: string,
