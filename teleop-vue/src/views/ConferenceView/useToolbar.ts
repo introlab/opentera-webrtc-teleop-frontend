@@ -1,6 +1,5 @@
 // src/views/ConferenceView/useToolbar.ts
 
-// TODO: remove overlay video from toolbar
 
 import { onMounted, Ref } from "vue";
 

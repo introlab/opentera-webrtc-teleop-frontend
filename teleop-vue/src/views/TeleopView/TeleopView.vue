@@ -10,13 +10,7 @@
     @touchmove="onTouchMove"
     @touchEnd="onTouchEnd"
   >
-    <video
-      v-show="isCameraOn"
-      ref="overlayVideoRef"
-      id="overlayVideo"
-      class="user-video mirror-y"
-      disablePictureInPicture
-    ></video>
+    <user-video />
     <div class="fluid pad row-flexbox">
       <div
         class="col-flexbox"
@@ -94,7 +88,6 @@
 <script>
 import { ref } from "vue";
 import useToolbar from "@/views/ConferenceView/useToolbar";
-import useVideoLayout from "@/views/ConferenceView/useVideoOverlay";
 import { VideoParticipant } from "@/components/VideoParticipant";
 import { ButtonConference } from "@/components/ButtonConference";
 import { ParticipantsList } from "@/components/ParticipantsList";
@@ -102,6 +95,7 @@ import { Joystick } from "@/components/Joystick";
 import KeyboardTeleop from "@/components/KeyboardTeleop/KeyboardTeleop.vue";
 import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
 import Slider from "@/components/Slider/Slider.vue";
+import UserVideo from "@/components/UserVideo/UserVideo.vue";
 
 export default {
   name: "teleop-view",
@@ -127,18 +121,16 @@ export default {
     Joystick,
     KeyboardTeleop,
     ExpandableMap,
-    Slider
+    Slider,
+    UserVideo
   },
   setup() {
     const toolbarRef = ref(null);
-    const overlayVideoRef = ref(null);
 
-    useVideoLayout(overlayVideoRef);
     const { showToolbar } = useToolbar(toolbarRef);
 
     return {
       toolbarRef,
-      overlayVideoRef,
       showToolbar
     };
   },
@@ -178,13 +170,6 @@ export default {
     cameraDisplayMode() {
       return this.$store.state.localClient.openteraVideoConf.cameraDisplayMode;
     }
-  },
-  activated() {
-    // Reactivate the local video when it's render from cache
-    const overlayVideo = this.$refs.overlayVideoRef;
-    overlayVideo.muted = true;
-    overlayVideo.srcObject = this.$store.state.localClient.openteraVideoConf.localStream;
-    overlayVideo.autoplay = true;
   },
   methods: {
     updateCmdVel(newCmd) {
