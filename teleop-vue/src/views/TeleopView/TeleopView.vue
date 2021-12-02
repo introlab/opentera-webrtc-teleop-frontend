@@ -10,8 +10,8 @@
     @touchmove="onTouchMove"
     @touchEnd="onTouchEnd"
   >
-    <user-video />
     <div class="fluid pad row-flexbox">
+      <user-video />
       <div
         class="col-flexbox"
         :class="{ col33: isMapExpanded, col100: !isMapExpanded }"
