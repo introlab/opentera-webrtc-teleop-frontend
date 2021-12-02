@@ -6,10 +6,16 @@
   padding: 5px;
   width: 20%;
   z-index: 3;
+  cursor: pointer;
 }
 
 .mirror-y {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
+}
+
+.top-left {
+  top: 0px;
+  left: 0px;
 }

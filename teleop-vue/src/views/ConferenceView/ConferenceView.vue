@@ -67,9 +67,6 @@ export default {
     },
     showParticipants() {
       return this.$store.state.localClient.openteraVideoConf.showParticipants;
-    },
-    isCameraOn() {
-      return this.$store.state.localClient.isCameraOn;
     }
   },
   unmounted() {

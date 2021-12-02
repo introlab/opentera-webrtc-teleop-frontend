@@ -5,6 +5,8 @@
     id="overlayVideo"
     class="user-video mirror-y"
     disablePictureInPicture
+    @click="onClick"
+    :class="{ 'top-left': top }"
   />
 </template>
 
@@ -15,7 +17,9 @@ import useVideoLayout from "./useVideoOverlay";
 export default {
   name: "user-video",
   data() {
-    return {};
+    return {
+      top: false
+    };
   },
   setup() {
     const overlayVideoRef = ref(null);
@@ -31,6 +35,16 @@ export default {
     overlayVideo.srcObject = this.$store.state.localClient.openteraVideoConf.localStream;
     overlayVideo.autoplay = true;
     overlayVideo.style.display = "inline";
+  },
+  computed: {
+    isCameraOn() {
+      return this.$store.state.localClient.isCameraOn;
+    }
+  },
+  methods: {
+    onClick() {
+      this.top = !this.top;
+    }
   }
 };
 </script>
