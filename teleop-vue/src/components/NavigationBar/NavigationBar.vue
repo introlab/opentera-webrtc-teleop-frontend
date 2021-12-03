@@ -2,9 +2,7 @@
   <div>
     <nav class="navbar bg-secondary-dark">
       <div class="container-fluid">
-        <router-link class="navbar-brand" v-bind:to="defaultPath">{{
-          brand
-        }}</router-link>
+        <div class="navbar-brand">{{ brand }}</div>
         <button
           class="icon-button navbar-toggler"
           type="button"
@@ -13,13 +11,6 @@
           <svg-icon class="navbar-toggler-icon" icon="list"></svg-icon>
         </button>
         <div class="flex-container navbar-collapse" v-show="showNav">
-          <ul ref="nav" class="navbar-nav">
-            <li v-for="link in links" v-bind:key="link.name">
-              <router-link class="navbar-item nav-link" v-bind:to="link">
-                {{ link.meta.name }}
-              </router-link>
-            </li>
-          </ul>
           <actions-menu class="navbar-item margin-right-extend margin-left-extend" />
           <signal-strength-indicator class="navbar-item" />
           <battery-indicator class="navbar-item" />

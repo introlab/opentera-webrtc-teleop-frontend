@@ -4,7 +4,6 @@ import store from "../store";
 import { getBasePath } from "@/config/location";
 
 import { DevelopperView } from "@/views/DevelopperView";
-import { ConferenceView } from "@/views/ConferenceView";
 import { UserView } from "@/views/UserView";
 import { TeleopView } from "@/views/TeleopView";
 import { NotFoundView } from "@/views/NotFoundView";
@@ -28,20 +27,7 @@ const routes: Array<any> = [
     children: [
       {
         path: "",
-        component: ConferenceView
-      },
-      {
-        path: dev.childrens?.teleop.path,
         component: TeleopView
-      },
-      {
-        path: dev.childrens?.dashboard.path,
-        component: NotFoundView // TODO
-      },
-      {
-        path: dev.childrens?.conference.path,
-        component: ConferenceView,
-        props: true
       }
     ]
   },
@@ -56,23 +42,14 @@ const routes: Array<any> = [
     children: [
       {
         path: "",
-        component: ConferenceView
-      },
-      {
-        path: user.childrens?.teleop.path,
         component: TeleopView
-      },
-      {
-        path: user.childrens?.conference.path,
-        component: ConferenceView,
-        props: true
       }
     ]
   },
   {
     path: participant.path,
     name: participant.name,
-    component: ConferenceView,
+    component: TeleopView,
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd
@@ -81,7 +58,7 @@ const routes: Array<any> = [
   {
     path: device.path,
     name: device.name,
-    component: ConferenceView,
+    component: TeleopView,
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd
