@@ -27,7 +27,7 @@ export default {
       loopIntervalId: false
     };
   },
-  emits: ["keyboardTeleopEvent"],
+  emits: ["keyboardCmdEvent"],
   created() {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
