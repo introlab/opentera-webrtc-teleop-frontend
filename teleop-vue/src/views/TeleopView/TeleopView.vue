@@ -58,8 +58,8 @@
     </div>
     <slider v-on:maxSpeedChangedEvent="onMaxSpeedChanged" />
     <joystick
-      width="150"
-      height="150"
+      :width="150"
+      :height="150"
       class="telepresence-joystick"
       v-bind:absolute-max-x="scaledMaxX"
       v-bind:absolute-max-yaw="scaledMaxYaw"

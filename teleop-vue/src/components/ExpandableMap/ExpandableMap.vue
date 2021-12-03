@@ -48,7 +48,6 @@
         @touchstart="onTouchStart"
         @touchmove="onTouchMove"
         @touchend="onTouchEnd"
-        @keyup="onCtrlKeyDown"
       />
       <div v-show="isExpanded" class="action-buttons">
         <action-button
