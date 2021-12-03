@@ -19,6 +19,10 @@ export default {
       type: Number,
       required: false,
       default: 10 // Hz
+    },
+    enabled: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -64,7 +68,9 @@ export default {
       this.emitKeyboardCmd();
     },
     emitKeyboardCmd() {
-      this.$emit("keyboardCmdEvent", this.cmd);
+      if (this.enabled) {
+        this.$emit("keyboardCmdEvent", this.cmd);
+      }
     },
     emitLoop() {
       this.loopIntervalId = setInterval(

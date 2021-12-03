@@ -26,9 +26,17 @@
         class="btn btn-primary-dark"
         v-on:click="toggleCameraDisplayMode"
       >
-        <svg-icon icon="both_cameras" v-if="cameraDisplayMode == 0" />
-        <svg-icon icon="top_camera_only" v-if="cameraDisplayMode == 1" />
-        <svg-icon icon="bottom_camera_only" v-if="cameraDisplayMode == 2" />
+        <svg-icon icon="both-cameras" v-if="cameraDisplayMode == 0" />
+        <svg-icon icon="top-camera-only" v-if="cameraDisplayMode == 1" />
+        <svg-icon icon="bottom-camera-only" v-if="cameraDisplayMode == 2" />
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
+        v-on:click="toggleShowControls"
+      >
+        <svg-icon icon="show-controls" v-if="showControls" />
+        <svg-icon icon="hide-controls" v-else />
       </button>
     </div>
     <div class="btn-group" role="group" aria-label="Group button">
@@ -60,12 +68,13 @@ export default {
       isCameraOn,
       showParticipants,
       cameraDisplayMode,
+      showControls,
 
-      toggleCall,
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
-      toggleCameraDisplayMode
+      toggleCameraDisplayMode,
+      toggleShowControls
     } = useButtons();
 
     return {
@@ -74,12 +83,13 @@ export default {
       isCameraOn,
       showParticipants,
       cameraDisplayMode,
+      showControls,
 
-      toggleCall,
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
-      toggleCameraDisplayMode
+      toggleCameraDisplayMode,
+      toggleShowControls
     };
   }
 };

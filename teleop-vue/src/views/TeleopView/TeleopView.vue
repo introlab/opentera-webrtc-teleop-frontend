@@ -53,10 +53,14 @@
         <expandable-map
           :translation="mapTranslation"
           @expansionToggle="onExpansionToggle"
+          v-show="showControls"
         />
       </div>
     </div>
-    <slider v-on:maxSpeedChangedEvent="onMaxSpeedChanged" />
+    <slider
+      v-on:maxSpeedChangedEvent="onMaxSpeedChanged"
+      v-show="showControls"
+    />
     <joystick
       :width="150"
       :height="150"
@@ -64,10 +68,12 @@
       v-bind:absolute-max-x="scaledMaxX"
       v-bind:absolute-max-yaw="scaledMaxYaw"
       v-on:joystickPositionChange="updateCmdVel"
+      v-show="showControls"
     />
     <keyboard-teleop
       v-bind:absolute-max-x="scaledMaxX"
       v-bind:absolute-max-yaw="scaledMaxYaw"
+      v-bind:enabled="showControls"
       v-on:keyboardCmdEvent="updateCmdVel"
     />
 
@@ -166,6 +172,16 @@ export default {
     },
     cameraDisplayMode() {
       return this.$store.state.localClient.openteraVideoConf.cameraDisplayMode;
+    },
+    showControls() {
+      return this.$store.state.localClient.openteraVideoConf.showControls;
+    }
+  },
+  watch: {
+    showControls() {
+      if (!this.showControls) {
+        this.isMapExpanded = false;
+      }
     }
   },
   methods: {

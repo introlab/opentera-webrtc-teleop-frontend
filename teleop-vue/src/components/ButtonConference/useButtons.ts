@@ -16,6 +16,9 @@ export default function() {
   const cameraDisplayMode = computed(
     () => store.state.localClient.openteraVideoConf.cameraDisplayMode
   );
+  const showControls = computed(
+    () => store.state.localClient.openteraVideoConf.showControls
+  );
 
   const toggleMute = () =>
     store.dispatch(namespace + "toggleMute").catch(error => {
@@ -33,17 +36,22 @@ export default function() {
     store.commit("localClient/openteraVideoConf/toggleParticipantsList");
 
   const toggleCameraDisplayMode = () =>
-    store.commit("localClient/openteraVideoConf/toggleCameraDisplayMode");
+    store.commit("localClient/openteraVideoConf/toggleCameraDisplayMode"); // TODO: move to localClient store instead?
+
+  const toggleShowControls = () =>
+    store.commit("localClient/openteraVideoConf/toggleShowControls"); // TODO: move to localClient store instead?
 
   return {
     isMuted,
     isCameraOn,
     showParticipants,
     cameraDisplayMode,
+    showControls,
 
     toggleMute,
     toggleCamera,
     toggleParticipantsList,
-    toggleCameraDisplayMode
+    toggleCameraDisplayMode,
+    toggleShowControls
   };
 }

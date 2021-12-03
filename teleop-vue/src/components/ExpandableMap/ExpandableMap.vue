@@ -151,6 +151,9 @@ export default {
         };
       }
       return {};
+    },
+    showControls() {
+      return this.$store.state.localClient.openteraVideoConf.showControls;
     }
   },
   watch: {
@@ -164,6 +167,11 @@ export default {
         this.waypointReached == this.waypoints.length
       ) {
         this.clearWaypoints();
+      }
+    },
+    showControls() {
+      if (!this.showControls) {
+        this.setIsExpanded(false);
       }
     }
   },
