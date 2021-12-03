@@ -65,7 +65,6 @@ export interface SignalingClientRoom {
   clientsInRoom: Array<Client>;
   numberClientsInCall: number;
   inCallState: boolean;
-  //clientsInCall: Array<Client>;
 }
 
 export interface StreamClientState extends SignalingClientRoom {

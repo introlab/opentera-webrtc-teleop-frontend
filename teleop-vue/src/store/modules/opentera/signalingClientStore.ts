@@ -20,7 +20,6 @@ export abstract class SignalingClientStore {
       logger: (...args) => console.log(...args),
       client: undefined,
       clientsInRoom: [],
-      //clientsInCall: []
       numberClientsInCall: 0,
       inCallState: false
     };
@@ -118,6 +117,15 @@ export abstract class SignalingClientStore {
 
       destroy(context: any) {
         self.destroy(context);
+      },
+
+      // TODO: make function to hang up all rooms
+      callRoom(context: any, room: string) {
+        console.log(context);
+        if (!context.state.isInCall) {
+          console.log("Calling " + room + " room");
+          context.state.client.callAll();
+        }
       }
     };
   }
@@ -227,6 +235,13 @@ export abstract class SignalingClientStore {
     clients: Array<Record<string, any>>
   ) {
     context.commit("updateClientsInRoom", clients);
+    console.log(context);
+    if (clients.length >= 2) {
+      context.dispatch(
+        "callRoom",
+        context.state.client._signalingServerConfiguration.room
+      );
+    }
   }
 
   protected onClientConnect(
