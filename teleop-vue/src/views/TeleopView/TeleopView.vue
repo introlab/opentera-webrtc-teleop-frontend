@@ -110,7 +110,7 @@ export default {
       chatTextArea: null,
       cmd: { x: 0, yaw: 0 }, // Global velocity command to be sent to the robot (x: m/s, y: rad/s)
       maxX: 0.3,
-      maxYaw: 0.55,
+      maxYaw: 0.75,
       scaledMaxX: 0.3,
       scaledMaxYaw: 0.55,
       mouseDown: false,
