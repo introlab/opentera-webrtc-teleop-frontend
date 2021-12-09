@@ -1,6 +1,6 @@
 <template>
   <div class="menu-container">
-    <button class="icon-button icon">
+    <button class="icon-button">
       <svg-icon class="" icon="gear" v-on:click="toggleShowSettings"></svg-icon>
     </button>
     <div class="menu" v-if="showSettings" v-click-away="onClickAway">
