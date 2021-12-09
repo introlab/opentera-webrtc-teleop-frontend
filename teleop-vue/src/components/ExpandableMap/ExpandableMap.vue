@@ -178,8 +178,6 @@ export default {
   mounted() {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
-    this.$refs.video.srcObject = this.mapClientStream;
-    this.setIsExpanded(false);
     this.prevZoom = this.zoom;
   },
   unmounted() {
@@ -420,10 +418,12 @@ export default {
       this.$nextTick(() => {
         const currMapWidth = mapBodyElement.offsetWidth;
         const currMapHeight = mapBodyElement.offsetHeight;
-        this.pan.x = (this.pan.x * currMapWidth) / prevMapWidth;
-        this.pan.y = (this.pan.y * currMapHeight) / prevMapHeight;
-        this.previousPan.x = this.pan.x;
-        this.previousPan.y = this.pan.y;
+        if (prevMapWidth > 0 && prevMapHeight > 0) {
+          this.pan.x = (this.pan.x * currMapWidth) / prevMapWidth;
+          this.pan.y = (this.pan.y * currMapHeight) / prevMapHeight;
+          this.previousPan.x = this.pan.x;
+          this.previousPan.y = this.pan.y;
+        }
       });
     }
   }
