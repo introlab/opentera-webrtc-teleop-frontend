@@ -89,6 +89,7 @@
       </participants-list>
     </transition>
   </div>
+  <device-settings v-if="showSettings" />
 </template>
 
 <script>
@@ -102,6 +103,7 @@ import KeyboardTeleop from "@/components/KeyboardTeleop/KeyboardTeleop.vue";
 import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
 import Slider from "@/components/Slider/Slider.vue";
 import UserVideo from "@/components/UserVideo/UserVideo.vue";
+import DeviceSettings from "@/components/DeviceSettings/DeviceSettings.vue";
 
 export default {
   name: "teleop-view",
@@ -128,7 +130,8 @@ export default {
     KeyboardTeleop,
     ExpandableMap,
     Slider,
-    UserVideo
+    UserVideo,
+    DeviceSettings
   },
   setup() {
     const toolbarRef = ref(null);
@@ -175,6 +178,10 @@ export default {
     },
     showControls() {
       return this.$store.state.localClient.openteraVideoConf.showControls;
+    },
+    showSettings() {
+      console.log("Teleop: show settings value: " + this.$store.state.localClient.openteraVideoConf.showSettings);
+      return this.$store.state.localClient.openteraVideoConf.showSettings;
     }
   },
   watch: {

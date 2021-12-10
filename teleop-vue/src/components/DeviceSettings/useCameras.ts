@@ -4,35 +4,34 @@ import { ref } from "@vue/reactivity";
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 
 export function useCameras() {
-    const camera = ref('');
-    const cameras = ref<MediaDeviceInfo[]>([]);
+  const camera = ref("");
+  const cameras = ref<MediaDeviceInfo[]>([]);
 
-    async function handler() {
-        //await navigator.mediaDevices.getUserMedia({ video: true });
-        navigator.mediaDevices.enumerateDevices().then(devices => {
-            const value = devices.filter(device => device.kind == "videoinput");
-            cameras.value = value;
-            
-            if (cameras.value.length > 0)
-                camera.value = cameras.value[0].deviceId;
-        });
-    }
+  async function handler() {
+    //await navigator.mediaDevices.getUserMedia({ video: true });
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      const value = devices.filter(device => device.kind == "videoinput");
+      cameras.value = value;
 
-    onMounted(() => {
-        if (navigator && navigator.mediaDevices) {
-            navigator.mediaDevices.addEventListener('devicechange', handler);
-            handler();
-        }
+      if (cameras.value.length > 0) camera.value = cameras.value[0].deviceId;
     });
+  }
 
-    onUnmounted(() => {
-        if (navigator && navigator.mediaDevices) {
-            navigator.mediaDevices.removeEventListener('devicechange', handler)
-        }
-    });
-    
-    return {
-        camera,
-        cameras
+  onMounted(() => {
+    if (navigator && navigator.mediaDevices) {
+      navigator.mediaDevices.addEventListener("devicechange", handler);
+      handler();
     }
+  });
+
+  onUnmounted(() => {
+    if (navigator && navigator.mediaDevices) {
+      navigator.mediaDevices.removeEventListener("devicechange", handler);
+    }
+  });
+
+  return {
+    camera,
+    cameras
+  };
 }

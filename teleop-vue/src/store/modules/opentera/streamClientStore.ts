@@ -33,6 +33,7 @@ export class StreamClientStore extends SignalingClientStore {
       showParticipants: false,
       cameraDisplayMode: 0,
       showControls: true,
+      showSettings: false,
       clientsInCall: []
     };
   }
@@ -65,6 +66,11 @@ export class StreamClientStore extends SignalingClientStore {
 
       toggleShowControls(state: StreamClientState) {
         state.showControls = !state.showControls;
+      },
+
+      toggleShowSettings(state: StreamClientState) {
+        state.showSettings = !state.showSettings;
+        console.log("Show settings: " + state.showSettings);
       }
     };
   }

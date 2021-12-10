@@ -74,6 +74,7 @@ export interface StreamClientState extends SignalingClientRoom {
   showParticipants: boolean;
   cameraDisplayMode: number;
   showControls: boolean;
+  showSettings: boolean;
 }
 
 export interface DataChannelClientState extends SignalingClientRoom {

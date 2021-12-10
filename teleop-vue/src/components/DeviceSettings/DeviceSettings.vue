@@ -1,92 +1,85 @@
 <template>
-  <div class="menu-container">
-    <button class="icon-button">
-      <svg-icon class="" icon="gear" v-on:click="toggleShowSettings"></svg-icon>
-    </button>
-    <div class="menu" v-if="showSettings" v-click-away="onClickAway">
-      <div class="menu-item" v-on:click="toggleAudioSettings">
-        Select audio source
-      </div>
-      <div class="menu-item" v-on:click="toggleVideoSettings">
-        Select video source
-      </div>
+  <div class="mask" />
+  <div class="modal" v-click-away="toggleShowSettings">
+    <h3>Device Settings</h3>
+    <div class="row">
+      <p>Select audio device:</p>
+      <select v-model="audioSelected" id="audioSelector">
+        <option
+          v-for="device in microphones"
+          v-bind:value="device.deviceId"
+          v-bind:key="device.deviceId"
+        >
+          {{ device.label }}
+        </option>
+      </select>
     </div>
-    <modal v-if="showAudioSettings" v-on:close="toggleAudioSettings">
-      <template v-slot:header>
-        <h3>Audio Settings</h3>
-      </template>
-      <template v-slot:body>
-        <div
-          style="display: flex; flex-direction: column; align-items: center;"
+    <div class="row">
+      <p>Select video device</p>
+      <select v-model="videoSelected">
+        <option
+          v-for="device in cameras"
+          v-bind:value="device.deviceId"
+          v-bind:key="device.deviceId"
         >
-          <h3>Select an audio source:</h3>
-          <select v-model="audioSelected">
-            <option
-              v-for="device in microphones"
-              v-bind:value="device.deviceId"
-              v-bind:key="device.deviceId"
-            >
-              {{ device.label }}
-            </option>
-          </select>
-        </div>
-      </template>
-      <template v-slot:footer>
-        <div
-          style="display: flex; flex-direction: row; justify-content: flex-end;"
-        >
-          <button class="modal-default-button" @click="toggleAudioSettings">
-            Cancel
-          </button>
-          <button class="modal-default-button" @click="onNewAudio">
-            Apply
-          </button>
-        </div>
-      </template>
-    </modal>
-    <modal v-if="showVideoSettings" v-on:close="toggleVideoSettings">
-      <template v-slot:header>
-        <h3>Video Settings</h3>
-      </template>
-      <template v-slot:body>
-        <div
-          style="display: flex; flex-direction: column; align-items: center;"
-        >
-          <h3>Select a video source:</h3>
-          <select v-model="videoSelected">
-            <option
-              v-for="device in cameras"
-              v-bind:value="device.deviceId"
-              v-bind:key="device.deviceId"
-            >
-              {{ device.label }}
-            </option>
-          </select>
-          <video
-            style="width: 300px"
-            ref="testVideoRef"
-            class="overlay-video mirror-y"
-          ></video>
-        </div>
-      </template>
-      <template v-slot:footer>
-        <div
-          style="display: flex; flex-direction: row; justify-content: flex-end;"
-        >
-          <button class="modal-default-button" @click="toggleVideoSettings">
-            Cancel
-          </button>
-          <button class="modal-default-button" @click="onNewVideo">
-            Apply
-          </button>
-        </div>
-      </template>
-    </modal>
+          {{ device.label }}
+        </option>
+      </select>
+    </div>
+    <video
+      style="width: 300px; background-color: black;"
+      ref="testVideoRef"
+      class="overlay-video mirror-y"
+    ></video>
+    <div class="row">
+      <button @click="toggleShowSettings">
+        Cancel
+      </button>
+      <button @click="onNewDevice">
+        Apply
+      </button>
+    </div>
   </div>
+  <!-- <modal
+    v-if="showSettings"
+    v-on:close="toggleShowSettings"
+    v-click-away="onClickAway"
+  >
+    <template v-slot:header>
+      <h3>Device Settings</h3>
+    </template>
+    <template v-slot:body>
+      <div
+        style="display: flex; flex-direction: column; align-items: center;"
+      >
+        <h3>Select an audio source:</h3>
+        <select v-model="audioSelected" id="audioSelector">
+          <option
+            v-for="device in microphones"
+            v-bind:value="device.deviceId"
+            v-bind:key="device.deviceId"
+          >
+            {{ device.label }}
+          </option>
+        </select>
+      </div>
+    </template>
+    <template v-slot:footer>
+      <div
+        style="display: flex; flex-direction: row; justify-content: flex-end;"
+      >
+        <button class="modal-default-button" @click="toggleAudioSettings">
+          Cancel
+        </button>
+        <button class="modal-default-button" @click="onNewAudio">
+          Apply
+        </button>
+      </div>
+    </template>
+  </modal> -->
 </template>
 
 <script>
-import { SvgIcon } from "@/components/SvgIcon";
 import { Modal } from "@/components/Modal";
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 import { useCameras } from "./useCameras";
@@ -98,15 +91,9 @@ import {
 } from "@/store/modules/opentera";
 
 export default {
-  components: {
-    SvgIcon,
-    Modal
-  },
   data() {
+    console.log("***** First video selected: " + this.camera.deviceId);
     return {
-      showSettings: false,
-      showAudioSettings: false,
-      showVideoSettings: false,
       audioSelected: this.microphone.deviceId,
       videoSelected: this.camera.deviceId
     };
@@ -133,44 +120,19 @@ export default {
     };
   },
   methods: {
-    toggleShowSettings() {
-      this.showSettings = !this.showSettings;
-    },
-    toggleAudioSettings() {
-      this.showAudioSettings = !this.showAudioSettings;
-      this.showSettings = false;
-    },
-    toggleVideoSettings() {
-      this.showVideoSettings = !this.showVideoSettings;
-      this.showSettings = false;
-    },
-    async onNewAudio() {
+    async onNewDevice() {
       this.microphone = this.audioSelected;
-      this.$store.commit(
-        "localClient/openteraVideoConf/setLocalStream",
-        await fetchLocalStream({
-          video: { deviceId: { exact: this.camera.deviceId } },
-          audio: { deviceId: { exact: this.audioSelected } }
-        })
-      );
-
-      await this.reconnect();
-
-      this.toggleAudioSettings();
-    },
-    async onNewVideo() {
       this.camera = this.videoSelected;
       this.$store.commit(
         "localClient/openteraVideoConf/setLocalStream",
         await fetchLocalStream({
           video: { deviceId: { exact: this.videoSelected } },
-          audio: { deviceId: { exact: this.microphone.deviceId } }
+          audio: { deviceId: { exact: this.audioSelected } }
         })
       );
-
       await this.reconnect();
-
-      this.toggleVideoSettings();
+      // await this.connectStream();
+      this.toggleShowSettings();
     },
     async reconnect() {
       // TODO
@@ -201,12 +163,10 @@ export default {
       );
       await this.$store.state.localClient.openteraVideoConf.client.connect();
     },
-    onClickAway() {
-      this.showSettings = false;
-    }
-  },
-  watch: {
-    async videoSelected() {
+    toggleShowSettings() {
+      this.$store.commit("localClient/openteraVideoConf/toggleShowSettings");
+    },
+    async connectStreamPreview() {
       const testVideoRef = this.$refs.testVideoRef;
       testVideoRef.muted = true;
       testVideoRef.srcObject = await fetchLocalStream({
@@ -214,6 +174,11 @@ export default {
         audio: { deviceId: { exact: this.microphone.deviceId } }
       });
       testVideoRef.autoplay = true;
+    }
+  },
+  watch: {
+    async videoSelected() {
+      await this.connectStreamPreview();
     }
   }
 };

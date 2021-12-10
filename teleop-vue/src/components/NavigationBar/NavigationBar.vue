@@ -11,10 +11,11 @@
           <svg-icon class="navbar-toggler-icon" icon="list"></svg-icon>
         </button>
         <div class="flex-container navbar-collapse" v-show="showNav">
-          <actions-menu class="navbar-item margin-right-extend margin-left-extend" />
+          <actions-menu
+            class="navbar-item margin-right-extend margin-left-extend"
+          />
           <signal-strength-indicator class="navbar-item" />
           <battery-indicator class="navbar-item" />
-          <device-settings class="navbar-item device-settings" />
           <action-button
             label="Stop"
             class="stop-button navbar-item"
@@ -28,7 +29,6 @@
 
 <script>
 import { SvgIcon } from "@/components/SvgIcon";
-import DeviceSettings from "../DeviceSettings/DeviceSettings.vue";
 import BatteryIndicator from "../BatteryIndicator/BatteryIndicator.vue";
 import SignalStrengthIndicator from "../SignalStrengthIndicator/SignalStrengthIndicator.vue";
 import ActionButton from "@/components/ActionButton/ActionButton.vue";
@@ -38,7 +38,6 @@ export default {
   name: "navigation-bar",
   components: {
     SvgIcon,
-    DeviceSettings,
     BatteryIndicator,
     SignalStrengthIndicator,
     ActionButton,

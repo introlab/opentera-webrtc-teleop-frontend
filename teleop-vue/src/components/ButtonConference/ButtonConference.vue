@@ -38,6 +38,13 @@
         <svg-icon icon="show-controls" v-if="showControls" />
         <svg-icon icon="hide-controls" v-else />
       </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
+        v-on:click="toggleShowSettings"
+      >
+        <svg-icon icon="gear" />
+      </button>
     </div>
     <div class="btn-group" role="group" aria-label="Group button">
       <button
@@ -74,7 +81,8 @@ export default {
       toggleCamera,
       toggleParticipantsList,
       toggleCameraDisplayMode,
-      toggleShowControls
+      toggleShowControls,
+      toggleShowSettings
     } = useButtons();
 
     return {
@@ -89,7 +97,8 @@ export default {
       toggleCamera,
       toggleParticipantsList,
       toggleCameraDisplayMode,
-      toggleShowControls
+      toggleShowControls,
+      toggleShowSettings
     };
   }
 };
