@@ -8,7 +8,6 @@ export function useCameras() {
   const cameras = ref<MediaDeviceInfo[]>([]);
 
   async function handler() {
-    //await navigator.mediaDevices.getUserMedia({ video: true });
     navigator.mediaDevices.enumerateDevices().then(devices => {
       const value = devices.filter(device => device.kind == "videoinput");
       cameras.value = value;

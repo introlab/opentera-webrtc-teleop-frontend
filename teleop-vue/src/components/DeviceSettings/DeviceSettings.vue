@@ -16,7 +16,7 @@
     </div>
     <div class="row">
       <p>Select video device</p>
-      <select v-model="videoSelected">
+      <select v-model="videoSelected" id="videoSelector">
         <option
           v-for="device in cameras"
           v-bind:value="device.deviceId"
@@ -29,7 +29,7 @@
     <video
       style="width: 300px; background-color: black;"
       ref="testVideoRef"
-      class="overlay-video mirror-y"
+      class="mirror-y"
     ></video>
     <div class="row">
       <button @click="toggleShowSettings">
@@ -40,47 +40,9 @@
       </button>
     </div>
   </div>
-  <!-- <modal
-    v-if="showSettings"
-    v-on:close="toggleShowSettings"
-    v-click-away="onClickAway"
-  >
-    <template v-slot:header>
-      <h3>Device Settings</h3>
-    </template>
-    <template v-slot:body>
-      <div
-        style="display: flex; flex-direction: column; align-items: center;"
-      >
-        <h3>Select an audio source:</h3>
-        <select v-model="audioSelected" id="audioSelector">
-          <option
-            v-for="device in microphones"
-            v-bind:value="device.deviceId"
-            v-bind:key="device.deviceId"
-          >
-            {{ device.label }}
-          </option>
-        </select>
-      </div>
-    </template>
-    <template v-slot:footer>
-      <div
-        style="display: flex; flex-direction: row; justify-content: flex-end;"
-      >
-        <button class="modal-default-button" @click="toggleAudioSettings">
-          Cancel
-        </button>
-        <button class="modal-default-button" @click="onNewAudio">
-          Apply
-        </button>
-      </div>
-    </template>
-  </modal> -->
 </template>
 
 <script>
-import { Modal } from "@/components/Modal";
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 import { useCameras } from "./useCameras";
 import { useMicrophones } from "./useMicrophones";
@@ -92,7 +54,6 @@ import {
 
 export default {
   data() {
-    console.log("***** First video selected: " + this.camera.deviceId);
     return {
       audioSelected: this.microphone.deviceId,
       videoSelected: this.camera.deviceId
@@ -119,6 +80,11 @@ export default {
       microphonesLabels
     };
   },
+  computed: {
+    localStream() {
+      return this.$store.state.localClient.openteraVideoConf.localStream;
+    }
+  },
   methods: {
     async onNewDevice() {
       this.microphone = this.audioSelected;
@@ -131,7 +97,6 @@ export default {
         })
       );
       await this.reconnect();
-      // await this.connectStream();
       this.toggleShowSettings();
     },
     async reconnect() {
@@ -179,6 +144,12 @@ export default {
   watch: {
     async videoSelected() {
       await this.connectStreamPreview();
+    },
+    cameras() {
+      this.videoSelected = this.cameras[0].deviceId;
+    },
+    microphones() {
+      this.audioSelected = this.microphones[0].deviceId;
     }
   }
 };

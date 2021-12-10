@@ -8,6 +8,7 @@
 	transform: translate(-50%, -50%);
 	z-index: 100;
 	color: black;
+	border-radius: 5px;
 }
 
 .mask {
@@ -25,5 +26,11 @@
 	display: flex;
 	flex-direction: row;
 	margin: 1rem;
+}
+
+.mirror-y {
+	transform: rotateY(180deg);
+	-webkit-transform: rotateY(180deg);
+	-moz-transform: rotateY(180deg);
 }
 

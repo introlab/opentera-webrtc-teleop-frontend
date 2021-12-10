@@ -180,7 +180,6 @@ export default {
       return this.$store.state.localClient.openteraVideoConf.showControls;
     },
     showSettings() {
-      console.log("Teleop: show settings value: " + this.$store.state.localClient.openteraVideoConf.showSettings);
       return this.$store.state.localClient.openteraVideoConf.showSettings;
     }
   },
