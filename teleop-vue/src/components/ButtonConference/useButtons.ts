@@ -22,6 +22,12 @@ export default function() {
   const showSettings = computed(
     () => store.state.localClient.openteraVideoConf.showSettings
   );
+  const isRobotMuted = computed(
+    () => store.state.localClient.openteraTeleop.status.isMuted
+  );
+  const isRobotCameraOn = computed(
+    () => store.state.localClient.openteraTeleop.status.isCameraOn
+  );
 
   const toggleMute = () =>
     store.dispatch(namespace + "toggleMute").catch(error => {
@@ -45,8 +51,29 @@ export default function() {
     store.commit("localClient/openteraVideoConf/toggleShowControls"); // TODO: move to localClient store instead?
 
   const toggleShowSettings = () => {
-    console.log("Toggling show settings");
     store.commit("localClient/openteraVideoConf/toggleShowSettings"); // TODO: move to localClient store instead?
+  };
+  const toggleRobotMute = () => {
+    store.commit("localClient/openteraTeleop/toggleRobotMute");
+    if (store.state.localClient.openteraTeleop.client) {
+      store.state.localClient.openteraTeleop.client.sendToAll(
+        JSON.stringify({
+          type: "mute",
+          value: store.state.localClient.openteraTeleop.status.isMuted
+        })
+      );
+    }
+  };
+  const toggleRobotCamera = () => {
+    store.commit("localClient/openteraTeleop/toggleRobotCamera");
+    if (store.state.localClient.openteraTeleop.client) {
+      store.state.localClient.openteraTeleop.client.sendToAll(
+        JSON.stringify({
+          type: "enableCamera",
+          value: store.state.localClient.openteraTeleop.status.isCameraOn
+        })
+      );
+    }
   };
 
   return {
@@ -56,12 +83,16 @@ export default function() {
     cameraDisplayMode,
     showControls,
     showSettings,
+    isRobotMuted,
+    isRobotCameraOn,
 
     toggleMute,
     toggleCamera,
     toggleParticipantsList,
     toggleCameraDisplayMode,
     toggleShowControls,
-    toggleShowSettings
+    toggleShowSettings,
+    toggleRobotCamera,
+    toggleRobotMute
   };
 }

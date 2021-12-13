@@ -3,7 +3,7 @@
   <div class="modal" v-click-away="toggleShowSettings">
     <h3>Device Settings</h3>
     <div class="row">
-      <p>Select audio device:</p>
+      <p style="margin-right: 1rem;">Select audio device:</p>
       <select v-model="audioSelected" id="audioSelector">
         <option
           v-for="device in microphones"
@@ -15,7 +15,7 @@
       </select>
     </div>
     <div class="row">
-      <p>Select video device</p>
+      <p style="margin-right: 1rem;">Select video device:</p>
       <select v-model="videoSelected" id="videoSelector">
         <option
           v-for="device in cameras"

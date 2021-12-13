@@ -13,6 +13,8 @@ export interface RobotStatus {
   wifiNetwork: string;
   wifiStrength: number;
   localIp: string;
+  isMuted: boolean;
+  isCameraOn: boolean;
 }
 
 export interface SignalingServerConfiguration {

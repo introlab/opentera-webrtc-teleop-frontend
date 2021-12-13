@@ -45,6 +45,22 @@
       >
         <svg-icon icon="gear" />
       </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
+        v-on:click="toggleRobotMute"
+      >
+        <div v-if="isRobotMuted">!audio</div>
+        <div v-else>audio</div>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
+        v-on:click="toggleRobotCamera"
+      >
+        <div v-if="isRobotCameraOn">video</div>
+        <div v-else>!video</div>
+      </button>
     </div>
     <div class="btn-group" role="group" aria-label="Group button">
       <button
@@ -76,13 +92,17 @@ export default {
       showParticipants,
       cameraDisplayMode,
       showControls,
+      isRobotMuted,
+      isRobotCameraOn,
 
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
       toggleCameraDisplayMode,
       toggleShowControls,
-      toggleShowSettings
+      toggleShowSettings,
+      toggleRobotCamera,
+      toggleRobotMute
     } = useButtons();
 
     return {
@@ -92,13 +112,17 @@ export default {
       showParticipants,
       cameraDisplayMode,
       showControls,
+      isRobotMuted,
+      isRobotCameraOn,
 
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
       toggleCameraDisplayMode,
       toggleShowControls,
-      toggleShowSettings
+      toggleShowSettings,
+      toggleRobotCamera,
+      toggleRobotMute
     };
   }
 };

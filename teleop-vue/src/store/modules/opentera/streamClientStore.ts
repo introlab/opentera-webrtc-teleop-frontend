@@ -70,7 +70,6 @@ export class StreamClientStore extends SignalingClientStore {
 
       toggleShowSettings(state: StreamClientState) {
         state.showSettings = !state.showSettings;
-        console.log("Show settings: " + state.showSettings);
       }
     };
   }
