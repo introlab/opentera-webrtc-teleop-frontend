@@ -50,16 +50,16 @@
         class="btn btn-primary-dark"
         v-on:click="toggleRobotMute"
       >
-        <div v-if="isRobotMuted">!audio</div>
-        <div v-else>audio</div>
+        <svg-icon icon="robot-mic-mute-fill" v-if="isRobotMuted" />
+        <svg-icon icon="robot-mic-fill" v-else />
       </button>
       <button
         type="button"
         class="btn btn-primary-dark"
         v-on:click="toggleRobotCamera"
       >
-        <div v-if="isRobotCameraOn">video</div>
-        <div v-else>!video</div>
+        <svg-icon icon="robot-camera-video-fill" v-if="isRobotCameraOn" />
+        <svg-icon icon="robot-camera-video-off-fill" v-else />
       </button>
     </div>
     <div class="btn-group" role="group" aria-label="Group button">
