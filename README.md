@@ -1,13 +1,14 @@
 # opentera-webrtc-teleop-frontend
 An OpenTera web user interface to teleoperate a robot. Made with Vue.js 3.
 
+![OpenTera teleop frontend](images/opentera_teleop_frontend.png)
+
 ## Authors
 * Gabriel Lauzier (@G-Lauz)
 * Marc-Antoine Maheux (@mamaheux)
 * Jérémie Bourque (@JeremieBourque1)
 * Dominic Létourneau (@doumdi)
 
-![OpenTera teleop frontend](images/opentera_teleop_frontend.png)
 ## Features
 * Dual camera view
 * Virtual joystick to move the robot
