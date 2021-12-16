@@ -30,7 +30,9 @@ export class DataChannelClientStore extends SignalingClientStore {
         diskUsage: 0,
         wifiNetwork: "",
         wifiStrength: 0,
-        localIp: ""
+        localIp: "",
+        isMuted: false,
+        isCameraOn: true
       },
       waypointReached: 0,
       dockingStatus: ""
@@ -55,13 +57,20 @@ export class DataChannelClientStore extends SignalingClientStore {
         state.status.wifiNetwork = payload.wifiNetwork;
         state.status.wifiStrength = payload.wifiStrength;
         state.status.localIp = payload.localIp;
+        state.status.isMuted = payload.isMuted;
+        state.status.isCameraOn = payload.isCameraOn;
       },
       changeWaypointReached(state: DataChannelClientState, payload: number) {
         state.waypointReached = payload;
       },
       updateDockingStatus(state: DataChannelClientState, payload: string) {
         state.dockingStatus = payload;
-        console.log(state.dockingStatus);
+      },
+      toggleRobotMute(state: DataChannelClientState) {
+        state.status.isMuted = !state.status.isMuted;
+      },
+      toggleRobotCamera(state: DataChannelClientState) {
+        state.status.isCameraOn = !state.status.isCameraOn;
       }
     };
   }
@@ -75,7 +84,7 @@ export class DataChannelClientStore extends SignalingClientStore {
   protected async initialize(
     context: DataChannelClientContext,
     payload: SignalingServerConfiguration
-  ): Promise<void> {
+  ) {
     context.commit("setInitPendingState", true);
 
     const signalingServerConfiguration = initSignalingServerConfiguration(
@@ -96,11 +105,11 @@ export class DataChannelClientStore extends SignalingClientStore {
       )
     );
 
-    context.dispatch("connectClientEvents");
+    await context.dispatch("connectClientEvents");
     context.commit("setInitPendingState", false);
   }
 
-  protected connectClientEvents(context: DataChannelClientContext) {
+  protected async connectClientEvents(context: DataChannelClientContext) {
     super.connectClientEvents(context);
     context.state.client.onDataChannelOpen = (
       id: string,

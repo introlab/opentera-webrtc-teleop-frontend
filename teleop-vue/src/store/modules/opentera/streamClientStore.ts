@@ -32,6 +32,8 @@ export class StreamClientStore extends SignalingClientStore {
       localStream: null,
       showParticipants: false,
       cameraDisplayMode: 0,
+      showControls: true,
+      showSettings: false,
       clientsInCall: []
     };
   }
@@ -60,6 +62,14 @@ export class StreamClientStore extends SignalingClientStore {
 
       toggleCameraDisplayMode(state: StreamClientState) {
         state.cameraDisplayMode = (state.cameraDisplayMode + 1) % 3;
+      },
+
+      toggleShowControls(state: StreamClientState) {
+        state.showControls = !state.showControls;
+      },
+
+      toggleShowSettings(state: StreamClientState) {
+        state.showSettings = !state.showSettings;
       }
     };
   }
@@ -67,12 +77,12 @@ export class StreamClientStore extends SignalingClientStore {
   protected async initialize(
     context: StreamClientContext,
     payload: SignalingServerConfiguration
-  ): Promise<void> {
+  ) {
     context.commit("setInitPendingState", true);
 
     if (this.canSendStream) {
       // Commented to allow videoconf to connect without a local feed
-      // context.commit("setLocalStream", await fetchLocalStream());
+      context.commit("setLocalStream", await fetchLocalStream());
     }
 
     const signalingServerConfiguration = initSignalingServerConfiguration(
@@ -95,11 +105,11 @@ export class StreamClientStore extends SignalingClientStore {
       )
     );
 
-    context.dispatch("connectClientEvents");
+    await context.dispatch("connectClientEvents");
     context.commit("setInitPendingState", false);
   }
 
-  protected connectClientEvents(context: SignalingClientContext) {
+  protected async connectClientEvents(context: SignalingClientContext) {
     super.connectClientEvents(context);
     context.state.client.onAddRemoteStream = (
       id: string,

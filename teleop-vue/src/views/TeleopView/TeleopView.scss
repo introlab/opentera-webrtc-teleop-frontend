@@ -22,33 +22,7 @@
     width: 100vw;
     height: var(--default-height);
     transition: height var(--transition-speed) ease-in-out;
-}
-
-.overlay-video {
-    position: absolute;
-    right: 0px;
-    bottom: var(--default-height);
-    margin: 1.5rem;
-    padding: 5px;
-    width: 20%;
-    transition: bottom var(--transition-speed) ease-in-out;
-    z-index: 2;
-}
-
-.mirror-y {
-    transform: rotateY(180deg);
-    -webkit-transform: rotateY(180deg);
-    -moz-transform: rotateY(180deg);
-}
-
-.user-video {
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
-  margin: 1.5rem;
-  padding: 5px;
-  width: 20%;
-  z-index: 3;
+    pointer-events: none;
 }
 
 .participants-enter-active,

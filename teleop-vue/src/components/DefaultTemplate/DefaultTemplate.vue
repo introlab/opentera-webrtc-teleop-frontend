@@ -64,8 +64,9 @@ export default {
       });
     }
   },
-  beforeMount() {
-    this.$store.dispatch("localClient/start", this.client);
+  async beforeMount() {
+    await this.$store.dispatch("localClient/start", this.client);
+    console.log("START COMPLETED");
     this.$store.commit(
       "localClient/openteraTeleop/setMessageEventHandler",
       (id, name, clientData, message) => {

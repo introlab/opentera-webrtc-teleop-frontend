@@ -1,3 +1,7 @@
+<template>
+  <div></div>
+</template>
+
 <script>
 export default {
   props: {
@@ -15,6 +19,10 @@ export default {
       type: Number,
       required: false,
       default: 10 // Hz
+    },
+    enabled: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -23,7 +31,7 @@ export default {
       loopIntervalId: false
     };
   },
-  emits: ["keyboardTeleopEvent"],
+  emits: ["keyboardCmdEvent"],
   created() {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
@@ -60,7 +68,9 @@ export default {
       this.emitKeyboardCmd();
     },
     emitKeyboardCmd() {
-      this.$emit("keyboardCmdEvent", this.cmd);
+      if (this.enabled) {
+        this.$emit("keyboardCmdEvent", this.cmd);
+      }
     },
     emitLoop() {
       this.loopIntervalId = setInterval(

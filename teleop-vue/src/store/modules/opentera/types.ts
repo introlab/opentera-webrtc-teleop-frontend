@@ -13,6 +13,8 @@ export interface RobotStatus {
   wifiNetwork: string;
   wifiStrength: number;
   localIp: string;
+  isMuted: boolean;
+  isCameraOn: boolean;
 }
 
 export interface SignalingServerConfiguration {
@@ -65,7 +67,6 @@ export interface SignalingClientRoom {
   clientsInRoom: Array<Client>;
   numberClientsInCall: number;
   inCallState: boolean;
-  //clientsInCall: Array<Client>;
 }
 
 export interface StreamClientState extends SignalingClientRoom {
@@ -74,6 +75,8 @@ export interface StreamClientState extends SignalingClientRoom {
   clientsInCall: Array<Client>;
   showParticipants: boolean;
   cameraDisplayMode: number;
+  showControls: boolean;
+  showSettings: boolean;
 }
 
 export interface DataChannelClientState extends SignalingClientRoom {

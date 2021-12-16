@@ -1,12 +1,6 @@
 <template>
   <div class="container-fluid bg-primary-dark" v-on:mousemove="showToolbar">
-    <video
-      v-show="isCameraOn"
-      ref="overlayVideoRef"
-      id="overlayVideo"
-      class="overlay-video mirror-y"
-      disablePictureInPicture
-    ></video>
+    <user-video />
     <div class="container-fluid">
       <video-conference v-bind:clients-list="clientsInCall"> </video-conference>
     </div>
@@ -28,20 +22,21 @@
 import { ref } from "vue";
 
 import useToolbar from "./useToolbar";
-import useVideoLayout from "./useVideoOverlay";
 
 import { BusyException } from "@/store/modules/opentera";
 
 import { VideoConference } from "@/components/VideoConference";
 import { ButtonConference } from "@/components/ButtonConference";
 import { ParticipantsList } from "@/components/ParticipantsList";
+import UserVideo from '@/components/UserVideo/UserVideo.vue';
 
 export default {
   name: "conference-view",
   components: {
     VideoConference,
     ButtonConference,
-    ParticipantsList
+    ParticipantsList,
+    UserVideo
   },
   data() {
     return {
@@ -56,14 +51,10 @@ export default {
   },
   setup() {
     const toolbarRef = ref(null);
-    const overlayVideoRef = ref(null);
-
-    useVideoLayout(overlayVideoRef);
     const { showToolbar } = useToolbar(toolbarRef);
 
     return {
       toolbarRef,
-      overlayVideoRef,
       showToolbar
     };
   },
@@ -76,35 +67,9 @@ export default {
     },
     showParticipants() {
       return this.$store.state.localClient.openteraVideoConf.showParticipants;
-    },
-    isCameraOn() {
-      return this.$store.state.localClient.isCameraOn;
     }
   },
-  beforeMount() {
-    this.client = {
-      name: this.name,
-      data: this.data,
-      room: "VideoConf",
-      password: this.password
-    };
-    this.$store.commit("localClient/setClient", { name: this.name });
-    this.$store
-      .dispatch("localClient/openteraVideoConf/start", this.client)
-      .then(() => console.log("CONNECTED")) // Do something after ther connection
-      .catch(err => {
-        if (!(err instanceof BusyException)) console.log(err);
-      });
-  },
-  activated() {
-    // Reactivate the local video when it's render from cache
-    const overlayVideo = this.$refs.overlayVideoRef;
-    overlayVideo.muted = true;
-    overlayVideo.srcObject = this.$store.state.localClient.openteraVideoConf.localStream;
-    overlayVideo.autoplay = true;
-  },
   unmounted() {
-    //this.$store.dispatch("openteraVideoConf/destroy");
     this.$store.dispatch("localClient/destroy");
   }
 };

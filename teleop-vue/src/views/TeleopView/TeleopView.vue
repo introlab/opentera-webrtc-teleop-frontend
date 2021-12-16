@@ -10,14 +10,8 @@
     @touchmove="onTouchMove"
     @touchEnd="onTouchEnd"
   >
-    <video
-      v-show="isCameraOn"
-      ref="overlayVideoRef"
-      id="overlayVideo"
-      class="user-video mirror-y"
-      disablePictureInPicture
-    ></video>
     <div class="fluid pad row-flexbox">
+      <user-video />
       <div
         class="col-flexbox"
         :class="{ col33: isMapExpanded, col100: !isMapExpanded }"
@@ -59,21 +53,27 @@
         <expandable-map
           :translation="mapTranslation"
           @expansionToggle="onExpansionToggle"
+          v-show="showControls"
         />
       </div>
     </div>
-    <slider v-on:maxSpeedChangedEvent="onMaxSpeedChanged" />
+    <slider
+      v-on:maxSpeedChangedEvent="onMaxSpeedChanged"
+      v-show="showControls"
+    />
     <joystick
-      width="150"
-      height="150"
+      :width="150"
+      :height="150"
       class="telepresence-joystick"
       v-bind:absolute-max-x="scaledMaxX"
       v-bind:absolute-max-yaw="scaledMaxYaw"
       v-on:joystickPositionChange="updateCmdVel"
+      v-show="showControls"
     />
     <keyboard-teleop
       v-bind:absolute-max-x="scaledMaxX"
       v-bind:absolute-max-yaw="scaledMaxYaw"
+      v-bind:enabled="showControls"
       v-on:keyboardCmdEvent="updateCmdVel"
     />
 
@@ -89,12 +89,12 @@
       </participants-list>
     </transition>
   </div>
+  <device-settings v-if="showSettings" />
 </template>
 
 <script>
 import { ref } from "vue";
 import useToolbar from "@/views/ConferenceView/useToolbar";
-import useVideoLayout from "@/views/ConferenceView/useVideoOverlay";
 import { VideoParticipant } from "@/components/VideoParticipant";
 import { ButtonConference } from "@/components/ButtonConference";
 import { ParticipantsList } from "@/components/ParticipantsList";
@@ -102,6 +102,8 @@ import { Joystick } from "@/components/Joystick";
 import KeyboardTeleop from "@/components/KeyboardTeleop/KeyboardTeleop.vue";
 import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
 import Slider from "@/components/Slider/Slider.vue";
+import UserVideo from "@/components/UserVideo/UserVideo.vue";
+import DeviceSettings from "@/components/DeviceSettings/DeviceSettings.vue";
 
 export default {
   name: "teleop-view",
@@ -110,7 +112,7 @@ export default {
       chatTextArea: null,
       cmd: { x: 0, yaw: 0 }, // Global velocity command to be sent to the robot (x: m/s, y: rad/s)
       maxX: 0.3,
-      maxYaw: 0.55,
+      maxYaw: 0.75,
       scaledMaxX: 0.3,
       scaledMaxYaw: 0.55,
       mouseDown: false,
@@ -127,18 +129,17 @@ export default {
     Joystick,
     KeyboardTeleop,
     ExpandableMap,
-    Slider
+    Slider,
+    UserVideo,
+    DeviceSettings
   },
   setup() {
     const toolbarRef = ref(null);
-    const overlayVideoRef = ref(null);
 
-    useVideoLayout(overlayVideoRef);
     const { showToolbar } = useToolbar(toolbarRef);
 
     return {
       toolbarRef,
-      overlayVideoRef,
       showToolbar
     };
   },
@@ -172,19 +173,22 @@ export default {
     showParticipants() {
       return this.$store.state.localClient.openteraVideoConf.showParticipants;
     },
-    isCameraOn() {
-      return this.$store.state.localClient.isCameraOn;
-    },
     cameraDisplayMode() {
       return this.$store.state.localClient.openteraVideoConf.cameraDisplayMode;
+    },
+    showControls() {
+      return this.$store.state.localClient.openteraVideoConf.showControls;
+    },
+    showSettings() {
+      return this.$store.state.localClient.openteraVideoConf.showSettings;
     }
   },
-  activated() {
-    // Reactivate the local video when it's render from cache
-    const overlayVideo = this.$refs.overlayVideoRef;
-    overlayVideo.muted = true;
-    overlayVideo.srcObject = this.$store.state.localClient.openteraVideoConf.localStream;
-    overlayVideo.autoplay = true;
+  watch: {
+    showControls() {
+      if (!this.showControls) {
+        this.isMapExpanded = false;
+      }
+    }
   },
   methods: {
     updateCmdVel(newCmd) {
@@ -195,7 +199,6 @@ export default {
     },
     sendCmdVel() {
       if (this.$store.state.localClient.openteraTeleop.client) {
-        console.log(this.cmd);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "velCmd", x: this.cmd.x, yaw: this.cmd.yaw })
         );

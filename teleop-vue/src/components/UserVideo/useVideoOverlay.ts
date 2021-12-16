@@ -1,5 +1,3 @@
-// src/views/ConferenceView/useVideoOverlay.ts
-
 import { computed, onMounted, Ref, watch } from "vue";
 import { useStore } from "vuex";
 
@@ -13,11 +11,12 @@ export default function(overlayVideoRef: Ref<HTMLVideoElement>) {
     overlayVideo.srcObject =
       store.state.localClient.openteraVideoConf.localStream;
     overlayVideo.autoplay = true;
+    overlayVideo.style.display = "inline";
   };
 
-  const stream = computed(
-    () => store.state.localClient.openteraVideoConf.localStream
-  );
+  const stream = computed(() => {
+    return store.state.localClient.openteraVideoConf.localStream;
+  });
   watch(stream, _initLocalVideo);
 
   onMounted(_initLocalVideo);

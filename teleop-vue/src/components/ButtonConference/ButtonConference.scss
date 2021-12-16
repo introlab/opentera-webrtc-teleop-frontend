@@ -9,6 +9,7 @@
     display: inline-flex;
     vertical-align: middle;
     margin-right: .5rem;
+    pointer-events: auto;
 }
 .btn-group > .btn {
     position: relative;

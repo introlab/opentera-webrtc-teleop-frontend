@@ -26,17 +26,40 @@
         class="btn btn-primary-dark"
         v-on:click="toggleCameraDisplayMode"
       >
-        <svg-icon icon="both_cameras" v-if="cameraDisplayMode == 0" />
-        <svg-icon icon="top_camera_only" v-if="cameraDisplayMode == 1" />
-        <svg-icon icon="bottom_camera_only" v-if="cameraDisplayMode == 2" />
+        <svg-icon icon="both-cameras" v-if="cameraDisplayMode == 0" />
+        <svg-icon icon="top-camera-only" v-if="cameraDisplayMode == 1" />
+        <svg-icon icon="bottom-camera-only" v-if="cameraDisplayMode == 2" />
       </button>
       <button
         type="button"
         class="btn btn-primary-dark"
-        v-on:click="toggleCall"
+        v-on:click="toggleShowControls"
       >
-        <svg-icon icon="telephone-outbound-fill" v-if="isInCall" />
-        <svg-icon icon="telephone-inbound" v-else />
+        <svg-icon icon="show-controls" v-if="showControls" />
+        <svg-icon icon="hide-controls" v-else />
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
+        v-on:click="toggleShowSettings"
+      >
+        <svg-icon icon="gear" />
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
+        v-on:click="toggleRobotMute"
+      >
+        <svg-icon icon="robot-mic-mute-fill" v-if="isRobotMuted" />
+        <svg-icon icon="robot-mic-fill" v-else />
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary-dark"
+        v-on:click="toggleRobotCamera"
+      >
+        <svg-icon icon="robot-camera-video-fill" v-if="isRobotCameraOn" />
+        <svg-icon icon="robot-camera-video-off-fill" v-else />
       </button>
     </div>
     <div class="btn-group" role="group" aria-label="Group button">
@@ -68,12 +91,18 @@ export default {
       isCameraOn,
       showParticipants,
       cameraDisplayMode,
+      showControls,
+      isRobotMuted,
+      isRobotCameraOn,
 
-      toggleCall,
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
-      toggleCameraDisplayMode
+      toggleCameraDisplayMode,
+      toggleShowControls,
+      toggleShowSettings,
+      toggleRobotCamera,
+      toggleRobotMute
     } = useButtons();
 
     return {
@@ -82,12 +111,18 @@ export default {
       isCameraOn,
       showParticipants,
       cameraDisplayMode,
+      showControls,
+      isRobotMuted,
+      isRobotCameraOn,
 
-      toggleCall,
       toggleMute,
       toggleCamera,
       toggleParticipantsList,
-      toggleCameraDisplayMode
+      toggleCameraDisplayMode,
+      toggleShowControls,
+      toggleShowSettings,
+      toggleRobotCamera,
+      toggleRobotMute
     };
   }
 };

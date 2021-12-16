@@ -32,26 +32,14 @@ const Router = {
           meta: {
             name: "Teleoperation"
           }
-        },
-        conference: {
-          path: "conference",
-          meta: {
-            name: "Conference"
-          }
         }
       }
     },
     user: {
       name: "User",
       path: "/user",
-      defaultPath: "/user/conference",
+      defaultPath: "/user/teleop",
       childrens: {
-        conference: {
-          path: "conference",
-          meta: {
-            name: "Conference"
-          }
-        },
         teleop: {
           path: "teleop",
           meta: {
