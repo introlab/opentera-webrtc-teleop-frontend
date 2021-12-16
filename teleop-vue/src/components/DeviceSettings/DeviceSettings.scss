@@ -2,13 +2,14 @@
 	position: fixed;
 	width: max-content;
 	height: max-content;
-	background-color: white;
+	background-color: var(--bg-primary-dark);
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	z-index: 100;
-	color: black;
+	color: var(--text-primary-dark);
 	border-radius: 5px;
+	font-size: 20px;
 }
 
 .mask {
@@ -32,4 +33,18 @@
 	transform: rotateY(180deg);
 	-webkit-transform: rotateY(180deg);
 	-moz-transform: rotateY(180deg);
+}
+
+button, select {
+	background-color: var(--bg-secondary-dark);
+	color: var(--text-primary-dark);
+	border-radius: 5px;
+	border: none;
+	opacity: 0.6;
+	transition: 0.3s;
+	font-size: 20px;
+}
+
+button:hover, select:hover {
+	opacity: 1;
 }
