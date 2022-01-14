@@ -1,7 +1,5 @@
 <template>
-  <canvas
-    ref="canvas"
-  />
+  <canvas ref="canvas" />
 </template>
 
 <script>
@@ -26,58 +24,58 @@ export default {
   props: {
     isActive: {
       type: Boolean,
-      default: true
+      default: true,
     },
     wpColor: {
       type: String,
-      default: "#00FF00"
+      default: "#00FF00",
     },
     show: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showGrid: {
       type: Boolean,
-      default: false
+      default: false,
     },
     zoom: {
       type: Number,
-      default: 1
+      default: 1,
     },
     pan: {
       type: Object,
       default() {
         return {
           x: 0,
-          y: 0
+          y: 0,
         };
-      }
+      },
     },
     mapSize: {
       type: Object,
       default() {
         return {
           width: 500,
-          height: 500
+          height: 500,
         };
-      }
+      },
     },
     list: {
       type: Array,
-      required: true
+      required: true,
     },
     nbOfWaypoint: {
       type: Number,
-      default: -1
+      default: -1,
     },
     videoElement: {
       type: [String, HTMLVideoElement],
-      default: null
+      default: null,
     },
     refreshRate: {
       type: Number,
-      default: 30
-    }
+      default: 30,
+    },
   },
   data() {
     return {
@@ -87,10 +85,10 @@ export default {
         coordinate: {
           x: -1,
           y: -1,
-          yaw: 0
+          yaw: 0,
         },
         label: "",
-        holdTimeS: 0
+        holdTimeS: 0,
       },
       isCreatingNewWp: false,
       loopIntervalId: null,
@@ -163,21 +161,17 @@ export default {
      * @public
      */
     drawWaypointList() {
-      if (this.nbOfWaypoint >= 0) {
-        for (let i = 0; i < this.nbOfWaypoint && i < this.list.length; i++) {
-          this.drawWaypoint(this.list[i]);
-          this.drawYawArrow(this.list[i]);
-        }
-      } else {
-        for (const [index, wp] of this.list.entries()) {
-          this.drawWaypoint(wp);
-          this.drawYawArrow(wp);
-          this.writeWaypointInfos(wp, index);
-        }
-      }
+      // TODO: Don't know why this is there, might be useless
+      // if (this.nbOfWaypoint >= 0) {
+      //   for (let i = 0; i < this.nbOfWaypoint && i < this.list.length; i++) {
+      //     this.drawWaypoint(this.list[i]);
+      //     this.drawYawArrow(this.list[i]);
+      //   }
+      // }
       if (this.isCreatingNewWp) {
         this.drawWaypoint(this.currentWaypoint);
         this.drawYawArrow(this.currentWaypoint);
+        this.writeWaypointInfos(this.currentWaypoint, this.list.length);
       }
     },
     writeWaypointInfos(wp, index) {
@@ -224,15 +218,15 @@ export default {
       const radYaw = (-wpCoord.yaw / 180) * Math.PI;
       const arrowEnd = {
         x: coord.x + arrowLength * Math.cos(radYaw),
-        y: coord.y + arrowLength * Math.sin(radYaw)
+        y: coord.y + arrowLength * Math.sin(radYaw),
       };
       const arrowTip1 = {
         x: arrowEnd.x - headLength * Math.cos(radYaw - Math.PI / 4),
-        y: arrowEnd.y - headLength * Math.sin(radYaw - Math.PI / 4)
+        y: arrowEnd.y - headLength * Math.sin(radYaw - Math.PI / 4),
       };
       const arrowTip2 = {
         x: arrowEnd.x - headLength * Math.cos(radYaw + Math.PI / 4),
-        y: arrowEnd.y - headLength * Math.sin(radYaw + Math.PI / 4)
+        y: arrowEnd.y - headLength * Math.sin(radYaw + Math.PI / 4),
       };
 
       this.context.lineCap = "round";
@@ -265,7 +259,7 @@ export default {
       const rect = this.canvas.getBoundingClientRect();
       const mapAdjustment = {
         width: this.mapSize.width / this.videoElement.videoWidth,
-        height: this.mapSize.height / this.videoElement.videoHeight
+        height: this.mapSize.height / this.videoElement.videoHeight,
       };
       const x =
         (event.clientX - rect.left - offsetAndScale.offsetX) /
@@ -275,7 +269,7 @@ export default {
         offsetAndScale.scale;
       return {
         x: x * mapAdjustment.width,
-        y: y * mapAdjustment.height
+        y: y * mapAdjustment.height,
       };
     },
     /**
@@ -289,7 +283,7 @@ export default {
       const offsetAndScale = this.getVideoOffsetAndScale();
       const mapAdjustment = {
         width: this.mapSize.width / this.videoElement.videoWidth,
-        height: this.mapSize.height / this.videoElement.videoHeight
+        height: this.mapSize.height / this.videoElement.videoHeight,
       };
 
       return {
@@ -298,7 +292,7 @@ export default {
           offsetAndScale.offsetX,
         y:
           (y / mapAdjustment.height) * offsetAndScale.scale +
-          offsetAndScale.offsetY
+          offsetAndScale.offsetY,
       };
     },
     /**
@@ -338,7 +332,7 @@ export default {
       return {
         offsetX,
         offsetY,
-        scale
+        scale,
       };
     },
     /**
@@ -416,7 +410,7 @@ export default {
       this.currentWaypoint.coordinate = {
         x: -1,
         y: -1,
-        yaw: 0
+        yaw: 0,
       };
     },
     /**
@@ -473,8 +467,8 @@ export default {
         }
       }
       return false;
-    }
-  }
+    },
+  },
 };
 </script>
 
