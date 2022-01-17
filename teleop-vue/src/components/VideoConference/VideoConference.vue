@@ -57,13 +57,13 @@ export default {
   name: "video-conference",
   components: {
     MediaQuery,
-    VideoParticipant
+    VideoParticipant,
   },
   props: {
     clientsList: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
     const { clientsList } = toRefs(props);
@@ -72,7 +72,7 @@ export default {
 
     return {
       nColumns,
-      nRows
+      nRows,
     };
   },
   computed: {
@@ -84,11 +84,11 @@ export default {
         return {
           id: "null",
           name: "null",
-          stream: null
+          stream: null,
         };
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

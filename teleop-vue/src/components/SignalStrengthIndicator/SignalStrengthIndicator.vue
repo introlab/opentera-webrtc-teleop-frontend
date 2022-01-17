@@ -12,24 +12,24 @@
 export default {
   data() {
     return {
-      signalBars: 0
+      signalBars: 0,
     };
   },
   computed: {
     signalStrength() {
       return this.$store.state.localClient.openteraTeleop.status.wifiStrength;
-    }
+    },
   },
   watch: {
     signalStrength() {
       this.onSignalStrengthChanged(this.signalStrength);
-    }
+    },
   },
   methods: {
     onSignalStrengthChanged(strength) {
       this.signalBars = Math.ceil((strength / 100) * 5);
-    }
-  }
+    },
+  },
 };
 </script>
 

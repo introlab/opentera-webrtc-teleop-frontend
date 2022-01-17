@@ -2,30 +2,30 @@
     BUTTON
 *****************************************************************/
 button {
-    -webkit-appearance: button;
+  -webkit-appearance: button;
 }
 button:not(:disabled) {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .icon-button {
-    display: inline-block;
-    color: inherit;
-    border: 0px solid transparent;
-    background-color: transparent;
-    transition: box-shadow 150ms ease-in-out;
-    padding: 0;
+  display: inline-block;
+  color: inherit;
+  border: 0px solid transparent;
+  background-color: transparent;
+  transition: box-shadow 150ms ease-in-out;
+  padding: 0;
 }
 .icon-button:focus {
-    outline: none;
+  outline: none;
 }
 .icon-button:hover > * {
-    -webkit-filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
-    filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
+  -webkit-filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
+  filter: drop-shadow(0.125rem 0.25rem 0.1rem rgba(0, 0, 0, 1));
 }
 
 .stop-button {
-    background-color: red;
-    border-color: darkred;
-    --hover-background-color: rgb(255, 77, 77);
+  background-color: red;
+  border-color: darkred;
+  --hover-background-color: rgb(255, 77, 77);
 }

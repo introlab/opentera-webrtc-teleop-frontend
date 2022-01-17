@@ -9,7 +9,7 @@ import {
   RoomClient,
   SignalingClientContext,
   SignalingClientRoom,
-  SignalingServerConfiguration
+  SignalingServerConfiguration,
 } from "./types";
 
 export abstract class SignalingClientStore {
@@ -21,7 +21,7 @@ export abstract class SignalingClientStore {
       client: undefined,
       clientsInRoom: [],
       numberClientsInCall: 0,
-      inCallState: false
+      inCallState: false,
     };
   }
 
@@ -77,7 +77,7 @@ export abstract class SignalingClientStore {
 
       setCallState(state: SignalingClientRoom, payload: boolean) {
         state.inCallState = payload;
-      }
+      },
     };
   }
 
@@ -104,13 +104,13 @@ export abstract class SignalingClientStore {
         context: SignalingClientContext,
         config: SignalingServerConfiguration
       ) {
-        return new Promise<void>(resolve => {
+        return new Promise<void>((resolve) => {
           self.initialize(context, config).then(() => resolve());
         });
       },
 
       connectClient({ state }: { state: SignalingClientRoom }) {
-        return new Promise<void>(resolve => {
+        return new Promise<void>((resolve) => {
           state.client.connect().then(() => resolve());
         });
       },
@@ -126,7 +126,7 @@ export abstract class SignalingClientStore {
           console.log("Calling " + room + " room");
           context.state.client.callAll();
         }
-      }
+      },
     };
   }
 
@@ -175,7 +175,7 @@ export abstract class SignalingClientStore {
           name: config.name ? config.name : "Undefined",
           data: config.data ? config.data : {},
           room: config.room ? config.room : "chat",
-          password: config.password
+          password: config.password,
         };
       }
     }
@@ -287,7 +287,7 @@ export abstract class SignalingClientStore {
       getters: this.getters(),
       mutations: this.mutations(),
       actions: this.actions(),
-      modules: this.modules()
+      modules: this.modules(),
     };
   }
 }

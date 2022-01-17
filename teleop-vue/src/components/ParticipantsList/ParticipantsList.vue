@@ -37,18 +37,18 @@ export default {
   name: "participants-list",
   components: {
     ParticipantOptions,
-    SvgIcon
+    SvgIcon,
   },
   props: {
     clientsInCall: Array,
-    clientsInRoom: Array
+    clientsInRoom: Array,
   },
   methods: {
     closeParticipantsList() {
       this.$store.commit(
         "localClient/openteraVideoConf/toggleParticipantsList"
       );
-    }
+    },
   },
   computed: {
     localClient() {
@@ -62,12 +62,12 @@ export default {
     },
     clientsNotInCall() {
       return this.clientsInRoom.filter(
-        client =>
-          !this.clientsInCall.some(i => i.id === client.id) &&
+        (client) =>
+          !this.clientsInCall.some((i) => i.id === client.id) &&
           client.id !== this.localStreamClient.id
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

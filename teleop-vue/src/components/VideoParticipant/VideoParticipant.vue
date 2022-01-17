@@ -19,30 +19,30 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
+      required: true,
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     stream: {
       type: MediaStream,
-      default: null
+      default: null,
     },
     showName: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   computed: {
     videoId() {
       return "video-" + this.id;
-    }
+    },
   },
   watch: {
     stream(newStream) {
       this.$refs.video.srcObject = newStream;
-    }
+    },
   },
   mounted() {
     this.$refs.video.srcObject = this.stream;
@@ -50,7 +50,7 @@ export default {
   activated() {
     this.$refs.video.srcObject = this.stream;
     this.$refs.video.autoplay = true;
-  }
+  },
 };
 </script>
 

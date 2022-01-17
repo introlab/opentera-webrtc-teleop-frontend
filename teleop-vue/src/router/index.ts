@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, createWebHashHistory, Router } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+  Router,
+} from "vue-router";
 
 import store from "../store";
 import { getBasePath } from "@/config/location";
@@ -22,14 +27,14 @@ const routes: Array<any> = [
     component: DevelopperView,
     props: (route: any) => ({
       name: route.query.name,
-      password: route.query.pwd
+      password: route.query.pwd,
     }),
     children: [
       {
         path: "",
-        component: TeleopView
-      }
-    ]
+        component: TeleopView,
+      },
+    ],
   },
   {
     path: user.path,
@@ -37,14 +42,14 @@ const routes: Array<any> = [
     component: UserView,
     props: (route: any) => ({
       name: route.query.name,
-      password: route.query.pwd
+      password: route.query.pwd,
     }),
     children: [
       {
         path: "",
-        component: TeleopView
-      }
-    ]
+        component: TeleopView,
+      },
+    ],
   },
   {
     path: participant.path,
@@ -52,8 +57,8 @@ const routes: Array<any> = [
     component: TeleopView,
     props: (route: any) => ({
       name: route.query.name,
-      password: route.query.pwd
-    })
+      password: route.query.pwd,
+    }),
   },
   {
     path: device.path,
@@ -61,21 +66,21 @@ const routes: Array<any> = [
     component: TeleopView,
     props: (route: any) => ({
       name: route.query.name,
-      password: route.query.pwd
-    })
+      password: route.query.pwd,
+    }),
   },
   {
     path: notFound.path,
     name: notFound.name,
-    component: NotFoundView
-  }
+    component: NotFoundView,
+  },
 ];
 
-export default function() : Router {
+export default function(): Router {
   return createRouter({
     //history: createWebHistory(getBasePath()),
     //history: createWebHistory(),
     history: createWebHashHistory(),
-    routes
-  })
-};
+    routes,
+  });
+}

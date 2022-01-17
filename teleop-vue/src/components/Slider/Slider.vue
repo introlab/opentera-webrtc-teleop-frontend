@@ -19,7 +19,7 @@ export default {
   name: "slider",
   data() {
     return {
-      speed: 0
+      speed: 0,
     };
   },
   emits: ["maxSpeedChangedEvent"],
@@ -33,8 +33,8 @@ export default {
     },
     emitMaxSpeedChanged() {
       this.$emit("maxSpeedChangedEvent", this.speed / 100);
-    }
-  }
+    },
+  },
 };
 </script>
 

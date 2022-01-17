@@ -5,14 +5,20 @@ export const SESSION_COOKIE =
 
 export function setCookie(cname: string, cvalue: string, maxAge: number): void {
   document.cookie =
-    cname + "=" + cvalue + ";max-age=" + maxAge + ";path=/" + ";sameSite=None; Secure";
+    cname +
+    "=" +
+    cvalue +
+    ";max-age=" +
+    maxAge +
+    ";path=/" +
+    ";sameSite=None; Secure";
 }
 
 export function getCookie(cname: string): string | undefined {
   const name = cname + "=";
   return document.cookie
     .split(";")
-    .map(cookie => cookie.replace(/ /g, ""))
-    .find(row => row.startsWith(name))
+    .map((cookie) => cookie.replace(/ /g, ""))
+    .find((row) => row.startsWith(name))
     ?.split("=")[1];
 }

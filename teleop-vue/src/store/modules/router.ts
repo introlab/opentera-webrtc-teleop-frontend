@@ -24,16 +24,16 @@ const Router = {
         dashboard: {
           path: "dashboard",
           meta: {
-            name: "Dashboard"
-          }
+            name: "Dashboard",
+          },
         },
         teleop: {
           path: "teleop",
           meta: {
-            name: "Teleoperation"
-          }
-        }
-      }
+            name: "Teleoperation",
+          },
+        },
+      },
     },
     user: {
       name: "User",
@@ -43,23 +43,23 @@ const Router = {
         teleop: {
           path: "teleop",
           meta: {
-            name: "Teleoperation"
-          }
-        }
-      }
+            name: "Teleoperation",
+          },
+        },
+      },
     },
     participant: {
       name: "Participant",
-      path: "/participant"
+      path: "/participant",
     },
     device: {
       name: "Device",
-      path: "/device"
+      path: "/device",
     },
     notFound: {
       name: "404",
-      path: "/:catchAll(.*)"
-    }
+      path: "/:catchAll(.*)",
+    },
   }),
 
   getters: {
@@ -77,21 +77,21 @@ const Router = {
       const obj: RouterState = getters.getRoute(route);
 
       if (obj && obj.childrens) {
-        return Object.keys(obj.childrens).map(key => {
+        return Object.keys(obj.childrens).map((key) => {
           return {
             path: obj.path + "/" + obj.childrens[key].path,
             childrens: recursive
               ? getters.getSubRoutes(route + ".childrens." + key, true)
               : undefined,
             meta: obj.childrens[key].meta,
-            params: {}
+            params: {},
           };
         });
       }
 
       return undefined;
-    }
-  }
+    },
+  },
 };
 
 export default Router;

@@ -8,13 +8,13 @@ export default {
   props: {
     icon: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     fetchIcon() {
       return require(`!!raw-loader!@/assets/${this.icon}.svg`).default;
-    }
+    },
   },
   mounted() {
     if (this.$refs.svg.firstElementChild.nodeName === "svg") {
@@ -23,7 +23,7 @@ export default {
       svgElement.setAttribute("height", "100%");
       svgElement.classList.add("svg-class");
     }
-  }
+  },
 };
 </script>
 

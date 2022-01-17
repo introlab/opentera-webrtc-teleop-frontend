@@ -1,108 +1,104 @@
-
 .navbar {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.2rem 0 0.2rem 0;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem 0 0.2rem 0;
 }
 .navbar > .container-fluid {
-    display: flex;
-    flex-wrap: inherit;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .navbar-brand {
-    padding-top: .3125rem;
-    padding-bottom: .3125rem;
-    margin-left: 1rem;
-    font-size: 1.25rem;
-    font-weight: bold;
-    text-decoration: none;
-    white-space: nowrap;
-    padding-right: 1rem;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-left: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: none;
+  white-space: nowrap;
+  padding-right: 1rem;
 }
 .navbar-brand:any-link {
-    color: inherit
+  color: inherit;
 }
 
 .navbar-toggler {
-    font-size: 1.25rem;
-    line-height: 1rem;
-    border: 3px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: .25rem;
-    margin-right: 1rem;
+  font-size: 1.25rem;
+  line-height: 1rem;
+  border: 3px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 0.25rem;
+  margin-right: 1rem;
 }
 .navbar-toggler-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: .25rem;
-    vertical-align: middle;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0.25rem;
+  vertical-align: middle;
 }
 
 .navbar-collapse {
-    flex-basis: 100%;
-    flex-grow: 1;
-    flex-direction: column;
+  flex-basis: 100%;
+  flex-grow: 1;
+  flex-direction: column;
 }
 
 .navbar-nav {
-    display: flex;
-    flex-direction: column;
-    padding-left: 0;
-    margin-bottom: 0;
-    margin-top: 0;
-    list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  list-style: none;
 }
 
 .navbar-item {
-    margin: 0.35rem 0.5rem 0.35rem 0.5rem;
+  margin: 0.35rem 0.5rem 0.35rem 0.5rem;
 }
 
 .nav-link {
-    display: flex;
-    text-decoration: none;
-    text-align: left !important;
-    transition: 
-        color 150ms ease-in-out,
-        background-color 150ms ease-in-out
-        border-color 150ms ease-in-out;
-    align-items: center;
+  display: flex;
+  text-decoration: none;
+  text-align: left !important;
+  transition: color 150ms ease-in-out,
+    background-color 150ms ease-in-out border-color 150ms ease-in-out;
+  align-items: center;
 }
 .nav-link:any-link {
-    color: inherit
+  color: inherit;
 }
 
 @media only screen and (min-width: 660px) {
-    .navbar-toggler {
-        display: none;
-    }
+  .navbar-toggler {
+    display: none;
+  }
 
-    .navbar-collapse {
-        display: flex !important;
-        flex-basis: auto;
-        flex-direction: row;
-        align-items: center;
-    }
+  .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto;
+    flex-direction: row;
+    align-items: center;
+  }
 
-    .navbar-nav {
-        flex-direction: row;
-        align-items: center;
-    }
+  .navbar-nav {
+    flex-direction: row;
+    align-items: center;
+  }
 
-    .margin-left-extend {
-        margin-left: auto;
-    }
+  .margin-left-extend {
+    margin-left: auto;
+  }
 
-    .margin-right-extend {
-        margin-right: auto;
-    }
+  .margin-right-extend {
+    margin-right: auto;
+  }
 
-    .device-settings {
-        --menu-left: auto;
-        --menu-right: 0px;
-    }
-
+  .device-settings {
+    --menu-left: auto;
+    --menu-right: 0px;
+  }
 }

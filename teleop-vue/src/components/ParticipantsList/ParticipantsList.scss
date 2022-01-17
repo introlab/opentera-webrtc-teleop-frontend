@@ -1,39 +1,39 @@
 .participants-list {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 20rem;
-    height: 100%;
-    padding: 1rem 0;
-    z-index: 4;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20rem;
+  height: 100%;
+  padding: 1rem 0;
+  z-index: 4;
 }
 
 .participants-top-bar {
-    position: relative;
-    display: inline-flex;
-    justify-content: space-between;
-    align-content: center;
-    padding: 0 0.5rem;
-    width: 100%;
+  position: relative;
+  display: inline-flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 0 0.5rem;
+  width: 100%;
 }
 
 .participants-title {
-    font-size: 1.25rem;
-    font-weight: 1000;
-    text-align: start;
-    line-height: 2;
+  font-size: 1.25rem;
+  font-weight: 1000;
+  text-align: start;
+  line-height: 2;
 }
 
 .icon-button {
-    border-color: rgba(255, 255, 255, 0.3);
-    border-radius: .25rem;
-    margin: .25rem;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0.25rem;
+  margin: 0.25rem;
 }
 .icon-button > * {
-    width: 1.25rem;
+  width: 1.25rem;
 }
 
 h4 {
-    padding: 0 0.5rem;
-    text-align: start;
+  padding: 0 0.5rem;
+  text-align: start;
 }

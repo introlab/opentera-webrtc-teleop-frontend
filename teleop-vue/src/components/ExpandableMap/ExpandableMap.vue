@@ -258,7 +258,7 @@ export default {
         this.preMouseDown = true;
         this.lastTouch = event.touches[0];
         this.touchTimeout = setTimeout(
-          function () {
+          function() {
             this.handleSingleTouch(event);
             this.touchTimeout = null;
             if (this.prematureTouchEnd && this.isMouseDown) {
