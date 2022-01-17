@@ -21,7 +21,7 @@
           class="gutter"
           :class="{
             row50: cameraDisplayMode == 0,
-            row100: cameraDisplayMode == 1
+            row100: cameraDisplayMode == 1,
           }"
         >
           <video-participant
@@ -37,7 +37,7 @@
           v-if="cameraDisplayMode != 1"
           :class="{
             row50: cameraDisplayMode == 0,
-            row100: cameraDisplayMode == 2
+            row100: cameraDisplayMode == 2,
           }"
         >
           <video-participant
@@ -119,7 +119,7 @@ export default {
       clickPosition: { x: 0, y: 0 },
       prevMapTranslation: { x: 0, y: 0 },
       mapTranslation: { x: 0, y: 0 },
-      isMapExpanded: false
+      isMapExpanded: false,
     };
   },
   components: {
@@ -131,7 +131,7 @@ export default {
     ExpandableMap,
     Slider,
     UserVideo,
-    DeviceSettings
+    DeviceSettings,
   },
   setup() {
     const toolbarRef = ref(null);
@@ -140,7 +140,7 @@ export default {
 
     return {
       toolbarRef,
-      showToolbar
+      showToolbar,
     };
   },
   computed: {
@@ -181,14 +181,14 @@ export default {
     },
     showSettings() {
       return this.$store.state.localClient.openteraVideoConf.showSettings;
-    }
+    },
   },
   watch: {
     showControls() {
       if (!this.showControls) {
         this.isMapExpanded = false;
       }
-    }
+    },
   },
   methods: {
     updateCmdVel(newCmd) {
@@ -250,8 +250,10 @@ export default {
         event.preventDefault(); // Prevents scrolling
         this.clickPosition.x = event.touches[0].clientX;
         this.clickPosition.y = event.touches[0].clientY;
-        this.clickPosition.x = (event.touches[0].clientX / window.innerWidth) * 100;
-        this.clickPosition.y = (event.touches[0].clientY / window.innerHeight) * 100;
+        this.clickPosition.x =
+          (event.touches[0].clientX / window.innerWidth) * 100;
+        this.clickPosition.y =
+          (event.touches[0].clientY / window.innerHeight) * 100;
         this.mouseDown = true;
       }
     },
@@ -277,8 +279,8 @@ export default {
     onMaxSpeedChanged(event) {
       this.scaledMaxX = this.maxX * event;
       this.scaledMaxYaw = this.maxYaw * event;
-    }
-  }
+    },
+  },
 };
 </script>
 

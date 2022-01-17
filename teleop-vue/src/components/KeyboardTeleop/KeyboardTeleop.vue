@@ -8,27 +8,27 @@ export default {
     absoluteMaxX: {
       // Maximum linear velocity in m/s
       type: Number,
-      required: true
+      required: true,
     },
     absoluteMaxYaw: {
       // Maximum angular velocity in rad/s
       type: Number,
-      required: true
+      required: true,
     },
     publishingRate: {
       type: Number,
       required: false,
-      default: 10 // Hz
+      default: 10, // Hz
     },
     enabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       cmd: { x: 0, yaw: 0 },
-      loopIntervalId: false
+      loopIntervalId: false,
     };
   },
   emits: ["keyboardCmdEvent"],
@@ -83,7 +83,7 @@ export default {
         }.bind(this),
         1000 / this.publishingRate
       );
-    }
-  }
+    },
+  },
 };
 </script>

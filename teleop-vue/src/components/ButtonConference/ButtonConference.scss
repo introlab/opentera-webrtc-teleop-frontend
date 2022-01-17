@@ -1,58 +1,55 @@
 .btn-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .btn-group {
-    position: relative;
-    display: inline-flex;
-    vertical-align: middle;
-    margin-right: .5rem;
-    pointer-events: auto;
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  pointer-events: auto;
 }
 .btn-group > .btn {
-    position: relative;
-    flex: 1 1 auto;
+  position: relative;
+  flex: 1 1 auto;
 }
 .btn-group > .btn:not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .btn-group > .btn:not(:first-child) {
-    margin-left: -1px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .btn {
-    display: inline-block;
+  display: inline-block;
 
-    font-weight: 400;
-    font-size: 1.25rem;
-    line-height: 1.5;
-    text-align: center;
-    text-decoration: none;
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
 
-    vertical-align: middle;
-    user-select: none;
+  vertical-align: middle;
+  user-select: none;
 
-    padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
 
-    background-color: transparent;
-    border: 1px solid transparent;
-    border-radius: .3rem;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.3rem;
 
-    transition:
-        color 150ms ease-in-out,
-        background-color 150ms ease-in-out,
-        border-color 150ms ease-in-out,
-        box-shadow 150ms ease-in-out,
-        position 150ms ease-in-out;
+  transition: color 150ms ease-in-out, background-color 150ms ease-in-out,
+    border-color 150ms ease-in-out, box-shadow 150ms ease-in-out,
+    position 150ms ease-in-out;
 }
 .btn > * > svg {
-    width: 1.25rem;
+  width: 1.25rem;
 }
-.btn:active > *{
-    transform: translateX(1px);
+.btn:active > * {
+  transform: translateX(1px);
 }

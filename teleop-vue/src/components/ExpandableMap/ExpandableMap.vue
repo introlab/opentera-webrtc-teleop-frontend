@@ -58,7 +58,7 @@
         />
         <action-button
           label="Start"
-          @clicked="sendWaypoints"
+          @clicked="startNavigation"
           :disabled="waypointsEmpty"
         />
       </div>
@@ -80,7 +80,7 @@ export default {
   components: {
     SvgIcon,
     WaypointOverlay,
-    ActionButton
+    ActionButton,
   },
   props: {
     translation: {
@@ -88,10 +88,10 @@ export default {
       default() {
         return {
           x: 0,
-          y: 0
+          y: 0,
         };
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -114,7 +114,7 @@ export default {
       lastTouch: null,
       touchTimeout: null,
       preMouseDown: false,
-      prematureTouchEnd: false
+      prematureTouchEnd: false,
     };
   },
   computed: {
@@ -136,7 +136,7 @@ export default {
         "-webkit-transform": transformation,
         "-o-transform": transformation,
         "-ms-transform": transformation,
-        transform: transformation
+        transform: transformation,
       };
     },
     mapTranslate() {
@@ -147,14 +147,14 @@ export default {
           "-webkit-transform": transformation,
           "-o-transform": transformation,
           "-ms-transform": transformation,
-          transform: transformation
+          transform: transformation,
         };
       }
       return {};
     },
     showControls() {
       return this.$store.state.localClient.openteraVideoConf.showControls;
-    }
+    },
   },
   watch: {
     mapClientStream(newStream) {
@@ -173,7 +173,7 @@ export default {
       if (!this.showControls) {
         this.setIsExpanded(false);
       }
-    }
+    },
   },
   mounted() {
     window.addEventListener("keydown", this.onKeyDown);
@@ -347,16 +347,17 @@ export default {
     doPan(position) {
       const deltaPosition = {
         x: position.x - this.panStartPosition.x,
-        y: position.y - this.panStartPosition.y
+        y: position.y - this.panStartPosition.y,
       };
       this.pan = {
         x: this.previousPan.x + deltaPosition.x,
-        y: this.previousPan.y + deltaPosition.y
+        y: this.previousPan.y + deltaPosition.y,
       };
     },
     saveWaypoint(event) {
       this.waypoints.push(event);
       this.waypointsEmpty = false;
+      this.sendWaypoints([event]);
     },
     clearWaypoints() {
       this.waypoints = [];
@@ -372,11 +373,18 @@ export default {
         );
       }
     },
-    sendWaypoints() {
+    startNavigation() {
       this.isRobotNavigating = true;
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify({ type: "waypointArray", array: this.waypoints })
+          JSON.stringify({ type: "start", state: true })
+        );
+      }
+    },
+    sendWaypoints(waypoints) {
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({ type: "waypointArray", array: waypoints })
         );
       }
     },
@@ -425,8 +433,8 @@ export default {
           this.previousPan.y = this.pan.y;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

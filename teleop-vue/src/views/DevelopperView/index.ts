@@ -1,1 +1,1 @@
-export { default as DevelopperView} from "./DevelopperView.vue";
+export { default as DevelopperView } from "./DevelopperView.vue";

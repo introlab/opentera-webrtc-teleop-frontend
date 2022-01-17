@@ -10,8 +10,8 @@ export default {
   props: {
     label: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {};
@@ -19,8 +19,8 @@ export default {
   methods: {
     onClick() {
       this.$emit("clicked");
-    }
-  }
+    },
+  },
 };
 </script>
 

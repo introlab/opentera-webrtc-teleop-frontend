@@ -26,33 +26,33 @@ export default {
       canvas: null,
       context: null,
       isMouseDown: false,
-      activeTouchID: null
+      activeTouchID: null,
     };
   },
   props: {
     width: {
       type: Number,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      required: true
+      required: true,
     },
     absoluteMaxX: {
       // Maximum linear velocity in m/s
       type: Number,
-      required: true
+      required: true,
     },
     absoluteMaxYaw: {
       // Maximum angular velocity in rad/s
       type: Number,
-      required: true
+      required: true,
     },
     publishingRate: {
       type: Number,
       required: false,
-      default: 10 // Hz
-    }
+      default: 10, // Hz
+    },
   },
   emits: ["joystickPositionChange"],
   methods: {
@@ -269,7 +269,7 @@ export default {
           (this.getCanvasRadius() - this.getJoystickRadius()),
         yaw:
           -((this.x - this.getCenterX()) * this.absoluteMaxX) /
-          (this.getCanvasRadius() - this.getJoystickRadius())
+          (this.getCanvasRadius() - this.getJoystickRadius()),
       };
       this.$emit("joystickPositionChange", event);
     },
@@ -284,7 +284,7 @@ export default {
     },
     getJoystickRadius() {
       return this.getCanvasRadius() / 4;
-    }
+    },
   },
   mounted() {
     this.canvas = this.$refs.canvas;
@@ -294,6 +294,6 @@ export default {
   unmounted() {
     clearInterval(this.loopIntervalId);
     clearInterval(this.positionChangeIntervalId);
-  }
+  },
 };
 </script>

@@ -15,7 +15,7 @@ const ClientStore = {
     stream: undefined,
     isInCall: false,
     isMuted: false,
-    isCameraOn: true
+    isCameraOn: true,
   }),
   mutations: {
     setClient(state: Client, payload: Client) {
@@ -32,7 +32,7 @@ const ClientStore = {
 
     setCameraState(state: Client, isCameraOn: boolean) {
       state.isCameraOn = isCameraOn;
-    }
+    },
   },
   actions: {
     async start(context: any, payload: SignalingServerConfiguration) {
@@ -40,7 +40,7 @@ const ClientStore = {
         id: undefined,
         name: payload.name ? payload.name : "Undefined",
         data: payload.data,
-        room: undefined
+        room: undefined,
       });
 
       // Create different configuration for different room
@@ -48,35 +48,35 @@ const ClientStore = {
         name: payload.name,
         data: payload.data,
         room: "VideoConf",
-        password: payload.password
+        password: payload.password,
       };
 
       const cameraXSignalingServerConfiguration: SignalingServerConfiguration = {
         name: payload.name,
         data: payload.data,
         room: "CameraX",
-        password: payload.password
+        password: payload.password,
       };
 
       const mapSignalingServerConfiguration: SignalingServerConfiguration = {
         name: payload.name,
         data: payload.data,
         room: "Map",
-        password: payload.password
+        password: payload.password,
       };
 
       const messagingSignalingServerConfiguration: SignalingServerConfiguration = {
         name: payload.name,
         data: payload.data,
         room: "Messaging",
-        password: payload.password
+        password: payload.password,
       };
 
       const teleopSignalingServerConfiguration: SignalingServerConfiguration = {
         name: payload.name,
         data: payload.data,
         room: "Teleop",
-        password: payload.password
+        password: payload.password,
       };
 
       // Temporary name persistence on refreshing the page
@@ -86,7 +86,7 @@ const ClientStore = {
         cookie = JSON.parse(cookie);
         if (cookie) {
           context.commit("setClient", {
-            name: (cookie as SignalingServerConfiguration).name
+            name: (cookie as SignalingServerConfiguration).name,
           });
         }
       }
@@ -159,14 +159,14 @@ const ClientStore = {
           });
         resolve();
       });
-    }
+    },
   },
   modules: {
     openteraVideoConf: new StreamClientStore(true).getModule(),
     openteraCameraX: new StreamClientStore(false).getModule(),
     openteraMap: new StreamClientStore(false).getModule(),
-    openteraTeleop: new DataChannelClientStore().getModule()
-  }
+    openteraTeleop: new DataChannelClientStore().getModule(),
+  },
 };
 
 export default ClientStore;

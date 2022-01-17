@@ -41,26 +41,26 @@ export default {
     BatteryIndicator,
     SignalStrengthIndicator,
     ActionButton,
-    ActionsMenu
+    ActionsMenu,
   },
   data() {
     return {
-      showNav: false
+      showNav: false,
     };
   },
   props: {
     brand: {
       type: String,
-      required: true
+      required: true,
     },
     links: {
       type: Array,
-      required: true
+      required: true,
     },
     defaultPath: {
       type: String,
-      default: "/"
-    }
+      default: "/",
+    },
   },
   methods: {
     navToggler() {
@@ -74,8 +74,8 @@ export default {
           JSON.stringify({ type: "stop", state: true })
         );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

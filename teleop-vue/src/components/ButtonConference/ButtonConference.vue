@@ -82,7 +82,7 @@ import { SvgIcon } from "@/components/SvgIcon";
 export default {
   name: "button-conference",
   components: {
-    SvgIcon
+    SvgIcon,
   },
   setup() {
     const {
@@ -102,7 +102,7 @@ export default {
       toggleShowControls,
       toggleShowSettings,
       toggleRobotCamera,
-      toggleRobotMute
+      toggleRobotMute,
     } = useButtons();
 
     return {
@@ -122,9 +122,9 @@ export default {
       toggleShowControls,
       toggleShowSettings,
       toggleRobotCamera,
-      toggleRobotMute
+      toggleRobotMute,
     };
-  }
+  },
 };
 </script>
 

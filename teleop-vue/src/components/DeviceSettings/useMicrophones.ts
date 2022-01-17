@@ -9,8 +9,8 @@ export function useMicrophones() {
 
   async function handler() {
     await navigator.mediaDevices.getUserMedia({ audio: true });
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      const value = devices.filter(device => device.kind == "audioinput");
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      const value = devices.filter((device) => device.kind == "audioinput");
       microphones.value = value;
 
       if (microphones.value.length > 0)
@@ -33,6 +33,6 @@ export function useMicrophones() {
 
   return {
     microphone,
-    microphones
+    microphones,
   };
 }

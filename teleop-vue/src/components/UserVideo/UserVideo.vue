@@ -18,14 +18,14 @@ export default {
   name: "user-video",
   data() {
     return {
-      top: false
+      top: false,
     };
   },
   setup() {
     const overlayVideoRef = ref(null);
     useVideoLayout(overlayVideoRef);
     return {
-      overlayVideoRef
+      overlayVideoRef,
     };
   },
   activated() {
@@ -39,13 +39,13 @@ export default {
   computed: {
     isCameraOn() {
       return this.$store.state.localClient.isCameraOn;
-    }
+    },
   },
   methods: {
     onClick() {
       this.top = !this.top;
-    }
-  }
+    },
+  },
 };
 </script>
 

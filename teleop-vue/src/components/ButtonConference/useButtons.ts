@@ -30,13 +30,13 @@ export default function() {
   );
 
   const toggleMute = () =>
-    store.dispatch(namespace + "toggleMute").catch(error => {
+    store.dispatch(namespace + "toggleMute").catch((error) => {
       // TODO
       alert(error.message);
     });
 
   const toggleCamera = () =>
-    store.dispatch(namespace + "toggleCamera").catch(error => {
+    store.dispatch(namespace + "toggleCamera").catch((error) => {
       // TODO
       alert(error.message);
     });
@@ -59,7 +59,7 @@ export default function() {
       store.state.localClient.openteraTeleop.client.sendToAll(
         JSON.stringify({
           type: "mute",
-          value: store.state.localClient.openteraTeleop.status.isMuted
+          value: store.state.localClient.openteraTeleop.status.isMuted,
         })
       );
     }
@@ -70,7 +70,7 @@ export default function() {
       store.state.localClient.openteraTeleop.client.sendToAll(
         JSON.stringify({
           type: "enableCamera",
-          value: store.state.localClient.openteraTeleop.status.isCameraOn
+          value: store.state.localClient.openteraTeleop.status.isCameraOn,
         })
       );
     }
@@ -93,6 +93,6 @@ export default function() {
     toggleShowControls,
     toggleShowSettings,
     toggleRobotCamera,
-    toggleRobotMute
+    toggleRobotMute,
   };
 }

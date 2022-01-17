@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 <template>
   <div class="wrapper">
-    <FlashMessage style="z-index: 5;" :position="'left top'" />
+    <FlashMessage style="z-index: 5" :position="'left top'" />
     <header class="header">
       <navigation-bar
         v-bind:brand="brand"

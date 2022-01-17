@@ -5,13 +5,13 @@ import { RobotStatus } from ".";
 import {
   initSignalingServerConfiguration,
   initRtcConfiguration,
-  initDataChannelConfiguration
+  initDataChannelConfiguration,
 } from "./init";
 import { SignalingClientStore } from "./signalingClientStore";
 import {
   DataChannelClientContext,
   DataChannelClientState,
-  SignalingServerConfiguration
+  SignalingServerConfiguration,
 } from "./types";
 
 export class DataChannelClientStore extends SignalingClientStore {
@@ -32,10 +32,10 @@ export class DataChannelClientStore extends SignalingClientStore {
         wifiStrength: 0,
         localIp: "",
         isMuted: false,
-        isCameraOn: true
+        isCameraOn: true,
       },
       waypointReached: 0,
-      dockingStatus: ""
+      dockingStatus: "",
     };
   }
 
@@ -71,13 +71,13 @@ export class DataChannelClientStore extends SignalingClientStore {
       },
       toggleRobotCamera(state: DataChannelClientState) {
         state.status.isCameraOn = !state.status.isCameraOn;
-      }
+      },
     };
   }
 
   protected actions() {
     return {
-      ...super.actions()
+      ...super.actions(),
     };
   }
 
@@ -93,7 +93,7 @@ export class DataChannelClientStore extends SignalingClientStore {
     const dataChannelConfiguration = initDataChannelConfiguration();
     const rtcConfiguration = await initRtcConfiguration(
       payload.password
-    ).catch(err => context.state.logger(err));
+    ).catch((err) => context.state.logger(err));
 
     context.commit(
       "setClient",

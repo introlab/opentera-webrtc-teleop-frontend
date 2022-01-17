@@ -29,7 +29,7 @@ export default {
     return {
       showMenu: false,
       docked: false,
-      localizationMode: false
+      localizationMode: false,
     };
   },
   methods: {
@@ -54,7 +54,7 @@ export default {
           JSON.stringify({
             type: "action",
             action: "localizationMode",
-            cmd: true
+            cmd: true,
           })
         );
       }
@@ -67,12 +67,12 @@ export default {
           JSON.stringify({
             type: "action",
             action: "mappingMode",
-            cmd: true
+            cmd: true,
           })
         );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

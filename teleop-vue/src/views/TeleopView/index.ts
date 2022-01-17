@@ -1,1 +1,1 @@
-export { default as TeleopView} from "./TeleopView.vue";
+export { default as TeleopView } from "./TeleopView.vue";

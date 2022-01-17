@@ -3,7 +3,7 @@
   <div class="modal" v-click-away="toggleShowSettings">
     <h3>Device Settings</h3>
     <div class="row">
-      <p style="margin-right: 1rem;">Select audio device:</p>
+      <p style="margin-right: 1rem">Select audio device:</p>
       <select v-model="audioSelected" id="audioSelector">
         <option
           v-for="device in microphones"
@@ -15,7 +15,7 @@
       </select>
     </div>
     <div class="row">
-      <p style="margin-right: 1rem;">Select video device:</p>
+      <p style="margin-right: 1rem">Select video device:</p>
       <select v-model="videoSelected" id="videoSelector">
         <option
           v-for="device in cameras"
@@ -27,17 +27,13 @@
       </select>
     </div>
     <video
-      style="width: 300px; background-color: black;"
+      style="width: 300px; background-color: black"
       ref="testVideoRef"
       class="mirror-y"
     ></video>
     <div class="row">
-      <button @click="toggleShowSettings">
-        Cancel
-      </button>
-      <button @click="onNewDevice">
-        Apply
-      </button>
+      <button @click="toggleShowSettings">Cancel</button>
+      <button @click="onNewDevice">Apply</button>
     </div>
   </div>
 </template>
@@ -49,14 +45,14 @@ import { useMicrophones } from "./useMicrophones";
 import { computed } from "@vue/runtime-core";
 import {
   fetchLocalStream,
-  initStreamConfiguration
+  initStreamConfiguration,
 } from "@/store/modules/opentera";
 
 export default {
   data() {
     return {
       audioSelected: this.microphone.deviceId,
-      videoSelected: this.camera.deviceId
+      videoSelected: this.camera.deviceId,
     };
   },
   setup() {
@@ -64,11 +60,11 @@ export default {
     const { microphone, microphones } = useMicrophones();
 
     const camerasLabels = computed(() => {
-      cameras.value.map(device => device.label);
+      cameras.value.map((device) => device.label);
     });
 
     const microphonesLabels = computed(() => {
-      microphones.value.map(device => device.label);
+      microphones.value.map((device) => device.label);
     });
 
     return {
@@ -77,13 +73,13 @@ export default {
       camerasLabels,
       microphone,
       microphones,
-      microphonesLabels
+      microphonesLabels,
     };
   },
   computed: {
     localStream() {
       return this.$store.state.localClient.openteraVideoConf.localStream;
-    }
+    },
   },
   methods: {
     async onNewDevice() {
@@ -93,7 +89,7 @@ export default {
         "localClient/openteraVideoConf/setLocalStream",
         await fetchLocalStream({
           video: { deviceId: { exact: this.videoSelected } },
-          audio: { deviceId: { exact: this.audioSelected } }
+          audio: { deviceId: { exact: this.audioSelected } },
         })
       );
       await this.reconnect();
@@ -136,10 +132,10 @@ export default {
       testVideoRef.muted = true;
       testVideoRef.srcObject = await fetchLocalStream({
         video: { deviceId: { exact: this.videoSelected } },
-        audio: { deviceId: { exact: this.microphone.deviceId } }
+        audio: { deviceId: { exact: this.microphone.deviceId } },
       });
       testVideoRef.autoplay = true;
-    }
+    },
   },
   watch: {
     async videoSelected() {
@@ -150,8 +146,8 @@ export default {
     },
     microphones() {
       this.audioSelected = this.microphones[0].deviceId;
-    }
-  }
+    },
+  },
 };
 </script>
 

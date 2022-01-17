@@ -1,20 +1,19 @@
 .container-fluid {
-    height: 100%;
-    padding-right: .75rem;
-    padding-left: .75rem;
-    padding-top: .75rem;
-    padding-bottom: .75rem;
+  height: 100%;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 .container-fluid > * {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
-
 @media only screen and (min-width: 600px) and (max-width: 991.98px) and (orientation: portrait) {
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-    }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
 }

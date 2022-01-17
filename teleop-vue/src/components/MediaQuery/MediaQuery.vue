@@ -10,23 +10,23 @@ export default {
   props: {
     query: {
       type: String,
-      required: true
+      required: true,
     },
     visible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       matches: this.visible,
-      mediaQueryList: null
+      mediaQueryList: null,
     };
   },
   methods: {
     updateMatches() {
       this.matches = this.mediaQueryList.matches;
-    }
+    },
   },
   mounted() {
     this.mediaQueryList = window.matchMedia(this.query);
@@ -36,7 +36,7 @@ export default {
   beforeUnmount() {
     if (this.mediaQueryList)
       this.mediaQueryList.removeListener(this.updateMatches);
-  }
+  },
 };
 </script>
 

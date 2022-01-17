@@ -11,7 +11,7 @@
           class="inner"
           v-bind:class="{
             hidden: n <= nbOfChargeBars - chargeBars,
-            low: lowBattery
+            low: lowBattery,
           }"
         />
       </div>
@@ -28,13 +28,13 @@ import { SvgIcon } from "@/components/SvgIcon";
 export default {
   name: "battery-indicator",
   components: {
-    SvgIcon
+    SvgIcon,
   },
   data() {
     return {
       chargeBars: 0,
       nbOfChargeBars: 6,
-      lowBattery: true
+      lowBattery: true,
     };
   },
   computed: {
@@ -45,12 +45,12 @@ export default {
     },
     isCharging() {
       return this.$store.state.localClient.openteraTeleop.status.isCharging;
-    }
+    },
   },
   watch: {
     batteryLevel() {
       this.onBatteryLevelChanged(this.batteryLevel);
-    }
+    },
   },
   methods: {
     onBatteryLevelChanged(level) {
@@ -60,8 +60,8 @@ export default {
       } else {
         this.lowBattery = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

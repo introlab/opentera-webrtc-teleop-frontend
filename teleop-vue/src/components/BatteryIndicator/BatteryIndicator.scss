@@ -1,16 +1,16 @@
 .battery-indicator {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5%;
-    height: 1.5rem;
-    width: 3.5rem;
-    box-sizing: border-box;
-    --fill-color: white;
-    --border-color: white;
-    --font-size: 85%;
-    --border-radius: 1px;
-    --border-width: 1px;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5%;
+  height: 1.5rem;
+  width: 3.5rem;
+  box-sizing: border-box;
+  --fill-color: white;
+  --border-color: white;
+  --font-size: 85%;
+  --border-radius: 1px;
+  --border-width: 1px;
 }
 
 .battery {
@@ -61,7 +61,7 @@
   display: inline-flex;
   box-sizing: border-box;
   width: 70%;
-  height: auto
+  height: auto;
 }
 
 .percentage {

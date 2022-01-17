@@ -46,11 +46,11 @@ export function makePromiseState<T>(
   let isPending = true;
 
   const result: PromiseState<T> = promise.then(
-    value => {
+    (value) => {
       isPending = false;
       return value;
     },
-    err => {
+    (err) => {
       isPending = false;
       throw err;
     }

@@ -3,7 +3,7 @@ import {
   IceServer,
   RtcConfiguration,
   SignalingServerConfiguration,
-  StreamConfiguration
+  StreamConfiguration,
 } from "./types";
 import { getBasePath, getOrigin } from "@/config/location";
 import { getSignalingServerURL } from "./utils";
@@ -16,7 +16,7 @@ export function initSignalingServerConfiguration(
     name: payload.name,
     data: payload.data,
     room: payload.room,
-    password: payload.password
+    password: payload.password,
   };
 }
 
@@ -25,7 +25,7 @@ export function initStreamConfiguration(
 ): StreamConfiguration {
   return {
     localStream: localStream,
-    isSendOnly: false
+    isSendOnly: false,
   };
 }
 
@@ -46,7 +46,7 @@ export async function initRtcConfiguration(
       .fetchFromServer(url, password)
       .then((config: Array<IceServer>) =>
         resolve({
-          iceServers: config
+          iceServers: config,
         })
       )
       .catch((err: Error) => reject(err));

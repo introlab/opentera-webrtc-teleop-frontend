@@ -11,6 +11,6 @@ export default createStore<any>({
   actions: {},
   modules: {
     router: Router,
-    localClient: ClientStore
-  }
+    localClient: ClientStore,
+  },
 });

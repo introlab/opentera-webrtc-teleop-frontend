@@ -8,21 +8,21 @@
   height: 100vh;
 }
 .container-fluid {
-    height: 100%;
+  height: 100%;
 }
 
 .toolbar {
-    --transition-speed: 500ms;
-    --default-height: 0px;
-    --hovering-height: 7rem;
-    --hovering-video-height: 6rem;
+  --transition-speed: 500ms;
+  --default-height: 0px;
+  --hovering-height: 7rem;
+  --hovering-video-height: 6rem;
 
-    position: absolute;
-    bottom: 0px;
-    width: 100vw;
-    height: var(--default-height);
-    transition: height var(--transition-speed) ease-in-out;
-    pointer-events: none;
+  position: absolute;
+  bottom: 0px;
+  width: 100vw;
+  height: var(--default-height);
+  transition: height var(--transition-speed) ease-in-out;
+  pointer-events: none;
 }
 
 .participants-enter-active,
@@ -87,7 +87,7 @@
 
 .row100 {
   height: 100%;
-  width: 100%
+  width: 100%;
 }
 
 .gutter {

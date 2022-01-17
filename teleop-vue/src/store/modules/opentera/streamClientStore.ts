@@ -5,7 +5,7 @@ import { fetchLocalStream } from ".";
 import {
   initRtcConfiguration,
   initSignalingServerConfiguration,
-  initStreamConfiguration
+  initStreamConfiguration,
 } from "./init";
 import { SignalingClientStore } from "./signalingClientStore";
 import {
@@ -13,7 +13,7 @@ import {
   SignalingClientContext,
   SignalingServerConfiguration,
   StreamClientContext,
-  StreamClientState
+  StreamClientState,
 } from "./types";
 
 export class StreamClientStore extends SignalingClientStore {
@@ -34,7 +34,7 @@ export class StreamClientStore extends SignalingClientStore {
       cameraDisplayMode: 0,
       showControls: true,
       showSettings: false,
-      clientsInCall: []
+      clientsInCall: [],
     };
   }
 
@@ -52,7 +52,7 @@ export class StreamClientStore extends SignalingClientStore {
 
       removeClientIncallById(state: StreamClientState, payload: string) {
         state.clientsInCall = state.clientsInCall.filter(
-          client => client.id !== payload
+          (client) => client.id !== payload
         );
       },
 
@@ -70,7 +70,7 @@ export class StreamClientStore extends SignalingClientStore {
 
       toggleShowSettings(state: StreamClientState) {
         state.showSettings = !state.showSettings;
-      }
+      },
     };
   }
 
@@ -93,7 +93,7 @@ export class StreamClientStore extends SignalingClientStore {
     );
     const rtcConfiguration = await initRtcConfiguration(
       payload.password
-    ).catch(err => context.state.logger(err));
+    ).catch((err) => context.state.logger(err));
 
     context.commit(
       "setClient",
@@ -121,7 +121,7 @@ export class StreamClientStore extends SignalingClientStore {
         id: id,
         name: name,
         data: clientData,
-        stream: stream
+        stream: stream,
       });
     };
   }

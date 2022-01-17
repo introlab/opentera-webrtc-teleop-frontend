@@ -28,7 +28,7 @@ import { BusyException } from "@/store/modules/opentera";
 import { VideoConference } from "@/components/VideoConference";
 import { ButtonConference } from "@/components/ButtonConference";
 import { ParticipantsList } from "@/components/ParticipantsList";
-import UserVideo from '@/components/UserVideo/UserVideo.vue';
+import UserVideo from "@/components/UserVideo/UserVideo.vue";
 
 export default {
   name: "conference-view",
@@ -36,18 +36,18 @@ export default {
     VideoConference,
     ButtonConference,
     ParticipantsList,
-    UserVideo
+    UserVideo,
   },
   data() {
     return {
-      client: null
+      client: null,
     };
   },
   props: {
     name: String,
     data: Object,
     room: String,
-    password: String
+    password: String,
   },
   setup() {
     const toolbarRef = ref(null);
@@ -55,7 +55,7 @@ export default {
 
     return {
       toolbarRef,
-      showToolbar
+      showToolbar,
     };
   },
   computed: {
@@ -67,11 +67,11 @@ export default {
     },
     showParticipants() {
       return this.$store.state.localClient.openteraVideoConf.showParticipants;
-    }
+    },
   },
   unmounted() {
     this.$store.dispatch("localClient/destroy");
-  }
+  },
 };
 </script>
 
