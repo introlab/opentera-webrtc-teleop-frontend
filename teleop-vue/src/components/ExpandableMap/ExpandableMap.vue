@@ -66,6 +66,9 @@
         <action-button label="+" class="zoom-button" @clicked="zoomIn" />
         <action-button label="-" class="zoom-button" @clicked="zoomOut" />
       </div>
+      <div v-show="isExpanded" class="map-view-select">
+        <dropdown name="test" :options="mapViews"></dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -115,6 +118,16 @@ export default {
       touchTimeout: null,
       preMouseDown: false,
       prematureTouchEnd: false,
+      mapViews: [
+        {
+          value: "centered-robot",
+          text: "Centered Robot",
+        },
+        {
+          value: "static-map",
+          text: "Static Map",
+        },
+      ],
     };
   },
   computed: {
