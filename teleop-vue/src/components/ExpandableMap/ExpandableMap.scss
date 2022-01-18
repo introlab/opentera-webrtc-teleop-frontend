@@ -107,6 +107,20 @@
   z-index: 2;
 }
 
+.map-view-select {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  top: 0;
+  left: 0;
+  margin: 0.65rem 1.5rem;
+  z-index: 2;
+  --background-color: rgb(149, 131, 90);
+  --border-color: rgb(88, 78, 53);
+  --hover-background-color: rgb(209, 184, 125);
+}
+
 .reset-button {
   background-color: blue;
   border-color: darkblue;

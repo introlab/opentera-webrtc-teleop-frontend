@@ -67,7 +67,13 @@
         <action-button label="-" class="zoom-button" @clicked="zoomOut" />
       </div>
       <div v-show="isExpanded" class="map-view-select">
-        <dropdown name="test" :options="mapViews"></dropdown>
+        <dropdown
+          class="map-view-select"
+          name="map-view-select"
+          label="Map view: "
+          @changed="changeMapView"
+          :options="mapViews"
+        ></dropdown>
       </div>
     </div>
   </div>
@@ -77,6 +83,7 @@
 import { SvgIcon } from "@/components/SvgIcon";
 import WaypointOverlay from "@/components/WaypointOverlay/WaypointOverlay.vue";
 import ActionButton from "@/components/ActionButton/ActionButton.vue";
+import Dropdown from "@/components/Dropdown/Dropdown.vue";
 
 export default {
   name: "expandable-map",
@@ -84,6 +91,7 @@ export default {
     SvgIcon,
     WaypointOverlay,
     ActionButton,
+    Dropdown,
   },
   props: {
     translation: {
@@ -383,6 +391,17 @@ export default {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "stop", state: true })
+        );
+      }
+    },
+    changeMapView(event) {
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({
+            type: "changeMapView",
+            new: event.new,
+            old: event.old,
+          })
         );
       }
     },

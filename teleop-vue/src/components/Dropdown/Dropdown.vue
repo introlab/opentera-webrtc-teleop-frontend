@@ -1,12 +1,21 @@
 <template>
-  <select v-bind:name="name" v-bind:id="name" v-on:change="onChange(this)">
-    <option
-      v-for="opt in options"
-      v-bind:value="opt.value"
-      v-bind:key="opt.value"
-      >{{ opt.text }}</option
+  <span class="span">
+    <label class="label">{{ label }}</label>
+    <select
+      ref="select"
+      class="select"
+      v-bind:name="name"
+      v-bind:id="name"
+      v-on:change="onChange"
     >
-  </select>
+      <option
+        v-for="opt in options"
+        v-bind:value="opt.value"
+        v-bind:key="opt.value"
+        >{{ opt.text }}</option
+      >
+    </select>
+  </span>
 </template>
 
 <script>
@@ -17,23 +26,28 @@ export default {
       type: String,
       required: true,
     },
+    label: {
+      type: String,
+      required: false,
+    },
     options: {
       type: Array,
       required: true,
     },
-  },
-  data: {
-    recent: null,
+    default: {
+      type: String,
+      required: false,
+    },
   },
   data() {
-    return {};
+    return {
+      recent: null,
+    };
   },
   methods: {
-    onChange(event) {
-      alert(event.source.value);
-      alert(event.target.value);
-      this.recent = event.source.value;
-      this.$emit("changed", event.value);
+    onChange() {
+      this.$emit("changed", { new: this.$refs.select.value, old: this.recent });
+      this.recent = this.$refs.select.value;
     },
   },
 };
