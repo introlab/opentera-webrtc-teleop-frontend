@@ -1,0 +1,41 @@
+.span {
+  display: inline-block;
+  text-align: left;
+  --background-color: darkgrey;
+  --hover-background-color: grey;
+  --border-color: grey;
+  --select-text-color: white;
+  --select-font-size: 0.8rem;
+  --select-font-weight: 400;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+}
+
+.label {
+  padding: 0.5rem 0.1rem;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  color: inherit;
+  transition: all 0.2s ease-in-out;
+}
+
+.select {
+  padding: 0.5rem 0;
+  font-size: var(--select-font-size);
+  font-weight: var(--select-font-weight);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 2px;
+  border-color: var(--border-color);
+  color: var(--select-text-color);
+  background-color: var(--background-color);
+}
+
+.select:hover {
+  background-color: var(--hover-background-color);
+}

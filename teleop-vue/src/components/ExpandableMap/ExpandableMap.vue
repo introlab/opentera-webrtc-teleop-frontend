@@ -66,6 +66,15 @@
         <action-button label="+" class="zoom-button" @clicked="zoomIn" />
         <action-button label="-" class="zoom-button" @clicked="zoomOut" />
       </div>
+      <div v-show="isExpanded" class="map-view-select">
+        <dropdown
+          class="map-view-select"
+          name="map-view-select"
+          label="Map view: "
+          @changed="changeMapView"
+          :options="mapViews"
+        ></dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -74,6 +83,7 @@
 import { SvgIcon } from "@/components/SvgIcon";
 import WaypointOverlay from "@/components/WaypointOverlay/WaypointOverlay.vue";
 import ActionButton from "@/components/ActionButton/ActionButton.vue";
+import Dropdown from "@/components/Dropdown/Dropdown.vue";
 
 export default {
   name: "expandable-map",
@@ -81,6 +91,7 @@ export default {
     SvgIcon,
     WaypointOverlay,
     ActionButton,
+    Dropdown,
   },
   props: {
     translation: {
@@ -115,6 +126,16 @@ export default {
       touchTimeout: null,
       preMouseDown: false,
       prematureTouchEnd: false,
+      mapViews: [
+        {
+          value: "centered-robot",
+          text: "Centered Robot",
+        },
+        {
+          value: "static-map",
+          text: "Static Map",
+        },
+      ],
     };
   },
   computed: {
@@ -370,6 +391,17 @@ export default {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "stop", state: true })
+        );
+      }
+    },
+    changeMapView(event) {
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({
+            type: "changeMapView",
+            new: event.new,
+            old: event.old,
+          })
         );
       }
     },
