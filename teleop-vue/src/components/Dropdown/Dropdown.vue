@@ -34,10 +34,6 @@ export default {
       type: Array,
       required: true,
     },
-    default: {
-      type: String,
-      required: false,
-    },
   },
   data() {
     return {
