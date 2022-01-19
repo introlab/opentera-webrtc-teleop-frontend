@@ -1,0 +1,42 @@
+name: pull-request-audit
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          path: catkin_ws/src/opentera-webrtc-teleop-frontend
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install nodejs npm
+
+      - name: Update npm
+        run: sudo npm install -g npm@latest
+
+      - name: Install the VUE.js frontend
+        working-directory: catkin_ws/src/opentera-webrtc-teleop-frontend/teleop-vue
+        run: |
+          ls -l
+          npm --version
+          node --version
+          npm ci
+          npm run build
