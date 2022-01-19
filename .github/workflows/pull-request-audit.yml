@@ -28,7 +28,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install nodejs npm
-          sudo npm update -g npm
+
+      - name: Update npm
+        run: sudo npm install -g npm@latest
 
       - name: Install the VUE.js frontend
         working-directory: catkin_ws/src/opentera-webrtc-teleop-frontend/teleop-vue
@@ -36,5 +38,5 @@ jobs:
           ls -l
           npm --version
           node --version
-          npm install
+          npm ci
           npm run build
