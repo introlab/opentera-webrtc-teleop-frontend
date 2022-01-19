@@ -19,9 +19,6 @@ jobs:
         with:
           submodules: recursive
           path: catkin_ws/src/opentera-webrtc-teleop-frontend
-      - uses: ros-tooling/setup-ros@v0.2
-        with:
-          required-ros-distributions: noetic
 
       - uses: actions/setup-node@v2
         with:
