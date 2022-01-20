@@ -32,7 +32,7 @@ jobs:
       - name: Update npm
         run: |
           npm --version
-          sudo npm install -g npm@latest
+          sudo npm install -g npm@8.3.1
           npm --version
 
       - name: Install the VUE.js frontend
