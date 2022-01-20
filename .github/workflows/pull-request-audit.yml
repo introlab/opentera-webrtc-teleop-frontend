@@ -27,12 +27,12 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install nodejs npm
+          sudo apt-get install nodejs npm build-essential
 
       - name: Update npm
         run: |
           npm --version
-          sudo npm install -g npm@8.3.1
+          npm install -g npm@8.3.1
           npm --version
 
       - name: Install the VUE.js frontend
