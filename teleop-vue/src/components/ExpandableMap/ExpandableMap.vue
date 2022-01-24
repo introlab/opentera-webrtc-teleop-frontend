@@ -49,31 +49,54 @@
         @touchmove="onTouchMove"
         @touchend="onTouchEnd"
       />
-      <div v-show="isExpanded" class="action-buttons">
-        <action-button
-          label="Reset"
-          class="reset-button"
-          @clicked="clearWaypoints"
-          :disabled="waypointsEmpty"
-        />
-        <action-button
-          label="Start"
-          @clicked="startNavigation"
-          :disabled="waypointsEmpty"
-        />
+      <div v-show="isExpanded" class="nav-zone">
+        <div class="action-buttons">
+          <action-button
+            label="Reset"
+            class="reset-button"
+            @clicked="clearWaypoints"
+            :disabled="waypointsEmpty && !isRobotNavigating"
+          />
+          <action-button
+            label="Start"
+            @clicked="startNavigation"
+            :disabled="waypointsEmpty || isRobotNavigating"
+          />
+        </div>
+        <div class="label-navigation">
+          <dropdown
+            class="label-select"
+            name="label-select"
+            label="Go to label: "
+            ref="labelSelect"
+            @changed="onChangeLabel"
+            :options="labels"
+            :disabled="labelsIsEmpty || isRobotNavigating"
+          ></dropdown>
+          <div class="action-buttons>">
+            <action-button
+              label="Go"
+              class="go-button"
+              @clicked="goToLabel"
+              :disabled="currentLabelIsEmptyString || isRobotNavigating"
+            />
+          </div>
+        </div>
       </div>
-      <div v-show="isExpanded" class="zoom-buttons">
-        <action-button label="+" class="zoom-button" @clicked="zoomIn" />
-        <action-button label="-" class="zoom-button" @clicked="zoomOut" />
-      </div>
-      <div v-show="isExpanded" class="map-view-select">
-        <dropdown
-          class="map-view-select"
-          name="map-view-select"
-          label="Map view: "
-          @changed="changeMapView"
-          :options="mapViews"
-        ></dropdown>
+      <div v-show="isExpanded" class="map-zone">
+        <div class="zoom-buttons">
+          <action-button label="+" class="zoom-button" @clicked="zoomIn" />
+          <action-button label="-" class="zoom-button" @clicked="zoomOut" />
+        </div>
+        <div class="map-view-select">
+          <dropdown
+            class="map-view-select"
+            name="map-view-select"
+            label="Map view: "
+            @changed="changeMapView"
+            :options="mapViews"
+          ></dropdown>
+        </div>
       </div>
     </div>
   </div>
@@ -111,7 +134,6 @@ export default {
       isRobotNavigating: false,
       mapVideoElement: "",
       waypoints: [],
-      waypointsEmpty: true,
       zoom: 1,
       isPinchGesture: false,
       initialPinchDiff: 0,
@@ -136,9 +158,29 @@ export default {
           text: "Static Map",
         },
       ],
+      labels: [
+        {
+          value: "",
+          text: "",
+        },
+        {
+          value: "machin",
+          text: "machin",
+        },
+      ],
+      currentLabel: "",
     };
   },
   computed: {
+    waypointsEmpty() {
+      return this.waypoints.length === 0;
+    },
+    labelsIsEmpty() {
+      return this.labels.length === 1;
+    },
+    currentLabelIsEmptyString() {
+      return this.currentLabel === "";
+    },
     mapClientStream() {
       if (this.$store.state.localClient.openteraMap.clientsInCall.length > 0) {
         return this.$store.state.localClient.openteraMap.clientsInCall[0]
@@ -211,6 +253,9 @@ export default {
     this.mapVideoElement = document.getElementById("map");
   },
   methods: {
+    onChangeLabel(event) {
+      this.currentLabel = event.new;
+    },
     toggleExpand() {
       this.setIsExpanded(!this.isExpanded);
     },
@@ -377,14 +422,13 @@ export default {
     },
     saveWaypoint(event) {
       this.waypoints.push(event);
-      this.waypointsEmpty = false;
       this.sendWaypoints([event]);
     },
     clearWaypoints() {
       this.waypoints = [];
-      this.waypointsEmpty = true;
       this.cancelWaypoints();
       this.resetWaypointReached();
+      this.$refs.labelSelect.setValue("");
     },
     cancelWaypoints() {
       this.isRobotNavigating = false;
@@ -422,6 +466,21 @@ export default {
     },
     resetWaypointReached() {
       this.$store.commit("localClient/openteraTeleop/changeWaypointReached", 0);
+    },
+    goToLabel() {
+      if (!this.currentLabelIsEmptyString) {
+        this.isRobotNavigating = true;
+        if (this.$store.state.localClient.openteraTeleop.client) {
+          this.$store.state.localClient.openteraTeleop.client.sendToAll(
+            JSON.stringify({ type: "goToLabel", label: this.currentLabel })
+          );
+          this.waypoints.push({
+            // Random data, waypoints content is not currently used since they are not drawn anymore
+            type: "label",
+            label: this.currentLabel,
+          });
+        }
+      }
     },
     zoomIn() {
       this.zoom += 0.5;

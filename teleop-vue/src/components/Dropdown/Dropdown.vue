@@ -7,6 +7,7 @@
       v-bind:name="name"
       v-bind:id="name"
       v-on:change="onChange"
+      :disabled="disabled"
     >
       <option
         v-for="opt in options"
@@ -34,16 +35,29 @@ export default {
       type: Array,
       required: true,
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
-      recent: null,
+      recent: "",
     };
   },
   methods: {
     onChange() {
       this.$emit("changed", { new: this.$refs.select.value, old: this.recent });
       this.recent = this.$refs.select.value;
+    },
+    setValue(value) {
+      this.$refs.select.value = value;
+    },
+  },
+  computed: {
+    value() {
+      return this.$refs.select.value;
     },
   },
 };
