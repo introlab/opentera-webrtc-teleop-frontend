@@ -158,20 +158,13 @@ export default {
           text: "Static Map",
         },
       ],
-      labels: [
-        {
-          value: "",
-          text: "",
-        },
-        {
-          value: "machin",
-          text: "machin",
-        },
-      ],
       currentLabel: "",
     };
   },
   computed: {
+    labels() {
+      return this.$store.state.localClient.openteraTeleop.labels;
+    },
     waypointsEmpty() {
       return this.waypoints.length === 0;
     },

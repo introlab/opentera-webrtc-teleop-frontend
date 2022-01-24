@@ -30,15 +30,15 @@ import { NavigationBar } from "@/components/NavigationBar";
 export default {
   name: "default-template",
   components: {
-    NavigationBar
+    NavigationBar,
   },
   props: {
     brand: String,
     route: String,
     client: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapGetters(["router/getSubRoutes"]),
@@ -53,16 +53,16 @@ export default {
 
     dockingStatus() {
       return this.$store.state.localClient.openteraTeleop.dockingStatus;
-    }
+    },
   },
   watch: {
     dockingStatus() {
       this.$flashMessage.show({
         status: "info",
         title: this.dockingStatus,
-        message: ""
+        message: "",
       });
-    }
+    },
   },
   async beforeMount() {
     await this.$store.dispatch("localClient/start", this.client);
@@ -86,13 +86,18 @@ export default {
             "localClient/openteraTeleop/updateDockingStatus",
             parsedMsg.status
           );
+        } else if (parsedMsg.type === "labels") {
+          this.$store.commit(
+            "localClient/openteraTeleop/updateLabels",
+            parsedMsg.labels
+          );
         }
       }
     );
   },
   unmounted() {
     this.$store.dispatch("localClient/destroy");
-  }
+  },
 };
 </script>
 

@@ -36,6 +36,12 @@ export class DataChannelClientStore extends SignalingClientStore {
       },
       waypointReached: 0,
       dockingStatus: "",
+      labels: [
+        {
+          value: "",
+          text: "",
+        },
+      ],
     };
   }
 
@@ -71,6 +77,16 @@ export class DataChannelClientStore extends SignalingClientStore {
       },
       toggleRobotCamera(state: DataChannelClientState) {
         state.status.isCameraOn = !state.status.isCameraOn;
+      },
+      updateLabels(state: DataChannelClientState, payload: Array<string>) {
+        const newLabels = payload.filter((l) => !state.labels.some((l2) => l2.value === l));
+        const removedLabels = state.labels.filter((l) => l.value !== "" && !payload.some((l2) => l2 === l.value));
+        for (const label of removedLabels) {
+          state.labels.splice(state.labels.indexOf(label), 1);
+        }
+        for (const label of newLabels) {
+          state.labels.push({ value: label, text: label });
+        }
       },
     };
   }
