@@ -7,11 +7,13 @@
       <span class="popup-buttons">
         <action-button
           class="popup-button"
+          v-show="cancelShown"
           :label="cancelLabel"
           @click="cancelPressed"
         />
         <action-button
           class="popup-button"
+          v-show="okShown"
           :label="okLabel"
           :disabled="!okEnabled"
           @click="okPressed"
@@ -48,6 +50,16 @@ export default {
     shown: {
       type: Boolean,
       required: true,
+    },
+    okShown: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    cancelShown: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
   },
   methods: {

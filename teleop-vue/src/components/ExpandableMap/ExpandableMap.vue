@@ -28,12 +28,13 @@
         class="popup"
         :okEnabled="!labelNameIsEmpty"
         :shown="showPopup"
+        :cancelShown="!labelCreation.isShowingLabelInfo"
         @ok="createLabel"
-        @cancel="cancelLabelCreation"
+        @cancel="cancelLabel"
       >
         <h2 v-show="labelCreation.isCreatingLabelInfo">Creating new label</h2>
-        <h2 v-show="labelCreation.isEditingLabelInfo">Creating new label</h2>
-        <h2 v-show="labelCreation.isShowingLabelInfo">Creating new label</h2>
+        <h2 v-show="labelCreation.isEditingLabelInfo">Editing label</h2>
+        <h2 v-show="labelCreation.isShowingLabelInfo">Label informations</h2>
         <div class="popup-content">
           <ul class="popup-list">
             <li class="popup-list-row">
@@ -52,14 +53,18 @@
             </li>
             <li class="popup-list-row">
               <label class="popup-list-cell" for="labelDesc">
-                <abbr title="Optional">*</abbr>Description :
+                <abbr
+                  v-show="!labelCreation.isShowingLabelInfo"
+                  title="Optional"
+                  >*</abbr
+                >Description :
               </label>
               <textarea
                 id="labelDesc"
                 name="labelDesc"
                 ref="labelDesc"
                 class="popup-textarea"
-                :readonly="labelCreation.isShowingLabel"
+                :readonly="labelCreation.isShowingLabelInfo"
                 @keyup="validateLabelPopup($event, true)"
               />
             </li>
@@ -411,6 +416,24 @@ export default {
             })
           );
         }
+      } else if (this.labelCreation.isShowingLabelInfo) {
+        this.cancelLabel();
+      } else if (this.labelCreation.isEditingLabelInfo) {
+        this.labelCreation.labelDescField = this.$refs.labelDesc.value;
+        this.labelCreation.isEditingLabelInfo = false;
+        if (this.$store.state.localClient.openteraTeleop.client) {
+          this.$store.state.localClient.openteraTeleop.client.sendToAll(
+            JSON.stringify({
+              type: "editLabel",
+              currentLabel: this.currentLabel,
+              newLabel: {
+                name: this.labelCreation.labelNameField,
+                description: this.labelCreation.labelDescField,
+                coordinate: null,
+              },
+            })
+          );
+        }
       }
     },
     confirmMoveLabel() {
@@ -462,6 +485,18 @@ export default {
     },
     showLabel() {
       this.labelCreation.isShowingLabelInfo = true;
+      sleep(100).then(() => {
+        this.$refs.labelName.value = this.currentLabel;
+        this.$refs.labelDesc.value = this.getLabelDesc(this.currentLabel);
+        this.labelCreation.labelNameField = this.currentLabel;
+      });
+    },
+    editLabel() {
+      this.labelCreation.isEditingLabelInfo = true;
+      sleep(100).then(() => {
+        this.$refs.labelName.value = this.currentLabel;
+        this.$refs.labelDesc.value = this.getLabelDesc(this.currentLabel);
+      });
     },
     getLabelDesc(labelName) {
       return this.$store.state.localClient.openteraTeleop.labelsDesc[labelName];
@@ -621,9 +656,12 @@ export default {
         this.ctrlPressed = true;
       }
     },
-    cancelLabelCreation() {
+    cancelLabel() {
       this.labelCreation.isCreatingLabelCoordinates = false;
       this.labelCreation.isCreatingLabelInfo = false;
+      this.labelCreation.isMovingLabel = false;
+      this.labelCreation.isShowingLabelInfo = false;
+      this.labelCreation.isEditingLabelInfo = false;
     },
     onKeyUp(event) {
       if (event.key === "Control" || event.key === "Meta") {
