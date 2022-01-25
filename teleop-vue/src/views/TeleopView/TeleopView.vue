@@ -53,13 +53,14 @@
         <expandable-map
           :translation="mapTranslation"
           @expansionToggle="onExpansionToggle"
+          @enableKeyboardControls="onEnableKeyboardControls"
           v-show="showControls"
         />
       </div>
     </div>
     <slider
       v-on:maxSpeedChangedEvent="onMaxSpeedChanged"
-      v-show="showControls"
+      v-show="showControls && enableKeyboardTeleop"
     />
     <joystick
       :width="150"
@@ -68,12 +69,12 @@
       v-bind:absolute-max-x="scaledMaxX"
       v-bind:absolute-max-yaw="scaledMaxYaw"
       v-on:joystickPositionChange="updateCmdVel"
-      v-show="showControls"
+      v-show="showControls && enableKeyboardTeleop"
     />
     <keyboard-teleop
       v-bind:absolute-max-x="scaledMaxX"
       v-bind:absolute-max-yaw="scaledMaxYaw"
-      v-bind:enabled="showControls"
+      v-bind:enabled="showControls && enableKeyboardTeleop"
       v-on:keyboardCmdEvent="updateCmdVel"
     />
 
@@ -120,6 +121,7 @@ export default {
       prevMapTranslation: { x: 0, y: 0 },
       mapTranslation: { x: 0, y: 0 },
       isMapExpanded: false,
+      enableKeyboardTeleop: true,
     };
   },
   components: {
@@ -191,6 +193,9 @@ export default {
     },
   },
   methods: {
+    onEnableKeyboardControls(enabled) {
+      this.enableKeyboardTeleop = enabled;
+    },
     updateCmdVel(newCmd) {
       // Update the global velocity command with the command from the keyboard or joystick
       // TODO: prioritize one of the two sources over the other.

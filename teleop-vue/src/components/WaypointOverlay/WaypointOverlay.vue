@@ -76,6 +76,10 @@ export default {
       type: Number,
       default: 30,
     },
+    isCreatingLabel: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -171,7 +175,9 @@ export default {
       if (this.isCreatingNewWp) {
         this.drawWaypoint(this.currentWaypoint);
         this.drawYawArrow(this.currentWaypoint);
-        this.writeWaypointInfos(this.currentWaypoint, this.list.length);
+        if (!this.isCreatingLabel) {
+          this.writeWaypointInfos(this.currentWaypoint, this.list.length);
+        }
       }
     },
     writeWaypointInfos(wp, index) {

@@ -53,6 +53,8 @@ export default {
     },
     setValue(value) {
       this.$refs.select.value = value;
+      this.$emit("changed", { new: this.$refs.select.value, old: this.recent });
+      this.recent = this.$refs.select.value;
     },
   },
   computed: {

@@ -42,6 +42,9 @@ export class DataChannelClientStore extends SignalingClientStore {
           text: "",
         },
       ],
+      labelsDesc: {
+        "": "",
+      },
     };
   }
 
@@ -78,14 +81,16 @@ export class DataChannelClientStore extends SignalingClientStore {
       toggleRobotCamera(state: DataChannelClientState) {
         state.status.isCameraOn = !state.status.isCameraOn;
       },
-      updateLabels(state: DataChannelClientState, payload: Array<string>) {
-        const newLabels = payload.filter((l) => !state.labels.some((l2) => l2.value === l));
-        const removedLabels = state.labels.filter((l) => l.value !== "" && !payload.some((l2) => l2 === l.value));
+      updateLabels(state: DataChannelClientState, payload: Array<Record<string, string>>) {
+        const newLabels = payload.filter((l) => !state.labels.some((l2) => l2.value === l.name));
+        const removedLabels = state.labels.filter((l) => l.value !== "" && !payload.some((l2) => l2.name === l.value));
         for (const label of removedLabels) {
           state.labels.splice(state.labels.indexOf(label), 1);
+          delete state.labelsDesc[label.value];
         }
         for (const label of newLabels) {
-          state.labels.push({ value: label, text: label });
+          state.labels.push({ value: label.name, text: label.name });
+          state.labelsDesc[label.name] = label.description;
         }
       },
     };
