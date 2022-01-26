@@ -1,5 +1,8 @@
 .span {
-  display: inline-block;
+  position: relative;
+  display: flex;
+  flex-direction: inherit;
+  flex-wrap: nowrap;
   text-align: left;
   --background-color: darkgrey;
   --hover-background-color: grey;
@@ -14,17 +17,18 @@
 }
 
 .label {
+  position: relative;
   padding: 0.7rem 0.5rem 0.5rem 0.1rem;
   white-space: nowrap;
   font-size: inherit;
   font-weight: inherit;
   color: inherit;
-  color: inherit;
   transition: all 0.2s ease-in-out;
 }
 
 .select {
-  padding: 0.5rem 0;
+  position: relative;
+  padding: 0.5rem 0.1rem;
   font-size: var(--select-font-size);
   font-weight: var(--select-font-weight);
   cursor: pointer;

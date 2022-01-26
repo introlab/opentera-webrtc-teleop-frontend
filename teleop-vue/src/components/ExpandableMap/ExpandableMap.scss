@@ -55,6 +55,10 @@
 }
 
 .left {
+  margin-right: auto;
+}
+
+.right {
   margin-left: auto;
 }
 
@@ -85,61 +89,31 @@
   z-index: 1;
 }
 
-.map-zone {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  top: 0;
-  left: 0;
+.zone {
   margin: 0.5rem;
   z-index: 2;
+  --padding-top: 1rem;
 }
 
-.nav-zone {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  top: 0;
-  right: 0;
-  margin: 0.5rem;
-  z-index: 2;
+.map-color {
+  --background-color: rgb(149, 131, 90);
+  --border-color: rgb(88, 78, 53);
+  --hover-background-color: rgb(219, 197, 146);
 }
 
-.action-buttons {
-  top: 0;
-  right: 0;
-}
-
-.zoom-buttons {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  top: 0;
-  left: 0;
+.float-right {
+  float: right;
 }
 
 .map-view-select {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  top: 0.4rem;
-  left: 1.2rem;
-  --background-color: rgb(149, 131, 90);
-  --border-color: rgb(88, 78, 53);
-  --hover-background-color: rgb(209, 184, 125);
+  top: 0.6rem;
+  left: 0.3rem;
+  --background-color: inherit;
+  --border-color: inherit;
+  --hover-background-color: inherit;
 }
 
 .label-select {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  top: 0;
-  right: 2.3rem;
   --select-width: 20rem;
   --background-color: rgb(121, 32, 121);
   --border-color: rgb(32, 8, 32);
@@ -147,24 +121,26 @@
 }
 
 .flex-rows {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
 }
 
-.label-navigation {
-  top: 2.8rem;
-  right: 0;
+.fit-content {
+  width: fit-content;
+  height: fit-content;
 }
 
-.label-navigation-next-row {
-  top: 2.3rem;
-  right: 0;
+.label-navigation {
+  padding-top: 0.5rem;
+  --background-color: rgb(121, 32, 121);
+  --border-color: rgb(32, 8, 32);
+  --hover-background-color: rgb(145, 59, 145);
 }
 
 .flex-cols {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -177,9 +153,9 @@
 }
 
 .go-button {
-  background-color: rgb(121, 32, 121);
-  border-color: rgb(32, 8, 32);
-  --hover-background-color: rgb(145, 59, 145);
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+  --hover-background-color: inherit;
 }
 
 .label-button {
@@ -188,9 +164,9 @@
 }
 
 .zoom-button {
-  background-color: rgb(149, 131, 90);
-  border-color: rgb(88, 78, 53);
-  --hover-background-color: rgb(209, 184, 125);
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+  --hover-background-color: inherit;
   font-size: larger;
 }
 

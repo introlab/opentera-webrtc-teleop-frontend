@@ -7,7 +7,7 @@
     <div class="header" id="map-header">
       <div class="title">Map</div>
       <button
-        class="icon-button left expand-button-icon"
+        class="icon-button right expand-button-icon"
         type="button"
         @click="toggleExpand"
       >
@@ -105,91 +105,105 @@
         @touchmove="onTouchMove"
         @touchend="onTouchEnd"
       />
-      <div v-show="isExpanded" class="nav-zone">
-        <div class="action-buttons">
-          <action-button
-            label="Reset"
-            class="reset-button"
-            @clicked="clearWaypoints"
-            :disabled="waypointsEmpty && !isRobotNavigating"
-          />
-          <action-button
-            label="Start"
-            @clicked="startNavigation"
-            :disabled="waypointsEmpty || isRobotNavigating"
-          />
-        </div>
-        <div class="label-navigation flex-rows">
-          <dropdown
-            class="label-select"
-            name="label-select"
-            label="Go to label: "
-            ref="labelSelect"
-            @changed="onChangeLabel"
-            :options="labels"
-            :disabled="labelsIsEmpty || isRobotNavigating"
-          ></dropdown>
-          <div class="flex-rows action-buttons">
+      <dropdown-menu
+        v-show="isExpanded"
+        class="zone float-right flex-cols fit-content"
+        label="Navigation"
+        align="right"
+      >
+        <div class="flex-cols fit-content">
+          <div class="flex-rows fit-content right">
             <action-button
-              label="Go"
-              class="go-button"
-              @clicked="goToLabel"
-              :disabled="
-                !waypointsEmpty ||
-                  currentLabelIsEmptyString ||
-                  isRobotNavigating
-              "
+              label="Reset"
+              class="reset-button fit-content"
+              @clicked="clearWaypoints"
+              :disabled="waypointsEmpty && !isRobotNavigating"
+            />
+            <action-button
+              label="Start"
+              class="fit-content"
+              @clicked="startNavigation"
+              :disabled="waypointsEmpty || isRobotNavigating"
             />
           </div>
-          <div class="flex-rows label-navigation-next-row">
-            <action-button
-              label="+"
-              class="label-button go-button"
-              @clicked="addLabel"
-              :disabled="isRobotNavigating"
-            />
-            <action-button
-              label="-"
-              class="label-button go-button"
-              @clicked="removeLabel"
-              :disabled="currentLabelIsEmptyString || isRobotNavigating"
-            />
-            <action-button
-              label="✎"
-              class="label-button go-button"
-              @clicked="editLabel"
-              :disabled="currentLabelIsEmptyString || isRobotNavigating"
-            />
-            <action-button
-              label="✥"
-              class="label-button go-button"
-              @clicked="moveLabel"
-              :disabled="currentLabelIsEmptyString || isRobotNavigating"
-            />
-            <action-button
-              label="&#x2139;"
-              class="label-button go-button"
-              @clicked="showLabel"
-              :disabled="currentLabelIsEmptyString || isRobotNavigating"
-            />
+          <div class="label-navigation flex-cols fit-content">
+            <div class="flex-rows fit-content">
+              <dropdown
+                class="label-select fit-content flex-rows"
+                name="label-select"
+                label="Go to label: "
+                ref="labelSelect"
+                @changed="onChangeLabel"
+                :options="labels"
+                :disabled="labelsIsEmpty || isRobotNavigating"
+              ></dropdown>
+              <div class="flex-rows fit-content">
+                <action-button
+                  label="Go"
+                  class="go-button fit-content"
+                  @clicked="goToLabel"
+                  :disabled="
+                    !waypointsEmpty ||
+                      currentLabelIsEmptyString ||
+                      isRobotNavigating
+                  "
+                />
+              </div>
+            </div>
+            <div class="flex-rows fit-content right">
+              <action-button
+                label="+"
+                class="label-button go-button fit-content"
+                @clicked="addLabel"
+                :disabled="isRobotNavigating"
+              />
+              <action-button
+                label="-"
+                class="label-button go-button fit-content"
+                @clicked="removeLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+              <action-button
+                label="✎"
+                class="label-button go-button fit-content"
+                @clicked="editLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+              <action-button
+                label="✥"
+                class="label-button go-button fit-content"
+                @clicked="moveLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+              <action-button
+                label="&#x2139;"
+                class="label-button go-button fit-content"
+                @clicked="showLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div v-show="isExpanded" class="map-zone">
-        <div class="zoom-buttons">
-          <action-button label="+" class="zoom-button" @clicked="zoomIn" />
-          <action-button label="-" class="zoom-button" @clicked="zoomOut" />
-        </div>
-        <div class="map-view-select">
+      </dropdown-menu>
+      <dropdown-menu
+        v-show="isExpanded"
+        class="map-color zone flex-cols fit-content"
+        label="Map"
+      >
+        <div class="flex-rows">
+          <div class="flex-cols fit-content">
+            <action-button label="+" class="zoom-button" @clicked="zoomIn" />
+            <action-button label="-" class="zoom-button" @clicked="zoomOut" />
+          </div>
           <dropdown
-            class="map-view-select"
+            class="map-view-select flex-cols"
             name="map-view-select"
             label="Map view: "
             @changed="changeMapView"
             :options="mapViews"
           ></dropdown>
         </div>
-      </div>
+      </dropdown-menu>
     </div>
   </div>
 </template>
@@ -204,6 +218,7 @@ import WaypointOverlay from "@/components/WaypointOverlay/WaypointOverlay.vue";
 import ActionButton from "@/components/ActionButton/ActionButton.vue";
 import Dropdown from "@/components/Dropdown/Dropdown.vue";
 import Popup from "@/components/Popup/Popup.vue";
+import DropdownMenu from "@/components/DropdownMenu/DropdownMenu.vue";
 
 export default {
   name: "expandable-map",
@@ -213,6 +228,7 @@ export default {
     ActionButton,
     Dropdown,
     Popup,
+    DropdownMenu,
   },
   props: {
     translation: {

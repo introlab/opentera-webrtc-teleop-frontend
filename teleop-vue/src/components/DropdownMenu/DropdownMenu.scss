@@ -1,0 +1,40 @@
+.div {
+  display: inline-block;
+  transition: all 1s ease-in-out;
+  --padding-top: 0;
+}
+
+.toggle-button {
+  position: relative;
+  display: inline-block;
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem;
+  width: fit-content;
+  height: fit-content;
+}
+
+.left {
+  margin-right: auto;
+}
+
+.right {
+  margin-left: auto;
+}
+
+.icon {
+  font-size: larger;
+  font-weight: 600;
+  width: 1rem;
+  color: inherit;
+  padding: 0.4rem;
+}
+
+.inner {
+  display: inline-block;
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  transition: all 1s ease-in-out;
+  padding-top: var(--padding-top);
+}
