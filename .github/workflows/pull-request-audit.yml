@@ -27,10 +27,13 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install nodejs npm
+          sudo apt-get install nodejs npm build-essential
 
       - name: Update npm
-        run: sudo npm install -g npm@latest
+        run: |
+          npm --version
+          npm install -g npm@latest
+          npm --version
 
       - name: Install the VUE.js frontend
         working-directory: catkin_ws/src/opentera-webrtc-teleop-frontend/teleop-vue

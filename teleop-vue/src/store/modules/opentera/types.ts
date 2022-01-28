@@ -85,6 +85,8 @@ export interface DataChannelClientState extends SignalingClientRoom {
   status: RobotStatus;
   waypointReached: number;
   dockingStatus: string;
+  labels: Array<{ value: string; text: string }>;
+  labelsDesc: Record<string, string>;
 }
 
 export interface RoomClient {

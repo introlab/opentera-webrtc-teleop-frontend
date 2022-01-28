@@ -7,7 +7,7 @@
     <div class="header" id="map-header">
       <div class="title">Map</div>
       <button
-        class="icon-button left expand-button-icon"
+        class="icon-button right expand-button-icon"
         type="button"
         @click="toggleExpand"
       >
@@ -15,7 +15,62 @@
         <svg-icon v-show="!isExpanded" icon="expand"></svg-icon>
       </button>
     </div>
-    <div class="body" id="mapBody" v-bind:class="{ pointer: isExpanded }">
+    <div
+      class="body"
+      id="mapBody"
+      v-bind:class="{
+        pointer: isExpanded && !selectingLabelPosition,
+        crosshair: isExpanded && selectingLabelPosition,
+      }"
+    >
+      <popup
+        ref="labelCreationPopup"
+        class="popup"
+        :okEnabled="!labelNameIsEmpty"
+        :shown="showPopup"
+        :cancelShown="!labelCreation.isShowingLabelInfo"
+        @ok="createLabel"
+        @cancel="cancelLabel"
+      >
+        <h2 v-show="labelCreation.isCreatingLabelInfo">Creating new label</h2>
+        <h2 v-show="labelCreation.isEditingLabelInfo">Editing label</h2>
+        <h2 v-show="labelCreation.isShowingLabelInfo">Label informations</h2>
+        <div class="popup-content">
+          <ul class="popup-list">
+            <li class="popup-list-row">
+              <label class="popup-list-cell" for="labelName">Name : </label>
+              <input
+                id="labelName"
+                name="labelName"
+                ref="labelName"
+                type="text"
+                class="popup-text-field"
+                required
+                :readonly="labelCreation.isShowingLabelInfo"
+                @input="onChangeLabelName"
+                @keyup="validateLabelPopup($event, false)"
+              />
+            </li>
+            <li class="popup-list-row">
+              <label class="popup-list-cell" for="labelDesc">
+                <abbr
+                  v-show="!labelCreation.isShowingLabelInfo"
+                  title="Optional"
+                  >*</abbr
+                >Description :
+              </label>
+              <textarea
+                id="labelDesc"
+                name="labelDesc"
+                ref="labelDesc"
+                class="popup-textarea"
+                :readonly="labelCreation.isShowingLabelInfo"
+                @keyup="validateLabelPopup($event, true)"
+              />
+            </li>
+          </ul>
+        </div>
+      </popup>
       <video
         ref="video"
         id="map"
@@ -35,8 +90,9 @@
         :pan="pan"
         :map-size="{ width: 1000, height: 1000 }"
         :nb-of-waypoint="-1"
-        wp-color="#00d456"
+        :wp-color="waypointColor"
         :video-element="mapVideoElement"
+        :isCreatingLabel="selectingLabelPosition"
         @newWaypoint="saveWaypoint"
         @removeWaypoint="removeWaypoint"
         @wheel="onWheel"
@@ -49,41 +105,120 @@
         @touchmove="onTouchMove"
         @touchend="onTouchEnd"
       />
-      <div v-show="isExpanded" class="action-buttons">
-        <action-button
-          label="Reset"
-          class="reset-button"
-          @clicked="clearWaypoints"
-          :disabled="waypointsEmpty"
-        />
-        <action-button
-          label="Start"
-          @clicked="startNavigation"
-          :disabled="waypointsEmpty"
-        />
-      </div>
-      <div v-show="isExpanded" class="zoom-buttons">
-        <action-button label="+" class="zoom-button" @clicked="zoomIn" />
-        <action-button label="-" class="zoom-button" @clicked="zoomOut" />
-      </div>
-      <div v-show="isExpanded" class="map-view-select">
-        <dropdown
-          class="map-view-select"
-          name="map-view-select"
-          label="Map view: "
-          @changed="changeMapView"
-          :options="mapViews"
-        ></dropdown>
-      </div>
+      <dropdown-menu
+        v-show="isExpanded"
+        class="zone float-right flex-cols fit-content"
+        label="Navigation"
+        align="right"
+      >
+        <div class="flex-cols fit-content">
+          <div class="flex-rows fit-content right">
+            <action-button
+              label="Reset"
+              class="reset-button fit-content"
+              @clicked="clearWaypoints"
+              :disabled="waypointsEmpty && !isRobotNavigating"
+            />
+            <action-button
+              label="Start"
+              class="fit-content"
+              @clicked="startNavigation"
+              :disabled="waypointsEmpty || isRobotNavigating"
+            />
+          </div>
+          <div class="label-navigation flex-cols fit-content">
+            <div class="flex-rows fit-content">
+              <dropdown
+                class="label-select fit-content flex-rows"
+                name="label-select"
+                label="Go to label: "
+                ref="labelSelect"
+                @changed="onChangeLabel"
+                :options="labels"
+                :disabled="labelsIsEmpty || isRobotNavigating"
+              ></dropdown>
+              <div class="flex-rows fit-content">
+                <action-button
+                  label="Go"
+                  class="go-button fit-content"
+                  @clicked="goToLabel"
+                  :disabled="
+                    !waypointsEmpty ||
+                      currentLabelIsEmptyString ||
+                      isRobotNavigating
+                  "
+                />
+              </div>
+            </div>
+            <div class="flex-rows fit-content right">
+              <action-button
+                label="+"
+                class="label-button go-button fit-content"
+                @clicked="addLabel"
+                :disabled="isRobotNavigating"
+              />
+              <action-button
+                label="-"
+                class="label-button go-button fit-content"
+                @clicked="removeLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+              <action-button
+                label="✎"
+                class="label-button go-button fit-content"
+                @clicked="editLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+              <action-button
+                label="✥"
+                class="label-button go-button fit-content"
+                @clicked="moveLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+              <action-button
+                label="&#x2139;"
+                class="label-button go-button fit-content"
+                @clicked="showLabel"
+                :disabled="currentLabelIsEmptyString || isRobotNavigating"
+              />
+            </div>
+          </div>
+        </div>
+      </dropdown-menu>
+      <dropdown-menu
+        v-show="isExpanded"
+        class="map-color zone flex-cols fit-content"
+        label="Map"
+      >
+        <div class="flex-rows">
+          <div class="flex-cols fit-content">
+            <action-button label="+" class="zoom-button" @clicked="zoomIn" />
+            <action-button label="-" class="zoom-button" @clicked="zoomOut" />
+          </div>
+          <dropdown
+            class="map-view-select flex-cols"
+            name="map-view-select"
+            label="Map view: "
+            @changed="changeMapView"
+            :options="mapViews"
+          ></dropdown>
+        </div>
+      </dropdown-menu>
     </div>
   </div>
 </template>
 
 <script>
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 import { SvgIcon } from "@/components/SvgIcon";
 import WaypointOverlay from "@/components/WaypointOverlay/WaypointOverlay.vue";
 import ActionButton from "@/components/ActionButton/ActionButton.vue";
 import Dropdown from "@/components/Dropdown/Dropdown.vue";
+import Popup from "@/components/Popup/Popup.vue";
+import DropdownMenu from "@/components/DropdownMenu/DropdownMenu.vue";
 
 export default {
   name: "expandable-map",
@@ -92,6 +227,8 @@ export default {
     WaypointOverlay,
     ActionButton,
     Dropdown,
+    Popup,
+    DropdownMenu,
   },
   props: {
     translation: {
@@ -111,7 +248,6 @@ export default {
       isRobotNavigating: false,
       mapVideoElement: "",
       waypoints: [],
-      waypointsEmpty: true,
       zoom: 1,
       isPinchGesture: false,
       initialPinchDiff: 0,
@@ -136,9 +272,60 @@ export default {
           text: "Static Map",
         },
       ],
+      currentLabel: "",
+      labelCreation: {
+        isCreatingLabelInfo: false,
+        isCreatingLabelCoordinates: false,
+        isMovingLabel: false,
+        isEditingLabelInfo: false,
+        isShowingLabelInfo: false,
+        labelNameField: "",
+        labelDescField: "",
+        labelCoordinates: {
+          x: -1,
+          y: -1,
+          yaw: 0,
+        },
+      },
     };
   },
   computed: {
+    showPopup() {
+      return (
+        (this.labelCreation.isCreatingLabelInfo ||
+          this.labelCreation.isShowingLabelInfo ||
+          this.labelCreation.isEditingLabelInfo) &&
+        !this.isRobotNavigating
+      );
+    },
+    selectingLabelPosition() {
+      return (
+        this.labelCreation.isCreatingLabelCoordinates ||
+        this.labelCreation.isMovingLabel
+      );
+    },
+    waypointColor() {
+      if (this.selectingLabelPosition) {
+        return "#d916d9";
+      } else {
+        return "#00d456";
+      }
+    },
+    labelNameIsEmpty() {
+      return this.labelCreation.labelNameField.length === 0;
+    },
+    labels() {
+      return this.$store.state.localClient.openteraTeleop.labels;
+    },
+    waypointsEmpty() {
+      return this.waypoints.length === 0;
+    },
+    labelsIsEmpty() {
+      return this.labels.length === 1;
+    },
+    currentLabelIsEmptyString() {
+      return this.currentLabel === "";
+    },
     mapClientStream() {
       if (this.$store.state.localClient.openteraMap.clientsInCall.length > 0) {
         return this.$store.state.localClient.openteraMap.clientsInCall[0]
@@ -178,6 +365,9 @@ export default {
     },
   },
   watch: {
+    showPopup() {
+      this.$emit("enableKeyboardControls", !this.showPopup);
+    },
     mapClientStream(newStream) {
       this.$refs.video.srcObject = newStream;
       this.mapVideoElement = document.getElementById("map");
@@ -203,7 +393,7 @@ export default {
   },
   unmounted() {
     window.removeEventListener("keydown", this.onKeyDown);
-    window.addEventListener("keyup", this.onKeyUp);
+    window.removeEventListener("keyup", this.onKeyUp);
   },
   activated() {
     this.$refs.video.srcObject = this.mapClientStream;
@@ -211,6 +401,128 @@ export default {
     this.mapVideoElement = document.getElementById("map");
   },
   methods: {
+    validateLabelPopup(event, requireCtrl = false) {
+      if (
+        event.key === "Enter" &&
+        (event.ctrlKey || event.metaKey || requireCtrl === false)
+      ) {
+        if (!this.labelNameIsEmpty) {
+          this.$refs.labelCreationPopup.okPressed();
+        }
+      }
+    },
+    createLabel() {
+      if (this.labelCreation.isCreatingLabelInfo) {
+        this.labelCreation.labelDescField = this.$refs.labelDesc.value;
+        this.labelCreation.isCreatingLabelInfo = false;
+        this.labelCreation.isCreatingLabelCoordinates = false;
+        if (this.$store.state.localClient.openteraTeleop.client) {
+          this.$store.state.localClient.openteraTeleop.client.sendToAll(
+            JSON.stringify({
+              type: "addLabel",
+              label: {
+                name: this.labelCreation.labelNameField,
+                description: this.labelCreation.labelDescField,
+                coordinate: {
+                  x: this.labelCreation.labelCoordinates.x,
+                  y: this.labelCreation.labelCoordinates.y,
+                  yaw: this.labelCreation.labelCoordinates.yaw,
+                },
+              },
+            })
+          );
+        }
+      } else if (this.labelCreation.isShowingLabelInfo) {
+        this.cancelLabel();
+      } else if (this.labelCreation.isEditingLabelInfo) {
+        this.labelCreation.labelDescField = this.$refs.labelDesc.value;
+        this.labelCreation.isEditingLabelInfo = false;
+        if (this.$store.state.localClient.openteraTeleop.client) {
+          this.$store.state.localClient.openteraTeleop.client.sendToAll(
+            JSON.stringify({
+              type: "editLabel",
+              currentLabel: this.currentLabel,
+              newLabel: {
+                name: this.labelCreation.labelNameField,
+                description: this.labelCreation.labelDescField,
+                coordinate: null,
+              },
+            })
+          );
+        }
+      }
+    },
+    confirmMoveLabel() {
+      if (this.labelCreation.isMovingLabel) {
+        this.labelCreation.isMovingLabel = false;
+        if (this.$store.state.localClient.openteraTeleop.client) {
+          this.$store.state.localClient.openteraTeleop.client.sendToAll(
+            JSON.stringify({
+              type: "editLabel",
+              currentLabel: this.labelCreation.labelNameField,
+              newLabel: {
+                name: this.labelCreation.labelNameField,
+                description: this.labelCreation.labelDescField,
+                coordinate: {
+                  x: this.labelCreation.labelCoordinates.x,
+                  y: this.labelCreation.labelCoordinates.y,
+                  yaw: this.labelCreation.labelCoordinates.yaw,
+                },
+              },
+            })
+          );
+        }
+      }
+    },
+    addLabel() {
+      this.labelCreation.isCreatingLabelCoordinates = true;
+    },
+    removeLabel() {
+      if (this.currentLabelIsEmptyString) {
+        return;
+      }
+
+      const removedLabel = this.currentLabel;
+
+      this.$refs.labelSelect.setValue("");
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({
+            type: "removeLabel",
+            label: removedLabel,
+          })
+        );
+      }
+    },
+    moveLabel() {
+      this.labelCreation.isMovingLabel = true;
+      this.labelCreation.labelNameField = this.currentLabel;
+      this.labelCreation.labelDescField = this.getLabelDesc(this.currentLabel);
+    },
+    showLabel() {
+      this.labelCreation.isShowingLabelInfo = true;
+      sleep(100).then(() => {
+        this.$refs.labelName.value = this.currentLabel;
+        this.$refs.labelDesc.value = this.getLabelDesc(this.currentLabel);
+        this.labelCreation.labelNameField = this.currentLabel;
+      });
+    },
+    editLabel() {
+      this.labelCreation.isEditingLabelInfo = true;
+      sleep(100).then(() => {
+        this.$refs.labelName.value = this.currentLabel;
+        this.$refs.labelDesc.value = this.getLabelDesc(this.currentLabel);
+      });
+    },
+    getLabelDesc(labelName) {
+      return this.$store.state.localClient.openteraTeleop.labelsDesc[labelName];
+    },
+    onChangeLabel(event) {
+      this.currentLabel = event.new;
+    },
+    onChangeLabelName(event) {
+      this.labelCreation.labelNameField = event.target.value;
+    },
     toggleExpand() {
       this.setIsExpanded(!this.isExpanded);
     },
@@ -360,9 +672,18 @@ export default {
         this.ctrlPressed = true;
       }
     },
+    cancelLabel() {
+      this.labelCreation.isCreatingLabelCoordinates = false;
+      this.labelCreation.isCreatingLabelInfo = false;
+      this.labelCreation.isMovingLabel = false;
+      this.labelCreation.isShowingLabelInfo = false;
+      this.labelCreation.isEditingLabelInfo = false;
+    },
     onKeyUp(event) {
       if (event.key === "Control" || event.key === "Meta") {
         this.ctrlPressed = false;
+      } else if (event.key === "Escape") {
+        this.$refs.labelCreationPopup.cancelPressed();
       }
     },
     doPan(position) {
@@ -376,15 +697,27 @@ export default {
       };
     },
     saveWaypoint(event) {
-      this.waypoints.push(event);
-      this.waypointsEmpty = false;
-      this.sendWaypoints([event]);
+      if (this.selectingLabelPosition) {
+        this.labelCreation.labelCoordinates = { ...event.coordinate };
+        if (this.labelCreation.isCreatingLabelCoordinates) {
+          this.labelCreation.isCreatingLabelCoordinates = false;
+          this.labelCreation.isCreatingLabelInfo = true;
+          sleep(100).then(() => {
+            this.$refs.labelName.focus();
+          });
+        } else if (this.labelCreation.isMovingLabel) {
+          this.confirmMoveLabel();
+        }
+      } else {
+        this.waypoints.push(event);
+        this.sendWaypoints([event]);
+      }
     },
     clearWaypoints() {
       this.waypoints = [];
-      this.waypointsEmpty = true;
       this.cancelWaypoints();
       this.resetWaypointReached();
+      this.$refs.labelSelect.setValue("");
     },
     cancelWaypoints() {
       this.isRobotNavigating = false;
@@ -422,6 +755,21 @@ export default {
     },
     resetWaypointReached() {
       this.$store.commit("localClient/openteraTeleop/changeWaypointReached", 0);
+    },
+    goToLabel() {
+      if (!this.currentLabelIsEmptyString) {
+        this.isRobotNavigating = true;
+        if (this.$store.state.localClient.openteraTeleop.client) {
+          this.$store.state.localClient.openteraTeleop.client.sendToAll(
+            JSON.stringify({ type: "goToLabel", label: this.currentLabel })
+          );
+          this.waypoints.push({
+            // Random data, waypoints content is not currently used since they are not drawn anymore
+            type: "label",
+            label: this.currentLabel,
+          });
+        }
+      }
     },
     zoomIn() {
       this.zoom += 0.5;
