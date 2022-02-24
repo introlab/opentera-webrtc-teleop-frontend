@@ -15,6 +15,20 @@
 </template>
 
 <script>
+// From https://stackoverflow.com/a/7838871
+CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+  if (w < 2 * r) r = w / 2;
+  if (h < 2 * r) r = h / 2;
+  this.beginPath();
+  this.moveTo(x + r, y);
+  this.arcTo(x + w, y, x + w, y + h, r);
+  this.arcTo(x + w, y + h, x, y + h, r);
+  this.arcTo(x, y + h, x, y, r);
+  this.arcTo(x, y, x + w, y, r);
+  this.closePath();
+  return this;
+};
+
 export default {
   name: "joystick",
   data() {
@@ -138,14 +152,14 @@ export default {
       const centerY = this.getCenterY();
       const deltaX = this.x - centerX;
       const deltaY = this.y - centerY;
-      const radius = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      const maxRadius = this.getCanvasRadius() - this.getJoystickRadius();
 
-      if (radius > maxRadius) {
-        const ratio = maxRadius / radius;
-        this.x = deltaX * ratio + centerX;
-        this.y = deltaY * ratio + centerY;
+      if (Math.abs(deltaX) > this.getCanvasRadius()) {
+        this.x = deltaX + centerX;
       }
+      if (Math.abs(deltaY) > this.getCanvasRadius()) {
+        this.y = deltaY + centerY;
+      }
+
       this.emitJoystickPosition();
       this.drawFrame();
     },
@@ -178,10 +192,15 @@ export default {
 
       const radius = this.getCanvasRadius();
 
-      //Draw the background circle
+      //Draw the background area
       this.context.fillStyle = "#87CEEB";
-      this.context.beginPath();
-      this.context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      this.context.roundRect(
+        centerX - radius,
+        centerY - radius,
+        radius * 2,
+        radius * 2,
+        radius / 4
+      );
       this.context.fill();
 
       const pointOffset = radius / 8;
@@ -265,11 +284,11 @@ export default {
       //  forward linear axis and yaw corresponding to the angular axis.
       const event = {
         x:
-          -((this.y - this.getCenterY()) * this.absoluteMaxYaw) /
-          (this.getCanvasRadius() - this.getJoystickRadius()),
+          -((this.y - this.getCenterY()) * this.absoluteMaxX) /
+          this.getCanvasRadius(),
         yaw:
-          -((this.x - this.getCenterX()) * this.absoluteMaxX) /
-          (this.getCanvasRadius() - this.getJoystickRadius()),
+          -((this.x - this.getCenterX()) * this.absoluteMaxYaw) /
+          this.getCanvasRadius(),
       };
       this.$emit("joystickPositionChange", event);
     },
