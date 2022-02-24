@@ -17,16 +17,16 @@
         :class="{ col33: isMapExpanded, col100: !isMapExpanded }"
       >
         <div
-          v-if="cameraDisplayMode != 2"
+          v-if="cameraDisplayMode != 2 || provided.isRobotSingleCamera"
           class="gutter"
           :class="{
-            row50: cameraDisplayMode == 0,
-            row100: cameraDisplayMode == 1,
+            row50: cameraDisplayMode == 0 && !provided.isRobotSingleCamera,
+            row100: cameraDisplayMode == 1 || provided.isRobotSingleCamera,
           }"
         >
           <video-participant
             id="videoconf"
-            name="Front Camera"
+            :name="topCameraName"
             v-bind:stream="videoConfClientStream"
             v-bind:show-name="true"
           >
@@ -34,7 +34,7 @@
         </div>
         <div
           class="row50 gutter"
-          v-if="cameraDisplayMode != 1"
+          v-if="cameraDisplayMode != 1 && !provided.isRobotSingleCamera"
           :class="{
             row50: cameraDisplayMode == 0,
             row100: cameraDisplayMode == 2,
@@ -42,7 +42,7 @@
         >
           <video-participant
             id="camerax"
-            name="Bottom camera"
+            :name="bottomCameraName"
             v-bind:stream="cameraXClientStream"
             v-bind:show-name="true"
           >
@@ -135,6 +135,13 @@ export default {
     UserVideo,
     DeviceSettings,
   },
+  props: {
+    name: String,
+    data: Object,
+    room: String,
+    password: String,
+    robot: String,
+  },
   setup() {
     const toolbarRef = ref(null);
 
@@ -145,7 +152,25 @@ export default {
       showToolbar,
     };
   },
+  provide() {
+    return this.provided;
+  },
   computed: {
+    robotType() {
+      return this.robot || "demo";
+    },
+    provided() {
+      return {
+        isRobotMobile: this.robotType != "ttop",
+        isRobotSingleCamera: this.robotType == "ttop",
+      };
+    },
+    topCameraName() {
+      return this.provided.isRobotSingleCamera ? "Camera" : "Top Camera";
+    },
+    bottomCameraName() {
+      return "Bottom Camera";
+    },
     videoConfClientStream() {
       if (
         this.$store.state.localClient.openteraVideoConf.clientsInCall.length > 0

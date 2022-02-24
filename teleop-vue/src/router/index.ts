@@ -1,12 +1,12 @@
 import {
   createRouter,
-  createWebHistory,
+  //createWebHistory,
   createWebHashHistory,
   Router,
 } from "vue-router";
 
 import store from "../store";
-import { getBasePath } from "@/config/location";
+//import { getBasePath } from "@/config/location";
 
 import { DevelopperView } from "@/views/DevelopperView";
 import { UserView } from "@/views/UserView";
@@ -28,11 +28,17 @@ const routes: Array<any> = [
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd,
+      robot: route.query.robot,
     }),
     children: [
       {
         path: "",
         component: TeleopView,
+        props: (route: any) => ({
+          name: route.query.name,
+          password: route.query.pwd,
+          robot: route.query.robot,
+        }),
       },
     ],
   },
@@ -43,11 +49,17 @@ const routes: Array<any> = [
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd,
+      robot: route.query.robot,
     }),
     children: [
       {
         path: "",
         component: TeleopView,
+        props: (route: any) => ({
+          name: route.query.name,
+          password: route.query.pwd,
+          robot: route.query.robot,
+        }),
       },
     ],
   },
@@ -58,6 +70,7 @@ const routes: Array<any> = [
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd,
+      robot: route.query.robot,
     }),
   },
   {
@@ -67,6 +80,7 @@ const routes: Array<any> = [
     props: (route: any) => ({
       name: route.query.name,
       password: route.query.pwd,
+      robot: route.query.robot,
     }),
   },
   {

@@ -108,18 +108,20 @@
       <dropdown-menu
         v-show="isExpanded"
         class="zone float-right flex-cols fit-content"
-        label="Navigation"
+        :label="navigationDropdownMenuLabel"
         align="right"
       >
         <div class="flex-cols fit-content">
           <div class="flex-rows fit-content right">
             <action-button
+              v-if="isRobotMobile"
               label="Reset"
               class="reset-button fit-content"
               @clicked="clearWaypoints"
               :disabled="waypointsEmpty && !isRobotNavigating"
             />
             <action-button
+              v-if="isRobotMobile"
               label="Start"
               class="fit-content"
               @clicked="startNavigation"
@@ -131,7 +133,7 @@
               <dropdown
                 class="label-select fit-content flex-rows"
                 name="label-select"
-                label="Go to label: "
+                :label="navigationDropdownLabel"
                 ref="labelSelect"
                 @changed="onChangeLabel"
                 :options="labels"
@@ -139,6 +141,7 @@
               ></dropdown>
               <div class="flex-rows fit-content">
                 <action-button
+                  v-if="isRobotMobile"
                   label="Go"
                   class="go-button fit-content"
                   @clicked="goToLabel"
@@ -196,6 +199,7 @@
             <action-button label="-" class="zoom-button" @clicked="zoomOut" />
           </div>
           <dropdown
+            v-if="isRobotMobile"
             class="map-view-select flex-cols"
             name="map-view-select"
             label="Map view: "
@@ -241,6 +245,7 @@ export default {
       },
     },
   },
+  inject: ["isRobotMobile"],
   data() {
     return {
       loopIntervalId: null,
@@ -290,6 +295,12 @@ export default {
     };
   },
   computed: {
+    navigationDropdownLabel() {
+      return this.isRobotMobile ? "Go to label:" : "Selected label:";
+    },
+    navigationDropdownMenuLabel() {
+      return this.isRobotMobile ? "Navigation" : "Labels";
+    },
     showPopup() {
       return (
         (this.labelCreation.isCreatingLabelInfo ||

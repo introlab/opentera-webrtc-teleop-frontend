@@ -9,7 +9,7 @@
       <div>Actions</div>
     </button>
     <div class="menu" v-if="showMenu">
-      <div class="menu-item" @click="onDock">Dock</div>
+      <div class="menu-item" v-if="isRobotMobile" @click="onDock">Dock</div>
       <div
         class="menu-item"
         v-if="!localizationMode"
@@ -32,6 +32,7 @@ export default {
       localizationMode: false,
     };
   },
+  inject: ["isRobotMobile"],
   methods: {
     toggleShowMenu() {
       this.showMenu = !this.showMenu;

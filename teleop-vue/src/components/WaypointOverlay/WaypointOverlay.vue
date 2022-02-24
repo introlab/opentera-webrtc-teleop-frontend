@@ -81,6 +81,7 @@ export default {
       default: false,
     },
   },
+  inject: ["isRobotMobile"],
   data() {
     return {
       canvas: null,
@@ -452,7 +453,8 @@ export default {
         coord.x >= 0 &&
         coord.x < this.mapSize.width &&
         coord.y >= 0 &&
-        coord.y < this.mapSize.height
+        coord.y < this.mapSize.height &&
+        (this.isCreatingLabel || this.isRobotMobile)
       );
     },
     /**
