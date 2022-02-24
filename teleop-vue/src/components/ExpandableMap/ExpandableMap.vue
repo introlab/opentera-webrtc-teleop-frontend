@@ -315,7 +315,7 @@ export default {
       return this.labelCreation.labelNameField.length === 0;
     },
     labels() {
-      return this.$store.state.localClient.openteraTeleop.labels;
+      return this.$store.state.localClient.openteraTeleop.labelHandling.labels;
     },
     waypointsEmpty() {
       return this.waypoints.length === 0;
@@ -390,6 +390,9 @@ export default {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
     this.prevZoom = this.zoom;
+    this.$store.state.localClient.openteraTeleop.labelHandling.changedCb = () => {
+      this.$refs.labelSelect.setValue("");
+    };
   },
   unmounted() {
     window.removeEventListener("keydown", this.onKeyDown);
@@ -515,7 +518,8 @@ export default {
       });
     },
     getLabelDesc(labelName) {
-      return this.$store.state.localClient.openteraTeleop.labelsDesc[labelName];
+      return this.$store.state.localClient.openteraTeleop.labelHandling
+        .labelsDesc[labelName];
     },
     onChangeLabel(event) {
       this.currentLabel = event.new;
