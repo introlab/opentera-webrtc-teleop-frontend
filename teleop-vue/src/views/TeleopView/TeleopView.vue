@@ -230,7 +230,27 @@ export default {
     sendCmdVel() {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
-          JSON.stringify({ type: "velCmd", x: this.cmd.x, yaw: this.cmd.yaw })
+          JSON.stringify({
+            type: "velCmd",
+            x: (() => {
+              if (this.provided.isRobotMobile) return this.cmd.x;
+              else
+                return (
+                  (this.cmd.x != 0) *
+                  Math.sign(this.cmd.x) *
+                  ((Math.abs(this.cmd.x) * 2) / 3 + this.maxX / 3)
+                );
+            })(),
+            yaw: (() => {
+              if (this.provided.isRobotMobile) return this.cmd.yaw;
+              else
+                return (
+                  (this.cmd.yaw != 0) *
+                  Math.sign(this.cmd.yaw) *
+                  ((Math.abs(this.cmd.yaw) * 9) / 10 + this.maxYaw / 10)
+                );
+            })(),
+          })
         );
       }
     },
