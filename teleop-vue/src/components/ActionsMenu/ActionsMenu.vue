@@ -18,6 +18,27 @@
         Localization mode
       </div>
       <div class="menu-item" v-else @click="onMappingMode">Mapping mode</div>
+      <div
+        class="menu-item"
+        v-if="movementMode == 'teleop'"
+        @click="setMovementMode('sound')"
+      >
+        Track sound
+      </div>
+      <div
+        class="menu-item"
+        v-else-if="movementMode == 'sound'"
+        @click="setMovementMode('face')"
+      >
+        Track face
+      </div>
+      <div
+        class="menu-item"
+        v-else-if="movementMode == 'face'"
+        @click="setMovementMode('teleop')"
+      >
+        Teleoperate
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +51,7 @@ export default {
       showMenu: false,
       docked: false,
       localizationMode: false,
+      movementMode: "teleop",
     };
   },
   inject: ["isRobotMobile"],
@@ -69,6 +91,18 @@ export default {
             type: "action",
             action: "mappingMode",
             cmd: true,
+          })
+        );
+      }
+    },
+    setMovementMode(mode) {
+      if (this.$store.state.localClient.openteraTeleop.client) {
+        this.movementMode = mode;
+        this.$store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({
+            type: "action",
+            action: "setMovementMode",
+            cmd: mode,
           })
         );
       }
