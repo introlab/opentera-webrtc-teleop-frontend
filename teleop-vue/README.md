@@ -2,7 +2,7 @@
 
 **Note:** The following instructions were performed on Ubuntu 20.04. The project will work regardless of your OS, you may want to ignore some instructions or adapt to suit your OS.
 
-## Prerequisite 
+## Prerequisite
 * NodeJs (v10.19.0) and NPM (6.14.4)
 ```bash
 sudo apt install nodejs
@@ -43,7 +43,7 @@ chmod +x start_nginx.sh
 ```
 Start the script to lauch nginx in background:
 ```
-./start_nginx.sh 
+./start_nginx.sh
 ```
 
 ### Start the signaling server
@@ -70,7 +70,7 @@ In a new terminal in the [opentera-webrtc](https://github.com/introlab/opentera-
 cd signaling-server && python3 -m pip install -r requirements.txt
 ```
 ```bash
-python3 signaling_server.py --port 4040
+python3 opentera-signaling-server --port 4040
 ```
 You can change the port as you want, be sure to adjust the proxy_pass of the file [opentera-webrtc-teleop-frontend.conf](nginx-dev/opentera-webrtc-teleop-frontend.conf) according to your changes.
 
