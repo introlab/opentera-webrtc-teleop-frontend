@@ -36,14 +36,17 @@ export class DataChannelClientStore extends SignalingClientStore {
       },
       waypointReached: 0,
       dockingStatus: "",
-      labels: [
-        {
-          value: "",
-          text: "",
+      labelHandling: {
+        labels: [
+          {
+            value: "",
+            text: "",
+          },
+        ],
+        labelsDesc: {
+          "": "",
         },
-      ],
-      labelsDesc: {
-        "": "",
+        changedCb: null,
       },
     };
   }
@@ -82,19 +85,25 @@ export class DataChannelClientStore extends SignalingClientStore {
         state.status.isCameraOn = !state.status.isCameraOn;
       },
       updateLabels(state: DataChannelClientState, payload: Array<Record<string, string>>) {
-        const newLabels = payload.filter((l) => !state.labels.some((l2) => l2.value === l.name));
-        const removedLabels = state.labels.filter((l) => l.value !== "" && !payload.some((l2) => l2.name === l.value));
-        const commonLabels = payload.filter((l) => state.labels.some((l2) => l2.value === l.name));
+        const newLabels = payload.filter((l) => !state.labelHandling.labels.some((l2) => l2.value === l.name));
+        const removedLabels = state.labelHandling.labels.filter((l) => l.value !== "" && !payload.some((l2) => l2.name === l.value));
+        const commonLabels = payload.filter((l) => state.labelHandling.labels.some((l2) => l2.value === l.name));
+        let changed = false;
         for (const label of removedLabels) {
-          state.labels.splice(state.labels.indexOf(label), 1);
-          delete state.labelsDesc[label.value];
+          changed = true;
+          state.labelHandling.labels.splice(state.labelHandling.labels.indexOf(label), 1);
+          delete state.labelHandling.labelsDesc[label.value];
         }
         for (const label of newLabels) {
-          state.labels.push({ value: label.name, text: label.name });
-          state.labelsDesc[label.name] = label.description;
+          changed = true;
+          state.labelHandling.labels.push({ value: label.name, text: label.name });
+          state.labelHandling.labelsDesc[label.name] = label.description;
         }
         for (const label of commonLabels) {
-          state.labelsDesc[label.name] = label.description;
+          state.labelHandling.labelsDesc[label.name] = label.description;
+        }
+        if (changed && state.labelHandling.changedCb) {
+          state.labelHandling.changedCb();
         }
       },
     };

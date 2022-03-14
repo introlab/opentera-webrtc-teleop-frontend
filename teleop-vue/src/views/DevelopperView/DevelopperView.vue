@@ -2,7 +2,13 @@
   <default-template
     brand="Opentera User Interface"
     route="dev"
-    v-bind:client="{ name: name, data: data, room: room, password: password }"
+    v-bind:client="{
+      name: name,
+      data: data,
+      room: room,
+      password: password,
+      robot: robot,
+    }"
   />
 </template>
 
@@ -19,6 +25,7 @@ export default {
     data: Object,
     room: String,
     password: String,
+    robot: String,
   },
 };
 </script>

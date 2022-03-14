@@ -17,6 +17,12 @@ export interface RobotStatus {
   isCameraOn: boolean;
 }
 
+export interface LabelHandling {
+  labels: Array<{ value: string; text: string }>;
+  labelsDesc: Record<string, string>;
+  changedCb: Function | null;
+}
+
 export interface SignalingServerConfiguration {
   url?: string;
   name?: string;
@@ -85,8 +91,7 @@ export interface DataChannelClientState extends SignalingClientRoom {
   status: RobotStatus;
   waypointReached: number;
   dockingStatus: string;
-  labels: Array<{ value: string; text: string }>;
-  labelsDesc: Record<string, string>;
+  labelHandling: LabelHandling;
 }
 
 export interface RoomClient {

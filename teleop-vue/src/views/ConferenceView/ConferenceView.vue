@@ -48,6 +48,7 @@ export default {
     data: Object,
     room: String,
     password: String,
+    robot: String,
   },
   setup() {
     const toolbarRef = ref(null);
