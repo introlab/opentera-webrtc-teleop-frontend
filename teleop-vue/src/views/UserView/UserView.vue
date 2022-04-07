@@ -14,6 +14,7 @@
 
 <script>
 import { DefaultTemplate } from "@/components/DefaultTemplate";
+import { robotCapabilities } from "../robotCapabilities";
 
 export default {
   name: "user-view",
@@ -26,6 +27,9 @@ export default {
     room: String,
     password: String,
     robot: String,
+  },
+  provide() {
+    return robotCapabilities(this.robot);
   },
 };
 </script>
