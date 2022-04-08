@@ -12,18 +12,12 @@
       <div class="menu-item" v-if="isRobotMobile" @click="onDock">Dock</div>
       <div
         class="menu-item"
-        v-if="!localizationMode && doesRobotUseMap"
+        v-if="!localizationMode"
         @click="onLocalizationMode"
       >
         Localization mode
       </div>
-      <div
-        class="menu-item"
-        v-if="localizationMode && doesRobotUseMap"
-        @click="onMappingMode"
-      >
-        Mapping mode
-      </div>
+      <div class="menu-item" v-else @click="onMappingMode">Mapping mode</div>
       <div
         class="menu-item"
         v-if="movementMode == 'teleop'"
@@ -60,7 +54,7 @@ export default {
       movementMode: "teleop",
     };
   },
-  inject: ["isRobotMobile", "doesRobotUseMap"],
+  inject: ["isRobotMobile"],
   methods: {
     toggleShowMenu() {
       this.showMenu = !this.showMenu;
