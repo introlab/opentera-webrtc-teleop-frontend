@@ -4,6 +4,8 @@
     @mouseenter="mouseEnter"
     @mouseleave="mouseLeave"
     @mousemove="clearTimer"
+    @touchstart="touchStart"
+    @touchend="touchEnd"
   >
     <button
       class="toggle-button"
@@ -55,6 +57,8 @@ export default {
       pinnedShown: false,
       hoverShown: false,
       timer: null,
+      isTouched: false,
+      enteredAsTouch: false,
     };
   },
   computed: {
@@ -73,6 +77,11 @@ export default {
       this.timer = setTimeout(this.timerTimeout, timeout, timeout);
     },
     mouseEnter() {
+      if (this.isTouched) {
+        this.enteredAsTouch = true;
+        return;
+      }
+      this.enteredAsTouch = false;
       this.hoverShown = true;
       this.clearTimer();
     },
@@ -85,6 +94,9 @@ export default {
       }
     },
     mouseLeave(event) {
+      if (this.enteredAsTouch) {
+        return;
+      }
       // Needed to fix a bug on Firefox where hovering above a <select> dropdown menu triggers the mouseleave event
       if (event.relatedTarget === null) {
         event.stopPropagation();
@@ -93,9 +105,19 @@ export default {
         this.resetTimer(this.hoverTimeout);
       }
     },
-    togglePinned() {
+    togglePinned(event) {
       this.pinnedShown = !this.pinnedShown;
-      this.clearTimer();
+      if (event.pointerType === "mouse") {
+        this.clearTimer();
+      }
+    },
+    touchStart() {
+      this.isTouched = true;
+    },
+    touchEnd() {
+      setTimeout(() => {
+        this.isTouched = false;
+      }, 800);
     },
   },
 };
