@@ -12,7 +12,7 @@
     "opentera-webrtc-web-client": "file:submodules/opentera-webrtc/opentera-webrtc-web-client",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vue3-click-away": "^1.2.1",
+    "vue3-click-away": "^1.2.4",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
