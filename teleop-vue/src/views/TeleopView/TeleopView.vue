@@ -49,7 +49,11 @@
           </video-participant>
         </div>
       </div>
-      <div class="col-flexbox" :class="{ col66: isMapExpanded }">
+      <div
+        class="col-flexbox"
+        :class="{ col66: isMapExpanded }"
+        v-if="provided.doesRobotUseMap"
+      >
         <expandable-map
           :translation="mapTranslation"
           @expansionToggle="onExpansionToggle"
@@ -105,6 +109,7 @@ import ExpandableMap from "@/components/ExpandableMap/ExpandableMap.vue";
 import Slider from "@/components/Slider/Slider.vue";
 import UserVideo from "@/components/UserVideo/UserVideo.vue";
 import DeviceSettings from "@/components/DeviceSettings/DeviceSettings.vue";
+import { robotCapabilities } from "../robotCapabilities";
 
 export default {
   name: "teleop-view",
@@ -156,14 +161,8 @@ export default {
     return this.provided;
   },
   computed: {
-    robotType() {
-      return this.robot || "demo";
-    },
     provided() {
-      return {
-        isRobotMobile: this.robotType != "ttop",
-        isRobotSingleCamera: this.robotType == "ttop",
-      };
+      return robotCapabilities(this.robot);
     },
     topCameraName() {
       return this.provided.isRobotSingleCamera ? "Camera" : "Top Camera";
