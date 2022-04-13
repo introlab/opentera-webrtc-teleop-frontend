@@ -17,11 +17,11 @@
         :class="{ col33: isMapExpanded, col100: !isMapExpanded }"
       >
         <div
-          v-if="cameraDisplayMode != 2 || provided.isRobotSingleCamera"
+          v-if="cameraDisplayMode != 2 || robotCaps.isSingleCamera"
           class="gutter"
           :class="{
-            row50: cameraDisplayMode == 0 && !provided.isRobotSingleCamera,
-            row100: cameraDisplayMode == 1 || provided.isRobotSingleCamera,
+            row50: cameraDisplayMode == 0 && !robotCaps.isSingleCamera,
+            row100: cameraDisplayMode == 1 || robotCaps.isSingleCamera,
           }"
         >
           <video-participant
@@ -34,7 +34,7 @@
         </div>
         <div
           class="row50 gutter"
-          v-if="cameraDisplayMode != 1 && !provided.isRobotSingleCamera"
+          v-if="cameraDisplayMode != 1 && !robotCaps.isSingleCamera"
           :class="{
             row50: cameraDisplayMode == 0,
             row100: cameraDisplayMode == 2,
@@ -52,7 +52,7 @@
       <div
         class="col-flexbox"
         :class="{ col66: isMapExpanded }"
-        v-if="provided.doesRobotUseMap"
+        v-if="robotCaps.usesMap"
       >
         <expandable-map
           :translation="mapTranslation"
@@ -158,14 +158,14 @@ export default {
     };
   },
   provide() {
-    return this.provided;
+    return robotCapabilities(this.robot);
   },
   computed: {
-    provided() {
-      return robotCapabilities(this.robot);
+    robotCaps() {
+      return robotCapabilities(this.robot).robotCaps;
     },
     topCameraName() {
-      return this.provided.isRobotSingleCamera ? "Camera" : "Top Camera";
+      return this.robotCaps.isSingleCamera ? "Camera" : "Top Camera";
     },
     bottomCameraName() {
       return "Bottom Camera";
@@ -232,7 +232,7 @@ export default {
           JSON.stringify({
             type: "velCmd",
             x: (() => {
-              if (this.provided.isRobotMobile) return this.cmd.x;
+              if (this.robotCaps.isMobile) return this.cmd.x;
               else
                 return (
                   (this.cmd.x != 0) *
@@ -241,7 +241,7 @@ export default {
                 );
             })(),
             yaw: (() => {
-              if (this.provided.isRobotMobile) return this.cmd.yaw;
+              if (this.robotCaps.isMobile) return this.cmd.yaw;
               else
                 return (
                   (this.cmd.yaw != 0) *
