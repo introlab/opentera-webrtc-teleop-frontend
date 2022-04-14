@@ -47,27 +47,28 @@
       >
         Set movement mode: Face tracking
       </div>
-      <div
-        class="menu-item"
+      <template
         v-if="movementMode === 'teleop' && robotCaps.hasTtopHeadMovements"
-        @click="sendMovement('do_yes')"
       >
-        Head movement: Yes
-      </div>
-      <div
-        class="menu-item"
-        v-if="movementMode === 'teleop' && robotCaps.hasTtopHeadMovements"
-        @click="sendMovement('do_no')"
-      >
-        Head movement: No
-      </div>
-      <div
-        class="menu-item"
-        v-if="movementMode === 'teleop' && robotCaps.hasTtopHeadMovements"
-        @click="sendMovement('do_maybe')"
-      >
-        Head movement: Maybe
-      </div>
+        <div class="menu-item" @click="sendMovement('do_yes')">
+          Head movement: Yes
+        </div>
+        <div class="menu-item" @click="sendMovement('do_no')">
+          Head movement: No
+        </div>
+        <div class="menu-item" @click="sendMovement('do_maybe')">
+          Head movement: Maybe
+        </div>
+        <div class="menu-item" @click="sendMovement('goto_origin_head')">
+          Move to origin: Head
+        </div>
+        <div class="menu-item" @click="sendMovement('goto_origin_torso')">
+          Move to origin: Torso
+        </div>
+        <div class="menu-item" @click="sendMovement('goto_origin')">
+          Move to origin: Head + Torso
+        </div>
+      </template>
     </div>
   </div>
 </template>
