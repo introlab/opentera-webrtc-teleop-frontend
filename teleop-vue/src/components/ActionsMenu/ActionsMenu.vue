@@ -88,11 +88,9 @@ export default {
   methods: {
     toggleShowMenu() {
       if (!this.showMenu && this.canShowMenu) {
-        console.log("show");
         this.showMenu = true;
         this.canShowMenu = false;
       } else if (this.showMenu) {
-        console.log("hide");
         this.showMenu = false;
         this.canShowMenu = true;
       }
@@ -101,12 +99,11 @@ export default {
       this.showMenu = false;
       setTimeout(() => {
         this.canShowMenu = true;
-        console.log("canshow timeout");
       }, 200);
-      console.log("hide away");
     },
     onDock() {
       if (this.$store.state.localClient.openteraTeleop.client) {
+        console.log("Sending docking command");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "action", action: "dock", cmd: true })
         );
@@ -141,6 +138,7 @@ export default {
     setMovementMode(mode) {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.movementMode = mode;
+        console.log("Setting movement mode to: ", mode);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({
             type: "action",
@@ -152,6 +150,7 @@ export default {
     },
     sendMovement(movement) {
       if (this.$store.state.localClient.openteraTeleop.client) {
+        console.log("Sending movement command: ", movement);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({
             type: "action",
