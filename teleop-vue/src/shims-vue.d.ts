@@ -9,3 +9,8 @@ declare module "opentera-webrtc-web-client" {
   import openteraWebrtcWebClient from "opentera-webrtc-web-client";
   export default openteraWebrtcWebClient;
 }
+
+declare module "roslib" {
+  import { ROSLIB } from "roslib";
+  export default ROSLIB;
+}

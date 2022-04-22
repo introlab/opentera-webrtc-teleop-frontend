@@ -9,6 +9,9 @@
       v-click-away="onClickAway"
       @click="onClickAway"
     >
+      <div class="menu-item" @click="test">
+        Test
+      </div>
       <div class="menu-item" v-if="robotCaps.isMobile" @click="onDock">
         Dock
       </div>
@@ -74,6 +77,7 @@
 </template>
 
 <script>
+import ROSLIB from "roslib";
 export default {
   name: "actions-menu",
   data() {
@@ -107,6 +111,24 @@ export default {
         console.log("Sending docking command");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "action", action: "dock", cmd: true })
+        );
+      }
+    },
+    test() {
+      if (
+        this.$store.state.localClient.data &&
+        this.$store.state.localClient.data.ros
+      ) {
+        const _test = new ROSLIB.Topic({
+          ros: this.$store.state.localClient.data.ros,
+          name: "/opentera/status_test",
+          messageType: "std_msgs/String",
+        });
+
+        _test.publish(
+          new ROSLIB.Message({
+            data: "test",
+          })
         );
       }
     },

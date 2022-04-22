@@ -1,9 +1,10 @@
 // src/store/modules/opentera/clientStore.ts
 
 import { getCookie, SESSION_COOKIE } from "@/config/cookie";
-import { StreamClientStore, DataChannelClientStore } from "./opentera";
+import { StreamClientStore, DataChannelClientStore, RosbridgeDataChannelClientStore } from "./opentera";
 import { Client, SignalingServerConfiguration } from "./opentera/types";
 import { copyAttributes } from "./opentera/utils";
+import Ros from "@/ros/Ros";
 
 const ClientStore = {
   namespaced: true,
@@ -20,6 +21,13 @@ const ClientStore = {
   mutations: {
     setClient(state: Client, payload: Client) {
       copyAttributes(state, payload);
+    },
+
+    setRos(state: Client, payload: Ros) {
+      if (!state.data) {
+        state.data = {};
+      }
+      state.data.ros = payload;
     },
 
     setCallState(state: Client, isInCall: boolean) {
@@ -79,6 +87,13 @@ const ClientStore = {
         password: payload.password,
       };
 
+      const rosbridgeSignalingServerConfiguration: SignalingServerConfiguration = {
+        name: payload.name,
+        data: payload.data,
+        room: "rosbridge",
+        password: payload.password,
+      };
+
       // Temporary name persistence on refreshing the page
       // TODO: remove cookie
       let cookie = getCookie(SESSION_COOKIE);
@@ -112,6 +127,17 @@ const ClientStore = {
           teleopSignalingServerConfiguration
         );
         console.log("TELEOP CONNECTED");
+        await context.dispatch(
+          "openteraRosbridge/init",
+          rosbridgeSignalingServerConfiguration
+        );
+        context.commit("setRos", new Ros({
+          transportLibrary: context.state.openteraRosbridge.client,
+        }));
+        await context.dispatch(
+          "openteraRosbridge/connect",
+        );
+        console.log("ROSBRIDGE CONNECTED");
       } catch (err) {
         console.log(err);
         throw err;
@@ -166,6 +192,7 @@ const ClientStore = {
     openteraCameraX: new StreamClientStore(false).getModule(),
     openteraMap: new StreamClientStore(false).getModule(),
     openteraTeleop: new DataChannelClientStore().getModule(),
+    openteraRosbridge: new RosbridgeDataChannelClientStore().getModule(),
   },
 };
 

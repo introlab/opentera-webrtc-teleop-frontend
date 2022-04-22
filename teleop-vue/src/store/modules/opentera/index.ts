@@ -1,5 +1,6 @@
 export { StreamClientStore } from "./streamClientStore";
 export { DataChannelClientStore } from "./dataChannelClientStore";
+export { RosbridgeDataChannelClientStore } from "./rosbridgeDataChannelClientStore";
 
 export * from "./types";
 export * from "./utils";

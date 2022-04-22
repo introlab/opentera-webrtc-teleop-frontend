@@ -1,17 +1,24 @@
 /**
  * @fileoverview
- * @author philippewarren - philippewarren31@gmail.com
- * Original author (websockets version): Brandon Alexander - baalexander@gmail.com
+ * @author Brandon Alexander - baalexander@gmail.com
  */
 
-var WebSocket = require("ws");
-var WorkerSocket = require("../util/workerSocket");
-var socketAdapter = require("./SocketAdapter.js");
-var Service = require("roslib/core/Service.js");
-var ServiceRequest = require("roslib/core/ServiceRequest.js");
+// const WebSocket = require("ws");
+import { WebSocket } from "ws";
+import ROSLIB from "roslib";
+// const ROSLIB = require("roslib");
+import { assign } from "object-assign";
+// const assign = require("object-assign");
+import { SocketAdapter } from "roslib/src/core/SocketAdapter";
+const EventEmitter2 = require("eventemitter2").EventEmitter2;
+const WorkerSocket = ROSLIB.WorkerSocket;
+const socketAdapter = SocketAdapter;
+const Service = ROSLIB.Service;
+const ServiceRequest = ROSLIB.ServiceRequest;
 
-var assign = require("object-assign");
-var EventEmitter2 = require("eventemitter2").EventEmitter2;
+const io = () => {
+  alert("abort");
+};
 
 /**
  * Manages connection to the server and all interactions with ROS.
@@ -32,14 +39,14 @@ var EventEmitter2 = require("eventemitter2").EventEmitter2;
  */
 function Ros(options) {
   options = options || {};
-  var that = this;
+  //   const that = this;
   this.socket = null;
   this.idCounter = 0;
   this.isConnected = false;
   this.transportLibrary = options.transportLibrary || "websocket";
   this.transportOptions = options.transportOptions || {};
-  this._sendFunc = function(msg) {
-    that.sendEncodedMessage(msg);
+  this._sendFunc = (msg) => {
+    this.sendEncodedMessage(msg);
   };
 
   if (typeof options.groovyCompatibility === "undefined") {
@@ -52,9 +59,7 @@ function Ros(options) {
   this.setMaxListeners(0);
 
   // begin by checking if a URL was given
-  if (options.url) {
-    this.connect(options.url);
-  }
+  this.connect(options.url);
 }
 
 Ros.prototype.__proto__ = EventEmitter2.prototype;
@@ -81,12 +86,24 @@ Ros.prototype.connect = function(url) {
     );
   } else if (this.transportLibrary === "websocket") {
     if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
-      var sock = new WebSocket(url);
+      const sock = new WebSocket(url);
       sock.binaryType = "arraybuffer";
       this.socket = assign(sock, socketAdapter(this));
     }
   } else if (this.transportLibrary === "workersocket") {
     this.socket = assign(new WorkerSocket(url), socketAdapter(this));
+  } else if (this.transportLibrary.constructor.name === "DataChannelClient") {
+    this.socket = assign(this.transportLibrary, socketAdapter(this));
+    this.socket.onDataChannelOpen = () => {
+      console.log("Machintruc");
+      this.socket.onopen();
+    };
+    this.socket.onDataChannelClose = () => this.socket.onclose();
+    this.socket.onDataChannelMessage = (id, name, data) => {
+      this.socket.onmessage(data);
+    };
+    this.socket.onDataChannelError = () => this.socket.onerror();
+    this.socket.send = this.socket.sendToAll;
   } else {
     throw "Unknown transportLibrary: " + this.transportLibrary.toString();
   }
@@ -114,7 +131,7 @@ Ros.prototype.close = function() {
  */
 Ros.prototype.authenticate = function(mac, client, dest, rand, t, level, end) {
   // create the request
-  var auth = {
+  const auth = {
     op: "auth",
     mac: mac,
     client: client,
@@ -129,20 +146,20 @@ Ros.prototype.authenticate = function(mac, client, dest, rand, t, level, end) {
 };
 
 Ros.prototype.sendEncodedMessage = function(messageEncoded) {
-  var emitter = null;
-  var that = this;
+  let emitter = null;
+  //   const that = this;
   if (this.transportLibrary === "socket.io") {
-    emitter = function(msg) {
-      that.socket.emit("operation", msg);
+    emitter = (msg) => {
+      this.socket.emit("operation", msg);
     };
   } else {
-    emitter = function(msg) {
-      that.socket.send(msg);
+    emitter = (msg) => {
+      this.socket.send(msg);
     };
   }
 
   if (!this.isConnected) {
-    that.once("connection", function() {
+    this.once("connection", () => {
       emitter(messageEncoded);
     });
   } else {
@@ -169,7 +186,7 @@ Ros.prototype.callOnConnection = function(message) {
  * @param id - Optional: Operation ID to change status level on
  */
 Ros.prototype.setStatusLevel = function(level, id) {
-  var levelMsg = {
+  const levelMsg = {
     op: "set_level",
     level: level,
     id: id,
@@ -187,13 +204,13 @@ Ros.prototype.setStatusLevel = function(level, id) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getActionServers = function(callback, failedCallback) {
-  var getActionServers = new Service({
+  const getActionServers = new Service({
     ros: this,
     name: "/rosapi/action_servers",
     serviceType: "rosapi/GetActionServers",
   });
 
-  var request = new ServiceRequest({});
+  const request = new ServiceRequest({});
   if (typeof failedCallback === "function") {
     getActionServers.callService(
       request,
@@ -221,13 +238,13 @@ Ros.prototype.getActionServers = function(callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getTopics = function(callback, failedCallback) {
-  var topicsClient = new Service({
+  const topicsClient = new Service({
     ros: this,
     name: "/rosapi/topics",
     serviceType: "rosapi/Topics",
   });
 
-  var request = new ServiceRequest();
+  const request = new ServiceRequest();
   if (typeof failedCallback === "function") {
     topicsClient.callService(
       request,
@@ -255,13 +272,13 @@ Ros.prototype.getTopics = function(callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getTopicsForType = function(topicType, callback, failedCallback) {
-  var topicsForTypeClient = new Service({
+  const topicsForTypeClient = new Service({
     ros: this,
     name: "/rosapi/topics_for_type",
     serviceType: "rosapi/TopicsForType",
   });
 
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     type: topicType,
   });
   if (typeof failedCallback === "function") {
@@ -290,13 +307,13 @@ Ros.prototype.getTopicsForType = function(topicType, callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getServices = function(callback, failedCallback) {
-  var servicesClient = new Service({
+  const servicesClient = new Service({
     ros: this,
     name: "/rosapi/services",
     serviceType: "rosapi/Services",
   });
 
-  var request = new ServiceRequest();
+  const request = new ServiceRequest();
   if (typeof failedCallback === "function") {
     servicesClient.callService(
       request,
@@ -328,13 +345,13 @@ Ros.prototype.getServicesForType = function(
   callback,
   failedCallback
 ) {
-  var servicesForTypeClient = new Service({
+  const servicesForTypeClient = new Service({
     ros: this,
     name: "/rosapi/services_for_type",
     serviceType: "rosapi/ServicesForType",
   });
 
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     type: serviceType,
   });
   if (typeof failedCallback === "function") {
@@ -368,12 +385,12 @@ Ros.prototype.getServiceRequestDetails = function(
   callback,
   failedCallback
 ) {
-  var serviceTypeClient = new Service({
+  const serviceTypeClient = new Service({
     ros: this,
     name: "/rosapi/service_request_details",
     serviceType: "rosapi/ServiceRequestDetails",
   });
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     type: type,
   });
 
@@ -408,12 +425,12 @@ Ros.prototype.getServiceResponseDetails = function(
   callback,
   failedCallback
 ) {
-  var serviceTypeClient = new Service({
+  const serviceTypeClient = new Service({
     ros: this,
     name: "/rosapi/service_response_details",
     serviceType: "rosapi/ServiceResponseDetails",
   });
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     type: type,
   });
 
@@ -443,13 +460,13 @@ Ros.prototype.getServiceResponseDetails = function(
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getNodes = function(callback, failedCallback) {
-  var nodesClient = new Service({
+  const nodesClient = new Service({
     ros: this,
     name: "/rosapi/nodes",
     serviceType: "rosapi/Nodes",
   });
 
-  var request = new ServiceRequest();
+  const request = new ServiceRequest();
   if (typeof failedCallback === "function") {
     nodesClient.callService(
       request,
@@ -479,13 +496,13 @@ Ros.prototype.getNodes = function(callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getNodeDetails = function(node, callback, failedCallback) {
-  var nodesClient = new Service({
+  const nodesClient = new Service({
     ros: this,
     name: "/rosapi/node_details",
     serviceType: "rosapi/NodeDetails",
   });
 
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     node: node,
   });
   if (typeof failedCallback === "function") {
@@ -514,12 +531,12 @@ Ros.prototype.getNodeDetails = function(node, callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getParams = function(callback, failedCallback) {
-  var paramsClient = new Service({
+  const paramsClient = new Service({
     ros: this,
     name: "/rosapi/get_param_names",
     serviceType: "rosapi/GetParamNames",
   });
-  var request = new ServiceRequest();
+  const request = new ServiceRequest();
   if (typeof failedCallback === "function") {
     paramsClient.callService(
       request,
@@ -547,12 +564,12 @@ Ros.prototype.getParams = function(callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getTopicType = function(topic, callback, failedCallback) {
-  var topicTypeClient = new Service({
+  const topicTypeClient = new Service({
     ros: this,
     name: "/rosapi/topic_type",
     serviceType: "rosapi/TopicType",
   });
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     topic: topic,
   });
 
@@ -583,12 +600,12 @@ Ros.prototype.getTopicType = function(topic, callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getServiceType = function(service, callback, failedCallback) {
-  var serviceTypeClient = new Service({
+  const serviceTypeClient = new Service({
     ros: this,
     name: "/rosapi/service_type",
     serviceType: "rosapi/ServiceType",
   });
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     service: service,
   });
 
@@ -619,12 +636,12 @@ Ros.prototype.getServiceType = function(service, callback, failedCallback) {
  *   * error - the error message reported by ROS
  */
 Ros.prototype.getMessageDetails = function(message, callback, failedCallback) {
-  var messageDetailClient = new Service({
+  const messageDetailClient = new Service({
     ros: this,
     name: "/rosapi/message_details",
     serviceType: "rosapi/MessageDetails",
   });
-  var request = new ServiceRequest({
+  const request = new ServiceRequest({
     type: message,
   });
 
@@ -651,15 +668,15 @@ Ros.prototype.getMessageDetails = function(message, callback, failedCallback) {
  * @param defs - array of type_def dictionary
  */
 Ros.prototype.decodeTypeDefs = function(defs) {
-  var that = this;
+  //   const that = this;
 
   // calls itself recursively to resolve type definition using hints.
-  var decodeTypeDefsRec = function(theType, hints) {
-    var typeDefDict = {};
-    for (var i = 0; i < theType.fieldnames.length; i++) {
-      var arrayLen = theType.fieldarraylen[i];
-      var fieldName = theType.fieldnames[i];
-      var fieldType = theType.fieldtypes[i];
+  const decodeTypeDefsRec = (theType, hints) => {
+    const typeDefDict = {};
+    for (let i = 0; i < theType.fieldnames.length; i++) {
+      const arrayLen = theType.fieldarraylen[i];
+      const fieldName = theType.fieldnames[i];
+      const fieldType = theType.fieldtypes[i];
       if (fieldType.indexOf("/") === -1) {
         // check the fieldType includes '/' or not
         if (arrayLen === -1) {
@@ -669,21 +686,22 @@ Ros.prototype.decodeTypeDefs = function(defs) {
         }
       } else {
         // lookup the name
-        var sub = false;
-        for (var j = 0; j < hints.length; j++) {
+        let sub = false;
+        for (let j = 0; j < hints.length; j++) {
           if (hints[j].type.toString() === fieldType.toString()) {
             sub = hints[j];
             break;
           }
         }
         if (sub) {
-          var subResult = decodeTypeDefsRec(sub, hints);
+          const subResult = decodeTypeDefsRec(sub, hints);
           if (arrayLen === -1) {
+            // Nothing
           } else {
             typeDefDict[fieldName] = [subResult];
           }
         } else {
-          that.emit("error", "Cannot find " + fieldType + " in decodeTypeDefs");
+          this.emit("error", "Cannot find " + fieldType + " in decodeTypeDefs");
         }
       }
     }
@@ -705,13 +723,13 @@ Ros.prototype.decodeTypeDefs = function(defs) {
  *
  */
 Ros.prototype.getTopicsAndRawTypes = function(callback, failedCallback) {
-  var topicsAndRawTypesClient = new Service({
+  const topicsAndRawTypesClient = new Service({
     ros: this,
     name: "/rosapi/topics_and_raw_types",
     serviceType: "rosapi/TopicsAndRawTypes",
   });
 
-  var request = new ServiceRequest();
+  const request = new ServiceRequest();
   if (typeof failedCallback === "function") {
     topicsAndRawTypesClient.callService(
       request,
@@ -729,4 +747,5 @@ Ros.prototype.getTopicsAndRawTypes = function(callback, failedCallback) {
   }
 };
 
+// module.exports = Ros;
 export default Ros;
