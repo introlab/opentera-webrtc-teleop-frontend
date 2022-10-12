@@ -13,14 +13,52 @@
         <svg-icon icon="camera-video-fill" v-if="isCameraOn" />
         <svg-icon icon="camera-video-off-fill" v-else />
       </button>
-      <button
-        type="button"
-        class="btn btn-primary-dark"
-        v-on:click="toggleMute"
-      >
-        <svg-icon icon="mic-fill" v-if="!isMuted" />
-        <svg-icon icon="mic-mute-fill" v-else />
-      </button>
+      <div class="dropup">
+        <button
+          type="button"
+          class="btn btn-primary-dark btn-dropup-middle" 
+          v-on:click="setSessionMicVolume(true)"
+        >
+          <svg-icon v-if="sessionMicVolume > 0" icon="mic-fill"/>
+          <svg-icon v-else icon="mic-mute-fill"/>
+        </button>
+        <div class="dropup-content">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            value="1"
+            step="0.01"
+            class="slider"
+            id="sessionMicVolumeSlider"
+            @input="setSessionMicVolume(false)"
+          />
+        </div>
+      </div>
+      <div class="dropup">
+        <button
+          type="button"
+          class="btn btn-primary-dark btn-dropup-middle" 
+          v-on:click="setSessionVolume(true)"
+        >
+        <!-- ajouter on click mute direct-->
+          <svg-icon v-if="sessionVolume >= 0.5" icon="volume-up"/>
+          <svg-icon v-else-if="sessionVolume == 0" icon="volume-mute"/>
+          <svg-icon v-else icon="volume-down"/>
+        </button>
+        <div class="dropup-content">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            value="1"
+            step="0.01"
+            class="slider"
+            id="sessionVolumeSlider"
+            @input="setSessionVolume(false)"
+          />
+        </div>
+      </div>
       <button
         type="button"
         class="btn btn-primary-dark"
@@ -49,19 +87,56 @@
       <button
         type="button"
         class="btn btn-primary-dark"
-        v-on:click="toggleRobotMute"
-      >
-        <svg-icon icon="robot-mic-mute-fill" v-if="isRobotMuted" />
-        <svg-icon icon="robot-mic-fill" v-else />
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary-dark"
         v-on:click="toggleRobotCamera"
       >
         <svg-icon icon="robot-camera-video-fill" v-if="isRobotCameraOn" />
         <svg-icon icon="robot-camera-video-off-fill" v-else />
       </button>
+      <div class="dropup">
+        <button
+          type="button"
+          class="btn btn-primary-dark btn-dropup-middle"
+          v-on:click="setRobotMicVolume(true)"
+        >
+          <svg-icon v-if="robotMicVolume > 0" icon="robot-mic-fill"/>
+          <svg-icon v-else icon="robot-mic-mute-fill"/>
+        </button>
+        <div class="dropup-content">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            value="1"
+            step="0.01"
+            class="slider"
+            id="robotMicVolumeSlider"
+            @input="setRobotMicVolume(false)"
+          />
+        </div>
+      </div>
+       <div class="dropup">
+        <button
+          type="button"
+          class="btn btn-primary-dark btn-dropup-right" 
+          v-on:click="setRobotVolume(true)"
+        >
+          <svg-icon v-if="robotVolume >= 0.5" icon="volume-up-robot"/>
+          <svg-icon v-else-if="robotVolume == 0" icon="volume-mute-robot"/>
+          <svg-icon v-else icon="volume-down-robot"/>
+        </button>
+        <div class="dropup-content">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            value="1"
+            step="0.01"
+            class="slider"
+            id="robotVolumeSlider"
+            @input="setRobotVolume(false)"
+          />
+        </div>
+      </div>
     </div>
     <div class="btn-group" role="group" aria-label="Group button">
       <button
@@ -88,42 +163,50 @@ export default {
   setup() {
     const {
       isInCall,
-      isMuted,
       isCameraOn,
+      sessionMicVolume,
+      sessionVolume,
       showParticipants,
       cameraDisplayMode,
       showControls,
-      isRobotMuted,
+      robotMicVolume,
       isRobotCameraOn,
+      robotVolume,
 
-      toggleMute,
       toggleCamera,
+      setSessionMicVolume,
+      setSessionVolume,
       toggleParticipantsList,
       toggleCameraDisplayMode,
       toggleShowControls,
       toggleShowSettings,
       toggleRobotCamera,
-      toggleRobotMute,
+      setRobotMicVolume,
+      setRobotVolume,
     } = useButtons();
 
     return {
       isInCall,
-      isMuted,
       isCameraOn,
+      sessionMicVolume,
+      sessionVolume,
       showParticipants,
       cameraDisplayMode,
       showControls,
-      isRobotMuted,
+      robotMicVolume,
       isRobotCameraOn,
+      robotVolume,
 
-      toggleMute,
       toggleCamera,
+      setSessionMicVolume,
+      setSessionVolume,
       toggleParticipantsList,
       toggleCameraDisplayMode,
       toggleShowControls,
       toggleShowSettings,
       toggleRobotCamera,
-      toggleRobotMute,
+      setRobotMicVolume,
+      setRobotVolume,
     };
   },
   inject: ["isRobotSingleCamera"],

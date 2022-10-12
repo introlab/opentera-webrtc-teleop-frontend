@@ -31,8 +31,9 @@ export class DataChannelClientStore extends SignalingClientStore {
         wifiNetwork: "",
         wifiStrength: 0,
         localIp: "",
-        isMuted: false,
+        micVolume: 1,
         isCameraOn: true,
+        volume: 1
       },
       waypointReached: 0,
       dockingStatus: "",
@@ -69,8 +70,17 @@ export class DataChannelClientStore extends SignalingClientStore {
         state.status.wifiNetwork = payload.wifiNetwork;
         state.status.wifiStrength = payload.wifiStrength;
         state.status.localIp = payload.localIp;
-        state.status.isMuted = payload.isMuted;
+        if(state.status.micVolume != payload.micVolume){
+          (document.getElementById("robotMicVolumeSlider") as HTMLInputElement).value = payload.micVolume.toString();
+        }
+        state.status.micVolume = payload.micVolume;
         state.status.isCameraOn = payload.isCameraOn;
+        if(state.status.volume != payload.volume){
+          (document.getElementById("robotVolumeSlider") as HTMLInputElement).value = payload.volume.toString();
+        }
+        state.status.volume = payload.volume;
+
+        document.getElementById
       },
       changeWaypointReached(state: DataChannelClientState, payload: number) {
         state.waypointReached = payload;
@@ -78,11 +88,14 @@ export class DataChannelClientStore extends SignalingClientStore {
       updateDockingStatus(state: DataChannelClientState, payload: string) {
         state.dockingStatus = payload;
       },
-      toggleRobotMute(state: DataChannelClientState) {
-        state.status.isMuted = !state.status.isMuted;
+      setRobotMicVolume(state: DataChannelClientState, payload: number) {
+        state.status.micVolume = payload;
       },
       toggleRobotCamera(state: DataChannelClientState) {
         state.status.isCameraOn = !state.status.isCameraOn;
+      },
+      setRobotVolume(state: DataChannelClientState, payload: number) {
+        state.status.volume = payload;
       },
       updateLabels(state: DataChannelClientState, payload: Array<Record<string, string>>) {
         const newLabels = payload.filter((l) => !state.labelHandling.labels.some((l2) => l2.value === l.name));

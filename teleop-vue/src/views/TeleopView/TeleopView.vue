@@ -29,6 +29,7 @@
             :name="topCameraName"
             v-bind:stream="videoConfClientStream"
             v-bind:show-name="true"
+            v-bind:volume="sessionVolume"
           >
           </video-participant>
         </div>
@@ -45,6 +46,7 @@
             :name="bottomCameraName"
             v-bind:stream="cameraXClientStream"
             v-bind:show-name="true"
+            v-bind:volume="sessionVolume"
           >
           </video-participant>
         </div>
@@ -208,6 +210,9 @@ export default {
     showSettings() {
       return this.$store.state.localClient.openteraVideoConf.showSettings;
     },
+    sessionVolume() {
+      return this.$store.state.localClient.openteraVideoConf.volume;
+    }
   },
   watch: {
     showControls() {

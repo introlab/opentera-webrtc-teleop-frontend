@@ -53,3 +53,57 @@
 .btn:active > * {
   transform: translateX(1px);
 }
+
+.slider {
+  margin-top: 50px;
+  -webkit-appearance: none;
+  width: var(--length);
+  height: 15px;
+  border: 1px solid transparent;
+  border-radius: 0.3rem;color: var(--text-primary-dark) !important;
+  background-color: var(--bg-primary-dark) !important;
+  border-color: var(--btn-primary-dark) !important;
+  background: #3d3d3d;
+  outline: none;
+  opacity: 0.6;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  --length: 100px;
+  transform: rotate(-90deg);
+}
+
+.dropup {
+  display: flex;
+}
+.dropup-content {
+  display: flex;
+  visibility: hidden;
+  position: absolute;
+  bottom: 50px;
+  width: 3.4rem;
+  height: 115px;
+  border: 1px solid transparent;
+  border-radius: 0.3rem;color: var(--text-primary-dark) !important;
+  background-color: var(--btn-primary-dark) !important;
+  border-color: var(--btn-primary-dark) !important;
+  margin: 0px;
+  z-index: 1;
+  justify-content: center;
+  transition-delay:0.5s;
+}
+.dropup:hover .dropup-content {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.btn-dropup-right {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-dropup-middle {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

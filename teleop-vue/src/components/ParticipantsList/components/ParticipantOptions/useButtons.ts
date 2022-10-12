@@ -2,20 +2,45 @@
 
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { ParticipantOptions } from ".";
 
 export default function() {
   const store = useStore();
 
-  const toggleMute = () =>
-    store.dispatch("localClient/toggleMute").catch((error) => {
-      // TODO
-      alert(error.message);
-    });
+  const toggleMute = (participant: any) => {
+    if(participant == store.state.localClient){
+      const slider = (document.getElementById("sessionMicVolumeSlider") as HTMLInputElement);
+      slider.value = slider.value === "0" ? "1" : "0";
+      store.commit("localClient/openteraVideoConf/setSessionMicVolume", parseFloat(slider.value));
+    } else {
+      const slider = (document.getElementById("robotMicVolumeSlider") as HTMLInputElement);
+      slider.value = slider.value === "0" ? "1" : "0";
+      store.commit("localClient/openteraTeleop/setRobotMicVolume", parseFloat(slider.value)); 
+      if (store.state.localClient.openteraTeleop.client) {
+        store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({
+            type: "micVolume",
+            value: store.state.localClient.openteraTeleop.status.micVolume,
+          })
+        );
+      }
+    }
+  }
 
-  const isMuted = computed(() => store.state.localClient.isMuted);
+  const sessionMicVolume = computed(
+    () => store.state.localClient.openteraVideoConf.micVolume
+  );
+  const robotMicVolume = computed(
+    () => store.state.localClient.openteraTeleop.status.micVolume
+  );
+  const localClient = computed(
+    () => store.state.localClient
+  );
 
   return {
     toggleMute,
-    isMuted,
+    sessionMicVolume,
+    robotMicVolume,
+    localClient
   };
 }
