@@ -81,7 +81,7 @@ export default {
       default: false,
     },
   },
-  inject: ["isRobotMobile"],
+  inject: ["robotCaps"],
   data() {
     return {
       canvas: null,
@@ -454,7 +454,7 @@ export default {
         coord.x < this.mapSize.width &&
         coord.y >= 0 &&
         coord.y < this.mapSize.height &&
-        (this.isCreatingLabel || this.isRobotMobile)
+        (this.isCreatingLabel || this.robotCaps.isMobile)
       );
     },
     /**

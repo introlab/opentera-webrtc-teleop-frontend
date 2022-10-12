@@ -63,7 +63,7 @@
         type="button"
         class="btn btn-primary-dark"
         v-on:click="toggleCameraDisplayMode"
-        v-if="!isRobotSingleCamera"
+        v-if="!robotCaps.isSingleCamera"
       >
         <svg-icon icon="both-cameras" v-if="cameraDisplayMode == 0" />
         <svg-icon icon="top-camera-only" v-if="cameraDisplayMode == 1" />
@@ -209,7 +209,7 @@ export default {
       setRobotVolume,
     };
   },
-  inject: ["isRobotSingleCamera"],
+  inject: ["robotCaps"],
 };
 </script>
 

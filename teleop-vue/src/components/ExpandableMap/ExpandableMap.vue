@@ -114,14 +114,14 @@
         <div class="flex-cols fit-content">
           <div class="flex-rows fit-content right">
             <action-button
-              v-if="isRobotMobile"
+              v-if="robotCaps.isMobile"
               label="Reset"
               class="reset-button fit-content"
               @clicked="clearWaypoints"
               :disabled="waypointsEmpty && !isRobotNavigating"
             />
             <action-button
-              v-if="isRobotMobile"
+              v-if="robotCaps.isMobile"
               label="Start"
               class="fit-content"
               @clicked="startNavigation"
@@ -141,7 +141,7 @@
               ></dropdown>
               <div class="flex-rows fit-content">
                 <action-button
-                  v-if="isRobotMobile"
+                  v-if="robotCaps.isMobile"
                   label="Go"
                   class="go-button fit-content"
                   @clicked="goToLabel"
@@ -199,7 +199,7 @@
             <action-button label="-" class="zoom-button" @clicked="zoomOut" />
           </div>
           <dropdown
-            v-if="isRobotMobile"
+            v-if="robotCaps.isMobile"
             class="map-view-select flex-cols"
             name="map-view-select"
             label="Map view: "
@@ -245,7 +245,7 @@ export default {
       },
     },
   },
-  inject: ["isRobotMobile"],
+  inject: ["robotCaps"],
   data() {
     return {
       loopIntervalId: null,
@@ -296,10 +296,10 @@ export default {
   },
   computed: {
     navigationDropdownLabel() {
-      return this.isRobotMobile ? "Go to label:" : "Selected label:";
+      return this.robotCaps.isMobile ? "Go to label:" : "Selected label:";
     },
     navigationDropdownMenuLabel() {
-      return this.isRobotMobile ? "Navigation" : "Labels";
+      return this.robotCaps.isMobile ? "Navigation" : "Labels";
     },
     showPopup() {
       return (
