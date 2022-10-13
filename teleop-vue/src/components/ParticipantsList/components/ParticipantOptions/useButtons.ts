@@ -2,12 +2,12 @@
 
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { ParticipantOptions } from ".";
+import { Client } from "@/store/modules/opentera";
 
 export default function() {
   const store = useStore();
 
-  const toggleMute = (participant: any) => {
+  const toggleMute = (participant: Client) => {
     if(participant == store.state.localClient){
       const slider = (document.getElementById("sessionMicVolumeSlider") as HTMLInputElement);
       slider.value = slider.value === "0" ? "1" : "0";

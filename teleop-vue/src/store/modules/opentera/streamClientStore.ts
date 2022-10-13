@@ -136,7 +136,7 @@ export class StreamClientStore extends SignalingClientStore {
     context.state.client.onAddRemoteStream = (
       id: string,
       name: string,
-      clientData: Record<string, any>,
+      clientData: Client,
       stream: MediaStream
     ) => {
       context.commit("addClientInCall", {
@@ -152,7 +152,7 @@ export class StreamClientStore extends SignalingClientStore {
     context: SignalingClientContext,
     id: string,
     name: string,
-    clientData: Record<string, any>
+    clientData: Client
   ) {
     super.onClientDisconnect(context, id, name, clientData);
     context.commit("removeClientIncallById", id);
