@@ -1,6 +1,8 @@
 // src/store/modules/opentera/types.ts
 
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
+import { Commit, Dispatch } from "vuex";
+import { RouterState } from "../router";
 
 export interface RobotStatus {
   isCharging: boolean;
@@ -27,7 +29,7 @@ export interface LabelHandling {
 export interface SignalingServerConfiguration {
   url?: string;
   name?: string;
-  data?: Record<string, any>;
+  data?: Record<string, string>;
   room?: string;
   password?: string;
 }
@@ -49,14 +51,15 @@ export interface RtcConfiguration {
 }
 
 export interface Logger {
-  (...args: any[]): void | string;
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (...args: (any)[]): void | string;
 }
 
 // TODO: Split in different interface
 export interface Client {
   id?: string;
   name?: string;
-  data?: Record<string, any>; // TODO: define data interface
+  data?: Record<string, string>; // TODO: define data interface
   room?: string;
   stream?: MediaStream;
   isInCall?: boolean;
@@ -68,7 +71,7 @@ export interface Client {
 // REFACTOR TYPES
 export interface SignalingClientRoom {
   isInitPending: boolean;
-  beforeunloadEventHandler: Function | null;
+  beforeunloadEventHandler: EventListener;
   logger: Logger;
   client?: openteraWebrtcWebClient.SignalingClient;
   clientsInRoom: Array<Client>;
@@ -100,7 +103,7 @@ export interface DataChannelClientState extends SignalingClientRoom {
 export interface RoomClient {
   id?: string;
   name?: string;
-  data?: Record<string, any>; // TODO define data interface
+  data?: Record<string, string>; // TODO define data interface
   room?: string;
 }
 
@@ -116,15 +119,35 @@ export interface DataChannelClientContext extends SignalingClientContext {
   state: DataChannelClientState;
 }
 
+export interface RootState {
+  router: RouterState,
+  localClient: ClientState
+}
+
 export interface Context {
-  state: Record<string, any> | Function;
-  rootState: Record<string, any> | Function;
-  commit: {
-    (type: string, payload?: any, options?: Record<string, any>): void;
-  };
-  dispatch: {
-    (type: string, payload?: any, options?: Record<string, any>): void;
-  };
+  rootState: RootState;
+  commit: Commit;
+  dispatch: Dispatch;
   getters: { [key: string]: Function };
   rootGetters: { [key: string]: Function };
+}
+
+export interface ClientContext extends Context {
+  state: ClientState;
+}
+
+export interface ClientState {
+  id?: string;
+  name?: string;
+  data?: Record<string, string>; // TODO: define data interface
+  room?: string;
+  stream?: MediaStream;
+  isInCall?: boolean;
+  isMuted?: boolean;
+  isCameraOn?: boolean;
+  isConnected?: boolean;
+  openteraVideoConf: StreamClientState;
+  openteraCameraX: StreamClientState;
+  openteraMap: StreamClientState;
+  openteraTeleop: DataChannelClientState;
 }

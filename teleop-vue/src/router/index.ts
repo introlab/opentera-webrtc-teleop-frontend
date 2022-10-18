@@ -3,6 +3,7 @@ import {
   //createWebHistory,
   createWebHashHistory,
   Router,
+  RouteRecordRaw
 } from "vue-router";
 
 import store from "../store";
@@ -19,13 +20,13 @@ const participant = store.state.router.participant;
 const device = store.state.router.device;
 const notFound = store.state.router.notFound;
 
-const routes: Array<any> = [
+const routes: Array<RouteRecordRaw> = [
   {
     // TODO Check for auth
     path: dev.path,
     name: dev.name,
     component: DevelopperView,
-    props: (route: any) => ({
+    props: (route: Record<string, Record<string, string>>) => ({
       name: route.query.name,
       password: route.query.pwd,
       robot: route.query.robot,
@@ -34,7 +35,7 @@ const routes: Array<any> = [
       {
         path: "",
         component: TeleopView,
-        props: (route: any) => ({
+        props: (route: Record<string, Record<string, string>>) => ({
           name: route.query.name,
           password: route.query.pwd,
           robot: route.query.robot,
@@ -46,7 +47,7 @@ const routes: Array<any> = [
     path: user.path,
     name: user.name,
     component: UserView,
-    props: (route: any) => ({
+    props: (route: Record<string, Record<string, string>>) => ({
       name: route.query.name,
       password: route.query.pwd,
       robot: route.query.robot,
@@ -55,7 +56,7 @@ const routes: Array<any> = [
       {
         path: "",
         component: TeleopView,
-        props: (route: any) => ({
+        props: (route: Record<string, Record<string, string>>) => ({
           name: route.query.name,
           password: route.query.pwd,
           robot: route.query.robot,
@@ -67,7 +68,7 @@ const routes: Array<any> = [
     path: participant.path,
     name: participant.name,
     component: TeleopView,
-    props: (route: any) => ({
+    props: (route: Record<string, Record<string, string>>) => ({
       name: route.query.name,
       password: route.query.pwd,
       robot: route.query.robot,
@@ -77,7 +78,7 @@ const routes: Array<any> = [
     path: device.path,
     name: device.name,
     component: TeleopView,
-    props: (route: any) => ({
+    props: (route: Record<string, Record<string, string>>) => ({
       name: route.query.name,
       password: route.query.pwd,
       robot: route.query.robot,

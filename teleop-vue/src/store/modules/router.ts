@@ -1,14 +1,12 @@
 // src/store/modules/router.ts
 
-import router from "@/router";
-
 export interface RouteRawConfig {
-  [index: string]: any;
+  [index: string]: string | Function | { name: string } | RouteRawConfig | Record<string, RouteRawConfig> | undefined;
   path: string;
   name?: string;
   defaultPath?: string;
   childrens?: Record<string, RouteRawConfig>;
-  meta?: any;
+  meta?: { name: string };
 }
 
 export type RouterState = Record<string, RouteRawConfig>;
@@ -65,25 +63,25 @@ const Router = {
   getters: {
     getRoute: (state: RouterState) => (path: string) => {
       const splitPath = path.split(".");
-      for (let i = 0; i < splitPath.length; i++) state = state[splitPath[i]];
+      for (let i = 0; i < splitPath.length; i++) state = state[splitPath[i]] as Record<string, RouteRawConfig>;
 
       return state;
     },
 
-    getSubRoutes: (state: RouterState, getters?: any) => (
+    getSubRoutes: (state: RouterState, getters?: RouteRawConfig) => (
       route: string,
       recursive?: boolean
     ) => {
-      const obj: RouterState = getters.getRoute(route);
+      const obj: RouterState = (getters?.getRoute as Function)(route); //a tres tester
 
       if (obj && obj.childrens) {
         return Object.keys(obj.childrens).map((key) => {
           return {
-            path: obj.path + "/" + obj.childrens[key].path,
+            path: obj.path + "/" + (obj.childrens[key] as RouteRawConfig).path,
             childrens: recursive
-              ? getters.getSubRoutes(route + ".childrens." + key, true)
+              ? (getters?.getSubRoutes as Function)(route + ".childrens." + key, true)
               : undefined,
-            meta: obj.childrens[key].meta,
+            meta: (obj.childrens[key] as RouteRawConfig).meta,
             params: {},
           };
         });

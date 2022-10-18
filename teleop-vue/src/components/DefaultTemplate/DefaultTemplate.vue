@@ -23,8 +23,6 @@
 <script>
 import { mapGetters } from "vuex";
 
-import { BusyException } from "@/store/modules/opentera";
-
 import { NavigationBar } from "@/components/NavigationBar";
 
 export default {
@@ -66,10 +64,9 @@ export default {
   },
   async beforeMount() {
     await this.$store.dispatch("localClient/start", this.client);
-    console.log("START COMPLETED");
     this.$store.commit(
       "localClient/openteraTeleop/setMessageEventHandler",
-      (id, name, clientData, message) => {
+      (message) => {
         const parsedMsg = JSON.parse(message);
         if (parsedMsg.type === "robotStatus") {
           this.$store.commit(

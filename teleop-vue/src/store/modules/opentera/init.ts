@@ -5,7 +5,6 @@ import {
   SignalingServerConfiguration,
   StreamConfiguration,
 } from "./types";
-import { getBasePath, getOrigin } from "@/config/location";
 import { getSignalingServerURL } from "./utils";
 
 export function initSignalingServerConfiguration(
@@ -29,7 +28,7 @@ export function initStreamConfiguration(
   };
 }
 
-export function initDataChannelConfiguration(): any {
+export function initDataChannelConfiguration() {
   return {};
 }
 
@@ -37,11 +36,7 @@ export async function initRtcConfiguration(
   password?: string
 ): Promise<RtcConfiguration> {
   return new Promise<RtcConfiguration>((resolve, reject) => {
-    const url =
-      process.env.NODE_ENV !== "production"
-        ? getOrigin() + getBasePath() + "/iceservers.json"
-        : getSignalingServerURL() + "/iceservers";
-    console.log("Fetch ice servers from: ", url);
+    const url = getSignalingServerURL() + "/iceservers";
     openteraWebrtcWebClient.iceServers
       .fetchFromServer(url, password)
       .then((config: Array<IceServer>) =>

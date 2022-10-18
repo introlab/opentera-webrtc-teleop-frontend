@@ -104,7 +104,6 @@ export default {
     },
     onDock() {
       if (this.$store.state.localClient.openteraTeleop.client) {
-        console.log("Sending docking command");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({ type: "action", action: "dock", cmd: true })
         );
@@ -113,7 +112,6 @@ export default {
     onLocalizationMode() {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.localizationMode = true;
-        console.log("Switching to localization mode");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({
             type: "action",
@@ -126,7 +124,6 @@ export default {
     onMappingMode() {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.localizationMode = false;
-        console.log("Switching to mapping mode");
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({
             type: "action",
@@ -139,7 +136,6 @@ export default {
     setMovementMode(mode) {
       if (this.$store.state.localClient.openteraTeleop.client) {
         this.movementMode = mode;
-        console.log("Setting movement mode to: ", mode);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({
             type: "action",
@@ -151,7 +147,6 @@ export default {
     },
     sendMovement(movement) {
       if (this.$store.state.localClient.openteraTeleop.client) {
-        console.log("Sending movement command: ", movement);
         this.$store.state.localClient.openteraTeleop.client.sendToAll(
           JSON.stringify({
             type: "action",

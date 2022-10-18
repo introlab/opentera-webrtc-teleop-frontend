@@ -150,11 +150,9 @@ export class StreamClientStore extends SignalingClientStore {
 
   protected onClientDisconnect(
     context: SignalingClientContext,
-    id: string,
-    name: string,
-    clientData: Client
-  ) {
-    super.onClientDisconnect(context, id, name, clientData);
+    id: string
+    ) {
+    super.onClientDisconnect(context, id);
     context.commit("removeClientIncallById", id);
   }
 }
