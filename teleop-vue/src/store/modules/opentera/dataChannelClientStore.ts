@@ -158,11 +158,13 @@ export class DataChannelClientStore extends SignalingClientStore {
 
   protected async connectClientEvents(context: DataChannelClientContext) {
     super.connectClientEvents(context);
+    /*
     context.state.client.onDataChannelOpen = (
       id: string,
       name: string,
       clientData: Record<string, any>
     ) => {
+      console.log(clientData);
       // TODO
     };
     context.state.client.onDataChannelClose = (
@@ -170,16 +172,14 @@ export class DataChannelClientStore extends SignalingClientStore {
       name: string,
       clientData: Record<string, any>
     ) => {
+      console.log(clientData);
       // TODO
-    };
+    };*/
     context.state.client.onDataChannelMessage = (
-      id: string,
-      name: string,
-      clientData: Record<string, any>,
       message: string
     ) => {
       if (context.state.onMessageEventHandler) {
-        context.state.onMessageEventHandler(id, name, clientData, message);
+        context.state.onMessageEventHandler(message);
       }
     };
   }

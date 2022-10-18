@@ -2,9 +2,9 @@
 
 import { getCookie, SESSION_COOKIE, setCookie } from "@/config/cookie";
 import openteraWebrtcWebClient from "opentera-webrtc-web-client";
-import { BusyException } from ".";
 
 import {
+  Client,
   Logger,
   RoomClient,
   SignalingClientContext,
@@ -16,8 +16,14 @@ export abstract class SignalingClientStore {
   protected state(): SignalingClientRoom {
     return {
       isInitPending: false,
-      beforeunloadEventHandler: null,
-      logger: (...args) => console.log(...args),
+      beforeunloadEventHandler: ()=>null,
+      logger: (...args) => {
+        if(process.env.NODE_ENV !== "production")
+        {
+          // eslint-disable-next-line no-console
+          console.log(...args)
+        } 
+      },
       client: undefined,
       clientsInRoom: [],
       numberClientsInCall: 0,
@@ -39,7 +45,7 @@ export abstract class SignalingClientStore {
         state: SignalingClientRoom,
         payload: Function
       ) {
-        state.beforeunloadEventHandler = payload;
+        state.beforeunloadEventHandler = payload as EventListener;
       },
 
       setClient(
@@ -89,13 +95,17 @@ export abstract class SignalingClientStore {
         await self.connectClientEvents(context);
       },
 
-      async start(context: any, config: SignalingServerConfiguration) {
+      async start(context: SignalingClientContext, config: SignalingServerConfiguration) {
         try {
           config = await SignalingClientStore.cookieHandler(context, config);
           await context.dispatch("initialize", config);
           await context.dispatch("connectClient");
         } catch (err) {
-          console.log(err);
+          if(process.env.NODE_ENV !== "production")
+          {
+            // eslint-disable-next-line no-console
+            console.log(err);
+          } 
           throw err;
         }
       },
@@ -115,15 +125,14 @@ export abstract class SignalingClientStore {
         });
       },
 
-      destroy(context: any) {
+      destroy(context: SignalingClientContext) {
         self.destroy(context);
       },
 
       // TODO: make function to hang up all rooms
-      callRoom(context: any, room: string) {
-        console.log(context);
-        if (!context.state.isInCall) {
-          console.log("Calling " + room + " room");
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      callRoom(context: SignalingClientContext, room: string) {
+        if (!context.state.inCallState) {
           context.state.client.callAll();
         }
       },
@@ -135,7 +144,7 @@ export abstract class SignalingClientStore {
   }
 
   protected static async cookieHandler(
-    context: any,
+    context: SignalingClientContext,
     config: SignalingServerConfiguration
   ): Promise<SignalingServerConfiguration> {
     // TODO: handle errors
@@ -193,30 +202,24 @@ export abstract class SignalingClientStore {
       this.onSignalingConnectionError(context, message);
     };
     context.state.client.onRoomClientsChange = (
-      clients: Array<Record<string, any>>
+      clients: Array<Record<string, Client>>
     ) => {
       this.onRoomClientsChange(context, clients);
     };
-    context.state.client.onClientConnect = (
-      id: string,
-      name: string,
-      clientData: Record<string, any>
-    ) => {
-      this.onClientConnect(context, id, name, clientData);
+    context.state.client.onClientConnect = () => {
+      this.onClientConnect(context);
     };
-    context.state.client.onClientDisconnect = (
-      id: string,
-      name: string,
-      clientData: Record<string, any>
-    ) => {
-      this.onClientDisconnect(context, id, name, clientData);
+    context.state.client.onClientDisconnect = (id: string) => {
+      this.onClientDisconnect(context, id);
     };
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected onSignalingConnectionOpen(context: SignalingClientContext): void {
     // TODO
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected onSignalingConnectionClose(context: SignalingClientContext): void {
     // TODO
   }
@@ -232,10 +235,9 @@ export abstract class SignalingClientStore {
 
   protected onRoomClientsChange(
     context: SignalingClientContext,
-    clients: Array<Record<string, any>>
+    clients: Array<Record<string, Client>>
   ) {
     context.commit("updateClientsInRoom", clients);
-    console.log(context);
     if (clients.length >= 2) {
       context.dispatch(
         "callRoom",
@@ -246,9 +248,6 @@ export abstract class SignalingClientStore {
 
   protected onClientConnect(
     context: SignalingClientContext,
-    id: string,
-    name: string,
-    clientData: Record<string, any>
   ) {
     context.commit("incrementClientsInCall");
     context.commit("setCallState", true);
@@ -257,9 +256,8 @@ export abstract class SignalingClientStore {
 
   protected onClientDisconnect(
     context: SignalingClientContext,
-    id: string,
-    name: string,
-    clientData: Record<string, any>
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _id: string
   ) {
     context.commit("decrementClientInCall");
     if (context.state.numberClientsInCall <= 0) {

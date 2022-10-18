@@ -1,17 +1,20 @@
 // src/store/modules/opentera/utils.ts
 
-import openteraWebrtcWebClient from "opentera-webrtc-web-client";
 import { getBasePath, getOrigin } from "@/config/location";
 
-export function fetchLocalStream(constraint?: any) {
-  return new Promise<MediaStream | undefined>((resolve, reject) => {
+export function fetchLocalStream(constraint?: MediaStreamConstraints) {
+  return new Promise<MediaStream | undefined>((resolve) => {
     if (!constraint) constraint = { video: true, audio: true };
 
     navigator.mediaDevices
       .getUserMedia(constraint)
       .then((stream: MediaStream): void => resolve(stream))
       .catch((err: DOMException): void => {
-        console.error(err);
+        if(process.env.NODE_ENV != "production")
+        {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        } 
         alert("Can't access default media (Camera nor mic)");
         resolve(undefined);
       });
@@ -30,7 +33,7 @@ export function copyAttributes<T>(copy: T, original: T) {
 
 export function getSignalingServerURL() {
   if (process.env.NODE_ENV !== "production")
-    return process.env.VUE_APP_SIGNALING_SERVER_URL;
+    return getOrigin() + getBasePath() + "signaling";
   else return getOrigin() + getBasePath();
 }
 

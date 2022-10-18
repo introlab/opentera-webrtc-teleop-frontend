@@ -3,9 +3,9 @@
 import { onMounted, Ref } from "vue";
 
 export default function(toolbarRef: Ref<HTMLDivElement>) {
-  let toolbar: any = null;
-  let timeout: any = null;
-  let promise: any = null;
+  let toolbar: HTMLElement;
+  let timeout: number | null = null;
+  let promise;
   const TIME_BUFF = 5000;
 
   const _initDOMRefs = (): void => {
