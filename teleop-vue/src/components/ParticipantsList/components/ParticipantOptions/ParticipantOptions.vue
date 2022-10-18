@@ -4,11 +4,22 @@
     <button
       type="button"
       class="icon-button right-side"
-      v-on:click="toggleMute"
+      v-on:click="toggleMute(participant)"
+      v-if="participant == localClient"
     >
-      <svg-icon icon="mic-fill" v-if="!isMuted" />
-      <svg-icon icon="mic-mute-fill" v-else />
+      <svg-icon v-if="sessionMicVolume > 0" icon="mic-fill"/>
+      <svg-icon v-else icon="mic-mute-fill"/>
     </button>
+    <button
+      type="button"
+      class="icon-button right-side"
+      v-on:click="toggleMute(participant)"
+      v-else
+    >
+      <svg-icon v-if="robotMicVolume > 0" icon="mic-fill"/>
+      <svg-icon v-else icon="mic-mute-fill"/>
+    </button>
+
     <button type="button" class="icon-button">
       <svg-icon icon="three-dots" />
     </button>
@@ -29,13 +40,15 @@ export default {
     participant: Object,
   },
   setup() {
-    const { toggleMute, isMuted } = useButtons();
+    const { toggleMute, sessionMicVolume, robotMicVolume, localClient } = useButtons();
 
     return {
       toggleMute,
-      isMuted,
+      sessionMicVolume,
+      robotMicVolume,
+      localClient
     };
-  },
+  }
 };
 </script>
 

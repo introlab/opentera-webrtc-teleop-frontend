@@ -13,8 +13,9 @@ export interface RobotStatus {
   wifiNetwork: string;
   wifiStrength: number;
   localIp: string;
-  isMuted: boolean;
+  micVolume: number;
   isCameraOn: boolean;
+  volume: number;
 }
 
 export interface LabelHandling {
@@ -83,6 +84,8 @@ export interface StreamClientState extends SignalingClientRoom {
   cameraDisplayMode: number;
   showControls: boolean;
   showSettings: boolean;
+  micVolume: number;
+  volume: number;
 }
 
 export interface DataChannelClientState extends SignalingClientRoom {

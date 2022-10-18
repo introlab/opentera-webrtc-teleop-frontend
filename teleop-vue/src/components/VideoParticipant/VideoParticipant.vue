@@ -33,6 +33,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    volume: {
+      type: Number,
+      defualt: 1
+    }
   },
   computed: {
     videoId() {
@@ -43,12 +47,17 @@ export default {
     stream(newStream) {
       this.$refs.video.srcObject = newStream;
     },
+    volume(newVolume) {
+      this.$refs.video.volume = newVolume;
+    }
   },
   mounted() {
     this.$refs.video.srcObject = this.stream;
+    this.$refs.video.volume = this.volume;
   },
   activated() {
     this.$refs.video.srcObject = this.stream;
+    this.$refs.video.volume = this.volume;
     this.$refs.video.autoplay = true;
   },
 };

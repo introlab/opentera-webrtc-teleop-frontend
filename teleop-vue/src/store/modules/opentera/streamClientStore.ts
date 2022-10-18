@@ -35,15 +35,30 @@ export class StreamClientStore extends SignalingClientStore {
       showControls: true,
       showSettings: false,
       clientsInCall: [],
+      micVolume: 1,
+      volume: 1,
     };
   }
 
   protected mutations() {
+    const audioContext = new window.AudioContext();
+    const micGain = audioContext.createGain();
     return {
       ...super.mutations(),
 
       setLocalStream(state: StreamClientState, payload: MediaStream) {
-        state.localStream = payload;
+        const videoTracks = payload.getVideoTracks();
+
+        const destination = audioContext.createMediaStreamDestination();
+        const mic = audioContext.createMediaStreamSource(payload);
+        mic.connect(micGain);
+        micGain.connect(destination);
+        const controlledStream = destination.stream;
+        for (const videoTrack of videoTracks) {
+          controlledStream.addTrack(videoTrack);
+        }
+
+        state.localStream = controlledStream;
       },
 
       addClientInCall(state: StreamClientState, payload: Client) {
@@ -71,6 +86,13 @@ export class StreamClientStore extends SignalingClientStore {
       toggleShowSettings(state: StreamClientState) {
         state.showSettings = !state.showSettings;
       },
+      setSessionMicVolume(state: StreamClientState, payload: number) {
+        state.micVolume = payload;
+        micGain.gain.value = payload;
+      },
+      setSessionVolume(state: StreamClientState, payload: number) {
+        state.volume = payload;
+      }
     };
   }
 
@@ -114,7 +136,7 @@ export class StreamClientStore extends SignalingClientStore {
     context.state.client.onAddRemoteStream = (
       id: string,
       name: string,
-      clientData: Record<string, any>,
+      clientData: Client,
       stream: MediaStream
     ) => {
       context.commit("addClientInCall", {
@@ -130,7 +152,7 @@ export class StreamClientStore extends SignalingClientStore {
     context: SignalingClientContext,
     id: string,
     name: string,
-    clientData: Record<string, any>
+    clientData: Client
   ) {
     super.onClientDisconnect(context, id, name, clientData);
     context.commit("removeClientIncallById", id);

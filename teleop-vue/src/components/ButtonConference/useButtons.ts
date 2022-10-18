@@ -8,8 +8,13 @@ export default function() {
   const localClient = store.state.localClient;
   const namespace = "localClient/";
 
-  const isMuted = computed(() => localClient.isMuted);
   const isCameraOn = computed(() => localClient.isCameraOn);
+  const sessionMicVolume = computed(
+    () => store.state.localClient.openteraVideoConf.micVolume
+  );
+  const sessionVolume = computed(
+    () => store.state.localClient.openteraVideoConf.volume
+  );
   const showParticipants = computed(
     () => store.state.localClient.openteraVideoConf.showParticipants
   );
@@ -22,24 +27,37 @@ export default function() {
   const showSettings = computed(
     () => store.state.localClient.openteraVideoConf.showSettings
   );
-  const isRobotMuted = computed(
-    () => store.state.localClient.openteraTeleop.status.isMuted
+  const robotMicVolume = computed(
+    () => store.state.localClient.openteraTeleop.status.micVolume
   );
   const isRobotCameraOn = computed(
     () => store.state.localClient.openteraTeleop.status.isCameraOn
   );
-
-  const toggleMute = () =>
-    store.dispatch(namespace + "toggleMute").catch((error) => {
-      // TODO
-      alert(error.message);
-    });
+  const robotVolume = computed(
+    () => store.state.localClient.openteraTeleop.status.volume
+  );
 
   const toggleCamera = () =>
     store.dispatch(namespace + "toggleCamera").catch((error) => {
       // TODO
       alert(error.message);
     });
+
+  const setSessionVolume = (toggle: boolean) => {
+    const slider = (document.getElementById("sessionVolumeSlider") as HTMLInputElement);
+    if(toggle){
+      slider.value = slider.value === "0" ? "1" : "0";
+    }
+    store.commit("localClient/openteraVideoConf/setSessionVolume", parseFloat(slider.value));
+  }
+  
+  const setSessionMicVolume = (toggle: boolean) => {
+    const slider = (document.getElementById("sessionMicVolumeSlider") as HTMLInputElement);   
+    if(toggle){
+      slider.value = slider.value === "0" ? "1" : "0";
+    }
+    store.commit("localClient/openteraVideoConf/setSessionMicVolume", parseFloat(slider.value));
+  }
 
   const toggleParticipantsList = () =>
     store.commit("localClient/openteraVideoConf/toggleParticipantsList");
@@ -52,18 +70,7 @@ export default function() {
 
   const toggleShowSettings = () => {
     store.commit("localClient/openteraVideoConf/toggleShowSettings"); // TODO: move to localClient store instead?
-  };
-  const toggleRobotMute = () => {
-    store.commit("localClient/openteraTeleop/toggleRobotMute");
-    if (store.state.localClient.openteraTeleop.client) {
-      store.state.localClient.openteraTeleop.client.sendToAll(
-        JSON.stringify({
-          type: "mute",
-          value: store.state.localClient.openteraTeleop.status.isMuted,
-        })
-      );
-    }
-  };
+};
   const toggleRobotCamera = () => {
     store.commit("localClient/openteraTeleop/toggleRobotCamera");
     if (store.state.localClient.openteraTeleop.client) {
@@ -75,24 +82,57 @@ export default function() {
       );
     }
   };
-
+  const setRobotMicVolume = (toggle: boolean) => {
+    const slider = (document.getElementById("robotMicVolumeSlider") as HTMLInputElement);
+    if(toggle){
+      slider.value = slider.value === "0" ? "1" : "0";
+    }
+    store.commit("localClient/openteraTeleop/setRobotMicVolume", parseFloat(slider.value));
+      if (store.state.localClient.openteraTeleop.client) {
+        store.state.localClient.openteraTeleop.client.sendToAll(
+          JSON.stringify({
+            type: "micVolume",
+            value: store.state.localClient.openteraTeleop.status.micVolume,
+          })
+        );
+      }
+  };
+  const setRobotVolume = (toggle: boolean) => {
+    const slider = (document.getElementById("robotVolumeSlider") as HTMLInputElement);
+    if(toggle){
+      slider.value = slider.value === "0" ? "1" : "0";
+    }
+    store.commit("localClient/openteraTeleop/setRobotVolume", parseFloat(slider.value));
+    if (store.state.localClient.openteraTeleop.client) {
+      store.state.localClient.openteraTeleop.client.sendToAll(
+        JSON.stringify({
+          type: "volume",
+          value: store.state.localClient.openteraTeleop.status.volume,
+        })
+      );
+    }
+  };
   return {
-    isMuted,
     isCameraOn,
+    sessionMicVolume,
+    sessionVolume,
     showParticipants,
     cameraDisplayMode,
     showControls,
     showSettings,
-    isRobotMuted,
+    robotMicVolume,
     isRobotCameraOn,
+    robotVolume,
 
-    toggleMute,
     toggleCamera,
+    setSessionMicVolume,
+    setSessionVolume,
     toggleParticipantsList,
     toggleCameraDisplayMode,
     toggleShowControls,
     toggleShowSettings,
     toggleRobotCamera,
-    toggleRobotMute,
+    setRobotMicVolume,
+    setRobotVolume
   };
 }
