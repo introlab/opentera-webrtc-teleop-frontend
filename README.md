@@ -11,6 +11,7 @@ An OpenTera web user interface to teleoperate a robot. Made with Vue.js 3.
 - Jérémie Bourque (@JeremieBourque1)
 - Dominic Létourneau (@doumdi)
 - Philippe Warren (@philippewarren)
+- Ian-Mathieu Joly (@joli-1801)
 
 ## Features
 
