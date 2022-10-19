@@ -70,12 +70,12 @@ export class DataChannelClientStore extends SignalingClientStore {
         state.status.wifiNetwork = payload.wifiNetwork;
         state.status.wifiStrength = payload.wifiStrength;
         state.status.localIp = payload.localIp;
-        if(state.status.micVolume != payload.micVolume){
+        if(state.status.micVolume != payload.micVolume && payload.micVolume){
           (document.getElementById("robotMicVolumeSlider") as HTMLInputElement).value = payload.micVolume.toString();
         }
         state.status.micVolume = payload.micVolume;
         state.status.isCameraOn = payload.isCameraOn;
-        if(state.status.volume != payload.volume){
+        if(state.status.volume != payload.volume && payload.volume){
           (document.getElementById("robotVolumeSlider") as HTMLInputElement).value = payload.volume.toString();
         }
         state.status.volume = payload.volume;
@@ -164,7 +164,6 @@ export class DataChannelClientStore extends SignalingClientStore {
       name: string,
       clientData: Record<string, any>
     ) => {
-      console.log(clientData);
       // TODO
     };
     context.state.client.onDataChannelClose = (
@@ -172,11 +171,15 @@ export class DataChannelClientStore extends SignalingClientStore {
       name: string,
       clientData: Record<string, any>
     ) => {
-      console.log(clientData);
       // TODO
     };*/
     context.state.client.onDataChannelMessage = (
+      /* eslint-disable */
+      id: string,
+      name: string,
+      clientData: Record<string, any>,
       message: string
+      /* eslint-enable  */
     ) => {
       if (context.state.onMessageEventHandler) {
         context.state.onMessageEventHandler(message);

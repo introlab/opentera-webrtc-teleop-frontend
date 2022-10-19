@@ -206,11 +206,23 @@ export abstract class SignalingClientStore {
     ) => {
       this.onRoomClientsChange(context, clients);
     };
-    context.state.client.onClientConnect = () => {
+    context.state.client.onClientConnect = (
+      /* eslint-disable */
+      id: string,
+      name: string,
+      clientData: Record<string, any>
+      /* eslint-enable */
+      ) => {
       this.onClientConnect(context);
     };
-    context.state.client.onClientDisconnect = (id: string) => {
-      this.onClientDisconnect(context, id);
+    context.state.client.onClientDisconnect = (
+      /* eslint-disable */
+      id: string,
+      name: string,
+      clientData: Record<string, any>
+      /* eslint-enable */
+      ) => {
+      this.onClientDisconnect(context, id)
     };
   }
 
@@ -257,7 +269,7 @@ export abstract class SignalingClientStore {
   protected onClientDisconnect(
     context: SignalingClientContext,
     //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _id: string
+    id: string
   ) {
     context.commit("decrementClientInCall");
     if (context.state.numberClientsInCall <= 0) {
