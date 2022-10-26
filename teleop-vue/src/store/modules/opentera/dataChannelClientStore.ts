@@ -30,6 +30,8 @@ export class DataChannelClientStore extends SignalingClientStore {
         diskUsage: 0,
         wifiNetwork: "",
         wifiStrength: 0,
+        uploadSpeed: 0,
+        downloadSpeed: 0,
         localIp: "",
         micVolume: 1,
         isCameraOn: true,
@@ -69,6 +71,8 @@ export class DataChannelClientStore extends SignalingClientStore {
         state.status.diskUsage = payload.diskUsage;
         state.status.wifiNetwork = payload.wifiNetwork;
         state.status.wifiStrength = payload.wifiStrength;
+        state.status.uploadSpeed = payload.uploadSpeed;
+        state.status.downloadSpeed = payload.downloadSpeed;
         state.status.localIp = payload.localIp;
         if(state.status.micVolume != payload.micVolume && payload.micVolume){
           (document.getElementById("robotMicVolumeSlider") as HTMLInputElement).value = payload.micVolume.toString();
