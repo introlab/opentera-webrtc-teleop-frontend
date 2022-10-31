@@ -14,6 +14,8 @@ export interface RobotStatus {
   diskUsage: number;
   wifiNetwork: string;
   wifiStrength: number;
+  uploadSpeed: number;
+  downloadSpeed: number;
   localIp: string;
   micVolume: number;
   isCameraOn: boolean;
