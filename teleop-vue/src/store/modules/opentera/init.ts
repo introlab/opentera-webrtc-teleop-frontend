@@ -5,13 +5,13 @@ import {
   SignalingServerConfiguration,
   StreamConfiguration,
 } from "./types";
-import { getSignalingServerURL } from "./utils";
+import { getSignalingServerHttpURL, getSignalingServerWsURL } from "./utils";
 
 export function initSignalingServerConfiguration(
   payload: SignalingServerConfiguration
 ): SignalingServerConfiguration {
   return {
-    url: getSignalingServerURL() + "/socket.io",
+    url: getSignalingServerWsURL(),
     name: payload.name,
     data: payload.data,
     room: payload.room,
@@ -36,7 +36,7 @@ export async function initRtcConfiguration(
   password?: string
 ): Promise<RtcConfiguration> {
   return new Promise<RtcConfiguration>((resolve, reject) => {
-    const url = getSignalingServerURL() + "/iceservers";
+    const url = getSignalingServerHttpURL() + "/iceservers";
     openteraWebrtcWebClient.iceServers
       .fetchFromServer(url, password)
       .then((config: Array<IceServer>) =>

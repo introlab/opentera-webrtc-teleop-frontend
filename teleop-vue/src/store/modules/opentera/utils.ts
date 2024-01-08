@@ -14,7 +14,7 @@ export function fetchLocalStream(constraint?: MediaStreamConstraints) {
         {
           // eslint-disable-next-line no-console
           console.log(err);
-        } 
+        }
         alert("Can't access default media (Camera nor mic)");
         resolve(undefined);
       });
@@ -31,10 +31,14 @@ export function copyAttributes<T>(copy: T, original: T) {
   }
 }
 
-export function getSignalingServerURL() {
+export function getSignalingServerHttpURL() {
   if (process.env.NODE_ENV !== "production")
     return getOrigin() + getBasePath() + "signaling";
   else return getOrigin() + getBasePath();
+}
+
+export function getSignalingServerWsURL() {
+  return getSignalingServerHttpURL().replace("https://", "wss://").replace("http://", "ws://") + "/signaling";
 }
 
 export interface PromiseState<T = undefined> extends Promise<T> {
