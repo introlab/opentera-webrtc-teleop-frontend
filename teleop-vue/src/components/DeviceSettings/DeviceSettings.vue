@@ -101,7 +101,7 @@ export default {
       // Here we access private member of the class. It's bad.
       // Instead we should create a state of those configuration in our StreamClientStore and in the SignalingClientStore.
       const signalingServerConfiguration = this.$store.state.localClient
-        .openteraVideoConf.client._signalingServerConfiguration;
+        .openteraVideoConf.client._signalingClient._signalingServerConfiguration;
       const streamConfiguration = initStreamConfiguration(
         this.$store.state.localClient.openteraVideoConf.localStream
       );

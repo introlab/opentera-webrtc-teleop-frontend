@@ -18,11 +18,11 @@ export abstract class SignalingClientStore {
       isInitPending: false,
       beforeunloadEventHandler: ()=>null,
       logger: (...args) => {
-        if(process.env.NODE_ENV !== "production")
-        {
+        //if(process.env.NODE_ENV !== "production")
+        //{
           // eslint-disable-next-line no-console
           console.log(...args)
-        } 
+        //} 
       },
       client: undefined,
       clientsInRoom: [],
@@ -253,7 +253,7 @@ export abstract class SignalingClientStore {
     if (clients.length >= 2) {
       context.dispatch(
         "callRoom",
-        context.state.client._signalingServerConfiguration.room
+        context.state.client._signalingClient._signalingServerConfiguration.room
       );
     }
   }
