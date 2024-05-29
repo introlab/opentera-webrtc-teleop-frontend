@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@smartweb/vue-flash-message": "^1.0.0-alpha.12",
-    "opentera-webrtc-web-client": "file:submodules/opentera-webrtc/opentera-webrtc-web-client",
+    "opentera-webrtc-web-client": "https://github.com/introlab/opentera-webrtc/releases/download/v1.1.4/opentera-webrtc-web-client-1.1.4.tar.gz",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-click-away": "^1.2.4",
